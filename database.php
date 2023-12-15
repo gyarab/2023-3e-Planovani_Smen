@@ -27,8 +27,8 @@ $port = 3306;
 /*
 $host = "rp.toskanka.cz";
 $dbname = "login_db2";
-$username = "login_db2";
-$password = "Pass@db2";
+$username = "";
+$password = "";
 $port = 3306;
 */
 
