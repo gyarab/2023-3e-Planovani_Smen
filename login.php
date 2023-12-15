@@ -23,9 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             session_start();
             
             session_regenerate_id();
-            
+            /** start of global sessions*/
             $_SESSION["user2_id"] = $user["id"];
             if($user["position"] == "admin"){
+                //header("Location: admin_main_page.php");
                 header("Location: admin_main_page.php");
                 exit;
             }
@@ -37,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 header("Location: employee_main_page.php");
                 exit;
             }
-            if($user["position"] == "fultime_employee"){
+            if($user["position"] == "fulltime_employee"){
                 header("Location: employee_main_page.php");
                 exit;
             }
@@ -69,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                value="<?= htmlspecialchars($_POST["email"] ?? "") ?>">
         
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input type="password" value="" name="password" id="password"  autocomplete="off">
         <button>Log in</button>
         <?php if ($is_invalid): ?>
         <em style="color:red">Invalid login</em>
@@ -77,5 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </form>
     </div>
     </div>
+    <script>
+document.addEventListener("DOMContentLoaded", function(event)
+{ document.getElementById("password").autocomplete = "off"; });
+    </script>
 </body>
 </html>

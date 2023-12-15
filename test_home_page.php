@@ -1,5 +1,11 @@
 <?php
 
+
+/**This page is for testing of main page */
+
+
+
+
 /**main page of admin account */
 
 /**opening add picking data from database database */
@@ -29,6 +35,7 @@ $mysqli1->close();
 
 
 <!DOCTYPE html>
+<!-- Created By CodingNepal - www.codingnepalweb.com -->
 <html lang="en" dir="ltr">
 
 <head>
@@ -45,12 +52,13 @@ $mysqli1->close();
 
 
         <!--start of navbar -->
-        <!--source -  https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
+        <!-- https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
         <nav>
+        <!-- <div id="txt"></div> -->
             <div class="navbar">
             
                 <i class='bx bx-menu'></i>
-                <div class="logo"><a href="admin_main_page.php">Home : <?= $cons ?> <?= htmlspecialchars($user["firstname"]) ?> <?= htmlspecialchars($user["middlename"]) ?> <?= htmlspecialchars($user["lastname"]) ?> </a></div>
+                <div class="logo"><a href="test_home_page.php">Home : <?= $cons ?> <?= htmlspecialchars($user["firstname"]) ?> <?= htmlspecialchars($user["middlename"]) ?> <?= htmlspecialchars($user["lastname"]) ?> </a></div>
                 <div class="nav-links">
                     <div class="sidebar-logo">
                         <span class="logo-name">Home page</span>
@@ -107,6 +115,8 @@ $mysqli1->close();
                     </div>
                 </div>
                 
+                <!--<div id="txt" class="wrap"></div>-->
+                <!--<div id="txt" class="wrap"></div>-->
             </div>
         </nav>
         <script src="js/main_page.js"></script>
@@ -117,7 +127,6 @@ $mysqli1->close();
 
 
         <!--end of navbar -->
-        <!-- Printing of  informations  -->
         <p>Users first name : <?= htmlspecialchars($user["firstname"]) ?></p>
         <p>Users middle name : <?= htmlspecialchars($user["middlename"]) ?></p>
         <p>Users last name : <?= htmlspecialchars($user["lastname"]) ?></p>
@@ -132,6 +141,3 @@ $mysqli1->close();
 </body>
 
 </html>
-    
-    
-    

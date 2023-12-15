@@ -1,6 +1,6 @@
 <?php
-/** test version main login page */
-/**no use in program */
+/** Test version main login page */
+/**It haso use in program */
 session_start();
 
 if (isset($_SESSION["user2_id"])) {
