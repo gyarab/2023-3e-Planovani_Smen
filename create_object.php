@@ -65,7 +65,7 @@ $mysqli1->close();
 
 
 <body>
-  <?php //if (isset($user)): ?>
+  <?php if (isset($user)): ?>
 
 
      <!--start of the navbar -->
@@ -248,7 +248,7 @@ $mysqli1->close();
 
 
       $mysqli2 = require __DIR__ . "/database.php";
-
+      require __DIR__ . '/load_object.php';
 
       $conn2 = new mysqli($host, $username, $password, $dbname);
       $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
@@ -265,6 +265,8 @@ $mysqli1->close();
         array_multisort($data2, $data3);
       }
       $search;
+
+      $nm = "box";
       /**This part looks for row with any object without superior object (highest standing in hierarchie)  */
       for ($x = 0; $x < count($data2); $x++) {
         if ($data3[$x] == null) {
@@ -279,7 +281,10 @@ $mysqli1->close();
           <br>
           <?php
           /**This part calls the function in order to check if this object is superior to some other object*/
-          sub_object($search, $data2, $data3, $count);
+          //require __DIR__ . '/load_object.php';
+          //include "/load_object.php";
+          sub_object($search, $data2, $data3, $count, $nm);
+          
         }
 
       }
@@ -289,7 +294,7 @@ $mysqli1->close();
       <?php
 
       /** Recursion function - main purpose of this function is to look for objects in the sub hierarchie*/
-      function sub_object($searching, $dat2, $dat3, $counter)
+      /*function sub_object($searching, $dat2, $dat3, $counter)
       {
         for ($i = 0; $i < count($dat2); $i++) {
           if ($searching == $dat3[$i]) {
@@ -300,12 +305,12 @@ $mysqli1->close();
               } ?>
             </p>
             <input id="box" type="radio" name="box" value="<?php echo $dat2[$i]; ?>">
-            <label for="box">
+            <label for="box"> 
               <?php echo $dat2[$i]; ?>
             </label>
-            <br>
+            <br> 
             <?php
-            $co = $counter + 1;
+           $co = $counter + 1;
 
             $sea = $dat2[$i];
             if (!$searching == null) {
@@ -326,9 +331,9 @@ $mysqli1->close();
     </form>
   </div>
 
-  <?php //else: ?>
+  <?php else: ?>
   <br> USER IS NOT SET <BR>
-  <?php //endif; ?>
+  <?php endif; ?>
 
 </body>
 <?php

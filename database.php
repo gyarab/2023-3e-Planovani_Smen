@@ -27,10 +27,10 @@ $port = 3306;
 /*
 $host = "rp.toskanka.cz";
 $dbname = "login_db2";
-$username = "";
+$username = "login_db2";
 $password = "";
-$port = 3306;
-*/
+$port = 3306;*/
+
 
 /**This part insert login paramenters */
 $mysqli = new mysqli($host,$username, $password, $dbname, $port);
