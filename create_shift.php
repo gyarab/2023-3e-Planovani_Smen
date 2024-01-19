@@ -293,6 +293,10 @@ foreach ($names as $color){
 
         }
         ?>
+        <br>
+        <label for="colorpicker">Color Picker:</label>
+   <input type="color" id="colorpicker" name="colorpicker" value="#ffffff">
+   <br>
 <button id="v" name="v" type="submit" onclick="cr()">Save</button>
 <!--<button type="submit" onclick="cr()">Save</button>-->
 

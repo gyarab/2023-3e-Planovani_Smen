@@ -149,6 +149,7 @@ if (isset($_POST['v'])) {
 
         // $s = date("Y-d-m", strtotime($_POST['sr']));
         $s = $_POST['sr'];
+        $pickc = $_POST['colorpicker'];
 
         $rep = 1;
         //echo ($s + " fafsas");
@@ -156,11 +157,11 @@ if (isset($_POST['v'])) {
 
         echo ("<br>");
 
-        $sqlt = "INSERT INTO create_shift (start_shift, rep_non, monday, mon_from, mon_to, tuesday, tue_from, tue_to, wednesday, wed_from, wed_to, thursday, thu_from, thu_to, friday, fri_from, fri_to, saturday, sat_from, sat_to, sunday, sun_from, sun_to, shift_name)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sqlt = "INSERT INTO create_shift (start_shift, rep_non, monday, mon_from, mon_to, tuesday, tue_from, tue_to, wednesday, wed_from, wed_to, thursday, thu_from, thu_to, friday, fri_from, fri_to, saturday, sat_from, sat_to, sunday, sun_from, sun_to, shift_name, color)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt10 = $mysqli_sh2->prepare($sqlt);
         $stmt10->bind_param(
-            "siissississississississs",
+            "siissississississississss",
             $s,
             $rep,
             $mon,
@@ -184,7 +185,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             $sun,
             $sun_from,
             $sun_to,
-            $shi_name
+            $shi_name,
+            $pickc
         );
         if ($stmt10->execute()) {
             header("Location: create_shift.php");
