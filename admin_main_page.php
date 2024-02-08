@@ -36,8 +36,9 @@ $mysqli1->close();
     <title> Admin home page </title>
     <link rel="stylesheet" href="css/main_page.css">
     <!-- Boxicons CDN Link -->
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
 <body onload="startTime()">
@@ -46,8 +47,10 @@ $mysqli1->close();
 
         <!--start of navbar -->
         <!--source -  https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
+        <div class="container">
         <nav>
-            <div class="navbar">
+        
+            <div class="navbar container">
             
                 <i class='bx bx-menu'></i>
                 <div class="logo"><a href="admin_main_page.php">Home : <?= $cons ?> <?= htmlspecialchars($user["firstname"]) ?> <?= htmlspecialchars($user["middlename"]) ?> <?= htmlspecialchars($user["lastname"]) ?> </a></div>
@@ -60,24 +63,28 @@ $mysqli1->close();
                         <li>
                             <a href="#">EMPLOYEES</a>
                             <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-                            <ul class="em-sub-menu sub-menu">
+                            <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                <div >
                                 <li><a href="signup.php">ADD TO SYSTEM</a></li>
                                 <li><a href="list_of_employees.php">LIST</a></li>
                                 <li><a href="#">CHANGE DATA</a></li>
+                                <li><a href="rights.php">RIGTHS & ASSIGNMENT</a></li>
+                            </div>
                             </ul>
+
                         </li>
                         <li>
                             <a href="#">DATABASE</a>
                             <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-                            <ul class="htmlCss-sub-menu sub-menu">
+                            <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
                                 <li><a href="create_object.php">CREATE OBJECT</a></li>
                                 <li><a href="create_shift.php">CREATE SHIFT</a></li>
-                                <li><a href="#">CURRENT SCHEDULE</a></li>
+                                <li><a href="calendar.php">CURRENT SCHEDULE</a></li>
                                 <li class="more">
                                     <span><a href="#">More</a>
                                         <i class='bx bxs-chevron-right arrow more-arrow'></i>
                                     </span>
-                                    <ul class="more-sub-menu sub-menu">
+                                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
                                         <li><a href="#"></a></li>
                                         <li><a href="#">Pre-loader</a></li>
                                         <li><a href="#">Glassmorphism</a></li>
@@ -88,7 +95,7 @@ $mysqli1->close();
                         <li>
                             <a href="#">HISTORY</a>
                             <i class='bx bxs-chevron-down js-arrow arrow '></i>
-                            <ul class="js-sub-menu sub-menu">
+                            <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
                                 <li><a href="#">Dynamic Clock</a></li>
                                 <li><a href="#">Form Validation</a></li>
                                 <li><a href="#">Card Slider</a></li>
@@ -96,7 +103,7 @@ $mysqli1->close();
                             </ul>
                         </li>
                         <li><a href="#">STATISTICS</a></li>
-                        <li><a href="logout.php">LOG OUT</a></li>
+                        <li><a href="logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
                     </ul>
                 </div>
                
@@ -107,6 +114,7 @@ $mysqli1->close();
                     </div>
                 </div>
                 
+            
             </div>
         </nav>
         <script src="js/main_page.js"></script>
@@ -114,10 +122,11 @@ $mysqli1->close();
         <br>
         <br>
 
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
         <!--end of navbar -->
         <!-- Printing of  informations  -->
+        
         <p>Users first name : <?= htmlspecialchars($user["firstname"]) ?></p>
         <p>Users middle name : <?= htmlspecialchars($user["middlename"]) ?></p>
         <p>Users last name : <?= htmlspecialchars($user["lastname"]) ?></p>
@@ -126,7 +135,9 @@ $mysqli1->close();
         <p>Users phone : <?= htmlspecialchars($user["phone"]) ?></p>
         <p>Users password_hash : <?= htmlspecialchars($user["password_hash"]) ?></p>
         <p>Users position : <?= htmlspecialchars($user["position"]) ?></p>
+
         <div id="txt"></div>
+        </div>
     <?php else : ?>
     <?php endif; ?>
 </body>

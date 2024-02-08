@@ -37,7 +37,8 @@ while($row = mysqli_fetch_assoc($result)){
            //echo $firstname;
            
            echo "<br><button onClick='closebtn(this.id)' id='b".$idbtn.$id."'>". $firstname. " ".$middlename. " ". $lastname. " - ". $position . "</button>";
-}
+           //echo "<input type='hidden' id=hn".$idbtn.$id." value='".$id."'>";
+        }
 ?>
 
     <!--    <tr>

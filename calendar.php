@@ -6,6 +6,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
   <style>
     table,
     th,
@@ -89,6 +91,36 @@
 
 
 
+
+
+.myBox {
+border: none;
+font: 24px/36px sans-serif;
+width: 400px;
+height: 400px;
+overflow: scroll;
+}
+
+/* Scrollbar styles */
+/*::-webkit-scrollbar {
+width: 12px;
+height: 12px;
+}
+
+::-webkit-scrollbar-track {
+border: 1px solid yellowgreen;
+border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+background: yellowgreen;  
+border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #88ba1c;  
+}*/
+
   </style>
 </head>
 
@@ -96,10 +128,11 @@
   <?php
   $today = date("Y-m-d");
   ?>
+  <div class="container">
   <input type="hidden" id="kpk" name="kpk" value="2024-01">
-  <div style="margin: auto;width: 60%;">
+  <div >
     <input type="hidden" id="help" name="help">
-    <label id="hhia" name="hhia">asdasd</label>
+    <input type="hidden" id="help2" name="help2">
     <input type="hidden" id="hideYM">
     <form id="form1" name="form1" method="post">
 
@@ -110,7 +143,7 @@
           <span id="next" class="material-symbols-rounded">chevron_right</span>
         </div>
       </header>
-
+      <div style="width: 100%;height: 100%;overflow: scroll;">
       <div class="calendar">
         <table>
           <tr>
@@ -122,19 +155,12 @@
             </div>
           </table>
         </table>
-
+</div>
       </div>
 
 
       <div class="form-group">
-        <label for="email">Student Name:</label>
-        <input type="text" name="sname" class="form-control" id="name">
-      </div>
-      <div class="form-group">
-        <label for="pwd">Student email:</label>
-        <input type="text" name="email" class="form-control" id="email">
-      </div>
-      <input type="button" name="send" class="btn btn-primary" value="add data" id="butsend">
+
       <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
 
 
@@ -143,55 +169,35 @@
 
 
 
-    <table id="TVTVT">
-      <tr>
-        <th id="x0-0" name="x0-0" value="asdsa">asd</th>
-        <th id="x0-1">0-1</th>
-        <th id="x0-2">0-2</th>
-      </tr>
-      <tr>
-        <td id="x1-0">1-0</td>
-        <td id="x1-1">1-1</td>
-        <td id="x1-2">1-2</td>
-      </tr>
-      <tr>
-        <td id="x2-0">2-0</td>
-        <td id="x2-1">2-1</td>
-        <td id="x2-2">2-2</td>
-      </tr>
-    </table>
-    <button onClick="vl()"></button>
-    <input id="timssa" type="time" value="00:00">
-    <table id="table1" name="table1" class="table table-bordered">
-      <tbody>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>email</th>
-          <th>Action</th>
-        <tr>
-      </tbody>
-    </table>
+
+
+
   </div>
+  <div class="myBox">
+Efficient honorificabilitudinitatibus cross-media information without floccinaucinihilipilification cross-media value. Quickly maximize timely deliverables for real-time schemas plenipotentiary.
+</div>
+</div>
 
 
 
 
-
-  <h2>Modal Example</h2>
-
-<!-- Trigger/Open The Modal -->
-<button id="myBtn">Open Modal</button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
+  <div class='text-end'>
     <span class="close">&times;</span>
+    </div>
     <p>Search for employee..</p>
     <input type="text" id="live_search" autocomplete="off" placeholder="Search...">
     <br>
+    <input type="button" onclick="Vacant()" value="Vacant" >
+    <br>
+    <hr>
+    <br>
+    <hr>
     <div id="searchresult"></div>
   </div>
 
@@ -199,7 +205,7 @@
 
 
 <form>
-<input type="text" size="30" onkeyup="showResult(this.value)">
+<!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
 <div id="livesearch"></div>
 </form>
 <br>
@@ -212,6 +218,21 @@
   var btn = "";
   var idbtn = "xcxcz";
   var qkk = "alsd";
+  function Vacant(){
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    //let fkf = "bn"
+    
+    let chch = document.getElementById(idbtn);
+    let mj =idbtn.substring(1,9);
+    let vjvj = document.getElementById("h"+mj);
+    alert(mj);
+    vjvj.value= "";
+    chch.value = "vacant";
+    
+    
+
+  }
  function Open_name(clicked_id){
   var modal = document.getElementById("myModal");
 
@@ -223,6 +244,25 @@ var btn = document.getElementById(clicked_id);
 var span = document.getElementsByClassName("close")[0];
 modal.style.display = "block";
   //alert("hjkfashjk");
+  var input = document.getElementById("live_search").value;
+        //var qkk = "kldsa";
+        //var btna = "lasds";
+        //alert(input);
+        if(input != ""){
+           $.ajax({
+            url:"livesearch.php",
+            method: "POST",
+            data:{input : input, btns : idbtn},
+            success:function(data){
+              $("#searchresult").css("display", "inline");
+              $("#searchresult").html(data);
+            }
+           });
+        }else{
+          //alert(input);
+          $("#searchresult").css("display", "none");
+        }
+     
  }
 
 
@@ -256,14 +296,21 @@ modal.style.display = "block";
     //alert("hjkasd");
    let vva = clicked_id;
     let rr =vva.substring(1,9);
+    let mj =vva.substring(2,9);
+    var mjk =vva.substring(9);
     //alert(rr);
     let chch = document.getElementById(rr);
-    let hhl = document.getElementById("live_search");
-    hhl.value = "";
-    document.getElementById("searchresult").innerHTML = "";
-    let ttxx = vva.innerHTML;
+    let vjvj = document.getElementById("h"+mj);
+    //let hhl = document.getElementById("live_search");
+    //hhl.value = "";
+   
+
+    var ttxx = document.getElementById(vva).innerText;
+    //var ssxx = document.getElementById(vva).innerText;
     alert(ttxx);
     chch.value = ttxx;
+    vjvj.value = mjk;
+    document.getElementById("searchresult").innerHTML = "";
   }
 /*function showResult(str) {
   if (str.length==0) {
@@ -306,9 +353,11 @@ modal.style.display = "block";
         var from = new Array();
         var to = new Array();
         var date = new Array();
+        var nameid = new Array();
         var name = new Array();
         var id_shift = new Array();
         var id_shift_delete = new Array();
+        //var id_shift_delete = new Array();
         for (var x = 1; x <= 100; x++) {
           for (var i = 1; i <= 31; i++) {
             /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
@@ -333,6 +382,8 @@ modal.style.display = "block";
               to.push($("#tt" + q + "-" + p).val());
               from.push($("#tf" + q + "-" + p).val());
               id_shift.push($("#i00-" + p).val());
+              nameid.push($("#hn" + q + "-" + p).val());
+              name.push($("#bn" + q + "-" + p).val());
               var ids = $("#i00-" + p).val();
               if (id_shift_delete.includes(ids)) {
               } else {
@@ -350,11 +401,13 @@ modal.style.display = "block";
         var idArr = JSON.stringify(id_shift);
         var dateArr = JSON.stringify(date);
         var deleteArr = JSON.stringify(id_shift_delete);
+        var nameidArr = JSON.stringify(nameid);
+        var nameArr = JSON.stringify(name);
         var year_month = $("#current_load_date").val();
         $.ajax({
           url: "insert-ajax.php",
           type: "post",
-          data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr },
+          data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid : nameidArr, name : nameArr },
           success: function (data) {
             alert(data); /* alerts the response from php.*/
           }
@@ -363,6 +416,7 @@ modal.style.display = "block";
     });
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
 
@@ -385,6 +439,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
+  document.getElementById("searchresult").innerHTML = "";
 
 }
 
@@ -466,7 +521,7 @@ window.onclick = function(event) {
       let tet = "<input type='hidden' id='current_load_date' name='current_load_date' value='" + currYear + "-" + (currMonthNull) + "'>";
       liTag += `${tet}`;
 
-
+      var passedSavedata = [];
       for (let i = 1; i <= lastDateofMonth; i++) {
         if (i == 1) {
           <?php
@@ -630,27 +685,68 @@ window.onclick = function(event) {
           var lena = "<?php echo "$number" ?>";
           var tsaas = "1";
           var idp = JSON.stringify(passedID);
-          var Yp = JSON.parse(passedY);
-          var Mp = JSON.stringify(passedM);
+          var Yp = JSON.parse(currYear);
+          var Mp = JSON.stringify(currMonth);
           var ChA = JSON.stringify(passedCh);
           var passedSavedata1 = Array();
           var tes;
+          //alert(currYear);
+          var ssaz =currMonth +1;
+          var MPa = JSON.stringify(ssaz);
+          //alert(ssaz);
+          var a1sa = new Array; 
+
           $.ajax({
             type: "POST",
             url: "get-ajax.php",
-            dataType: "html",
+            dataType: "json",
+            cache: false,
+            async: false,
             data: {
-              id: idp, year: Yp, month: Mp, cha: ChA
+              id: idp, year: Yp, month: MPa, cha: ChA
             },
             success: function (data321) {
-              //alert(data);
+              //alert(data321);
+              document.getElementById("help2").value = data321;
               //var tes = JSON.parse(data);
               //tes =  JSON.stringify(data);
               //aja(data);
               //document.getElementById("help").innerHTML = data321;
               //r//eturn data;
+              a1sa = JSON.stringify(data321);
+
             }
           });
+          //let rrra = document.getElementById("help2").value;
+          var hhha =new Array();
+          var sks =new Array();
+          var qpw = [];
+          var bnm = "<?php echo "$number" ?>";
+          hhha = a1sa.split("]");
+          for(let i = 0; i< bnm;i++){
+            hhha[i] =hhha[i].substring(2);
+            //alert(hhha[i]);
+            passedSavedata[i] = [];
+            sks = hhha[i].split(",");
+            for(let j = 0; j< 32;j++){
+              passedSavedata[i][j] = sks[j].substring(1,sks[j].length-1);
+             //alert(qpw[j]);
+            }
+          }
+          //alert(qpw);
+          //alert(passedSavedata[0][0]);
+          /*alert(hhha[0]);
+          alert(hhha[1]);
+
+          alert(hhha[2]);
+
+          alert(hhha[3]);
+          alert(hhha[4]);
+          alert(hhha[5]);
+          alert(hhha[6]);
+          alert(hhha[7]);
+          alert(hhha[8]);*/
+
 
 
 
@@ -688,12 +784,12 @@ window.onclick = function(event) {
           <?php echo json_encode($color); ?>;
         var passedColorDark =
           <?php echo json_encode($colordark); ?>;
-        var passedSavedata =
-          <?php echo json_encode($saved_data); ?>;
+       /* var passedSavedata =
+          <?php //echo json_encode($saved_data); ?>;*/
         var passedID =
           <?php echo json_encode($idc); ?>;
         var tas = 0;
-
+    //alert(passedSavedata[0][2]);
 
 
         /** source https://www.geeksforgeeks.org/how-to-pass-variables-and-data-from-php-to-javascript/ */
@@ -717,10 +813,14 @@ window.onclick = function(event) {
         let xcx = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 10px;" onClick="canceled(this.id)">X</button>';
         let b1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
         let b2 = '">X</button><br><input type="button" id="bn';
-        let b3 = '" onClick="Open_name(this.id)" value="open">';
+        let b3 = '" onClick="Open_name(this.id)" value="';
+        let b6 = '"><input type="hidden" id="hn';
+        let b4 = '" value="';
+        let b5 = '">';
         let t1 = '<input type="time" id="tf';
         let t2 = '<input type="time" id="tt';
         let tv = '" value="';
+        let open  = 'vacant';
         let s = "background-color:#585858;color:white;";
         let ii = "";
 
@@ -744,9 +844,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -759,7 +859,21 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq);
               }
             } else if (passedArray[0][q] == 1) {
               let str1 = passedTime[0][q];
@@ -778,7 +892,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
             } else {
               let p = q + 1;
               if (i < 10) {
@@ -815,9 +929,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -830,7 +944,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
               }
             } else if (passedArray[1][q] == 1) {
               let str1 = passedTime[2][q];
@@ -849,7 +978,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
             } else {
               let p = q + 1;
               if (p < 10) {
@@ -887,9 +1016,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -902,7 +1031,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
               }
             } else if (passedArray[2][q] == 1) {
               let str1 = passedTime[4][q];
@@ -921,7 +1065,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
 
             } else {
               let p = q + 1;
@@ -960,9 +1104,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -975,7 +1119,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
               }
             } else if (passedArray[3][q] == 1) {
               let str1 = passedTime[6][q];
@@ -994,7 +1153,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
             } else {
               let p = q + 1;
               if (p < 10) {
@@ -1032,9 +1191,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1047,7 +1206,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
               }
             } else if (passedArray[4][q] == 1) {
               let str1 = passedTime[8][q];
@@ -1066,7 +1240,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
 
             } else {
               let p = q + 1;
@@ -1106,9 +1280,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1121,7 +1295,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq);
               }
             } else if (passedArray[5][q] == 1) {
               let str1 = passedTime[10][q];
@@ -1140,7 +1329,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
             } else {
               let p = q + 1;
               if (p < 10) {
@@ -1178,9 +1367,9 @@ window.onclick = function(event) {
 
               } else {
                 let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, str1.length - 13);
+                str1 = str1.substring(0, 5);
                 let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, str2.length - 3);
+                str2 = str2.substring(10, 15);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1193,7 +1382,22 @@ window.onclick = function(event) {
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+                var count = 0;
+              var char = 20;
+              var val3 = "";
+              for(;;){
+                let result = passedSavedata[q][i].charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = passedSavedata[q][i].substring(char);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
               }
             } else if (passedArray[6][q] == 1) {
               let str1 = passedTime[12][q];
@@ -1212,7 +1416,7 @@ window.onclick = function(event) {
               } else {
                 ii = i;
               }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3, qqq);
+              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
             } else {
               let p = q + 1;
               if (p < 10) {
@@ -1278,11 +1482,11 @@ window.onclick = function(event) {
         } else {
           date = new Date(); // pass the current date as date value
         }
-        first = 1;
+        //first = 1;
         renderCalendar(); // calling renderCalendar function
 
 
-        add_dat();
+        //add_dat();
 
 
       });
@@ -1325,6 +1529,7 @@ window.onclick = function(event) {
       var ChAb = JSON.stringify(passedChCH);
       var Cdsa = JSON.stringify(newww);
       var tess;
+      alert(newww);
       $.ajax({
         type: "POST",
         url: "get-ajax.php",
@@ -1394,17 +1599,37 @@ window.onclick = function(event) {
               if (chp !== null) {
               let final = "";
               let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-              let btn2 = '">V</button>';
+              let btn2 = '">V</button><br><input type="button" id="bn';
+              let b2 = '">X</button><br><input type="button" id="bn';
+              let btn3 = '" onClick="Open_name(this.id)" value="'
+              let btn6 = '"><input type="hidden" id="hn';
+              //let b3 = '" onClick="Open_name(this.id)" value="open"><input type="hidden" id="hn';
+              let btn4 = '" value="';
+              let btn5 = '">';
               let val = a1[x][i];
               let val1 = val.substring(0, 5);
               let val2 = val.substring(10, 15);
+              let val3 = "" /*val.substring(20)*/;
+              var count = 0;
+              var char = 20;
+              for(;;){
+                let result = val.charAt(char);
+               if(result != "/"){
+                val3 = val3 +result;
+                char++;
+               }else{
+                break;
+               }
+              }
+              char = char+2;
+              let namen = val.substring(char);
               let brr = "<br>";
               let tm1 = '<input type="time" id="tf';
               let tm2 = '<input type="time" id="tt';
               let tmv = '" value="';
               let tmc = '">';
               let asz = '<input type="time" id="tp01-001" value="00:00">';
-              final = tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2;
+              final = tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2+ fa+btn3+namen+btn6+fa+btn4+val3+btn5;
               chp.innerHTML = "";
               chp.innerHTML = final;
             }
@@ -1440,14 +1665,16 @@ window.onclick = function(event) {
       let cha = document.getElementById(result123);
       let final = "";
       let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-      let btn2 = '">x</button>'
+      let btn2 = '">x</button><br><input type="button" id="bn';
+      let btn3 = '" onClick="Open_name(this.id)" value="vacant"><input type="hidden" id="hn';
+      let btn4 = '" value="">';
       let val = "00:00";
       let brr = "<br>";
       let tm1 = '<input type="time" id="tf';
       let tm2 = '<input type="time" id="tt';
       let tmv = '" value="';
       let tmc = '">';
-      final = tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc + btn1 + result123 + btn2;
+      final = tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc + btn1 + result123 + btn2+ result123 +btn3 + result123 + btn4;
       cha.innerHTML = final;
     }
     function canceled(clicked_id) {

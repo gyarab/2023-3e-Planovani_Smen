@@ -66,8 +66,10 @@ $mysqli_sav = require __DIR__ . "/database.php";
                   while ($rows_get = $result_get->fetch_assoc()) {
                   $get_from = $rows_get['saved_from'];
                   $get_to = $rows_get['saved_to'];
+                  $get_id = $rows_get['id_user'];
+                  $get_name = $rows_get['user_name'];
                   }
-                  $saved_data[$x][$i] = $get_from."//".$get_to;
+                  $saved_data[$x][$i] = $get_from."//".$get_to."//".$get_id."//".$get_name;
                 }
               }
           }

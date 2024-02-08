@@ -5,6 +5,8 @@ $toArr = json_decode($_POST["to"]);
 $idArr = json_decode($_POST["id_shift"]);
 $dateArr = json_decode($_POST["date"]);
 $deleteArr = json_decode($_POST["id_delete"]);
+$namesidArr = json_decode($_POST["namesid"]);
+$nameArr = json_decode($_POST["name"]);
 $YM = $_POST['dateym'];
 $time = time();
 $mysqli_sav = require __DIR__ . "/database.php";
@@ -21,14 +23,14 @@ for ($x = 0; $x < count($fromArr); $x++) {
 
         if (mysqli_num_rows($check_unique_row) == 0) {
 
-            $sql = "INSERT INTO saved_shift_data (saved_date, id_of_shift, saved_from, saved_to, up_timestamp)
+            $sql = "INSERT INTO saved_shift_data (saved_date, id_of_shift, saved_from, saved_to, up_timestamp, id_user, user_name)
 VALUES
-('$dateArr[$x]','$idArr[$x]','$fromArr[$x]','$toArr[$x]','$time')";
+('$dateArr[$x]','$idArr[$x]','$fromArr[$x]','$toArr[$x]','$time','$namesidArr[$x]','$nameArr[$x]')";
             if (!mysqli_query($con, $sql)) {
                 die('Error: ' . mysqli_error($con));
             }
         } else {
-            $sqlsav = "UPDATE saved_shift_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , up_timestamp='$time' WHERE saved_date='$dateArr[$x]' AND id_of_shift='$idArr[$x]'";
+            $sqlsav = "UPDATE saved_shift_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , up_timestamp='$time', id_user='$namesidArr[$x]', user_name='$nameArr[$x]' WHERE saved_date='$dateArr[$x]' AND id_of_shift='$idArr[$x]'";
             $con->query($sqlsav);
         }
     }

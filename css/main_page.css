@@ -30,7 +30,7 @@ nav{
 }
 nav .navbar{
   height: 100%;
-  max-width: 1450px;
+  /*max-width: 1450px;*/
   width: 100%;
   display: flex;
   align-items: center;
@@ -39,6 +39,8 @@ nav .navbar{
   
    /*background: red; */
   padding: 0 50px;
+  padding-left:  1%;
+  padding-right:  1%;
 }
 .navbar .logo a{
   font-size: 30px;
@@ -254,6 +256,8 @@ nav .navbar .links li{
 nav .navbar .links li .sub-menu{
   position: relative;
   top: 0;
+  /*text-align: left;*/
+  flex-direction: column;
   box-shadow: none;
   display: none;
 }
@@ -269,6 +273,7 @@ nav .navbar .links li .sub-menu li{
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 .links li:hover .htmlcss-arrow,
 .links li:hover .js-arrow,
