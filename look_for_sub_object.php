@@ -7,7 +7,7 @@ $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
 $data2 = array();
 $data3 = array();
 $numberval = array();
-$look1= array();
+$look_arr = array();
 
 $input = $_POST['input'];
 if (mysqli_num_rows($fetch) > 0) {
@@ -26,9 +26,9 @@ if (mysqli_num_rows($fetch) > 0) {
 $find2[] = array();
 $look = 0;
 for ($x = 0; $x < count($data2); $x++) {
-    if ($data3[$x] == null && $data1[$x] == $input) {
+    if ($data1[$x] == $input) {
         static $dd = 1;
-        $look = $data1[$x];
+        //$look = $data1[$x];
         /*if ($input == $data1[$x]){
             $find2[1] = $look;
             $find2[0] = 0;
@@ -36,13 +36,7 @@ for ($x = 0; $x < count($data2); $x++) {
             echo json_encode($find2);
             //break;
         }*/
-
-        echo "<div class='form-check form-check-inline'>";
-        echo "<input class='form-check-input' style='display:inline;' type='checkbox' id='inlineCheckbox".$data1[$x]."' onclick='obj_click(this.value)' value='".$data1[$x]."'>";
-        echo "<label class='form-check-label' style='display:inline;' for='inlineCheckbox".$data1[$x]."'>".$data2[$x]."</label>";
-        echo "</div>";
-
-
+        
         $search = $data1[$x] . "";
         $numberval[$count] = $data1[$x] . "";
         $count = 1;
@@ -54,23 +48,23 @@ for ($x = 0; $x < count($data2); $x++) {
 
         for ($h = 0; $h < count($data2); $h++) {
             if ($search == $data4[$h]) {
-                sub_object($search, $data1, $data2, $data3, $data4, $find2, $look, $input);
+            sub_object($search, $data1, $data2, $data3, $data4, $find2, $look, $input/*, $look_arr*/);
                 $row++;
                 break;
             }
         }
 
-        break;
-
-
+     break;
     }
 
 }
 
-function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input)
+function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input/*, $look_arr*/)
 {
     static $dd = 1;
+    static $ff = 0;
     static $find3;
+    global $look_arr;
     $find = 0;
     for ($i = 0; $i < count($dat2); $i++) {
         if ($searching == $dat4[$i]) {
@@ -87,29 +81,33 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
                 echo json_encode($find2);
                 //break;
             }*/
-            echo "<div class='form-check form-check-inline'>";
-            echo "<input class='form-check-input' style='display:inline;' type='checkbox' id='inlineCheckbox".$dat1[$i]."' onclick='obj_click(this.value)' value='".$dat1[$i]."'>";
-            echo "<label class='form-check-label' style='display:inline;' for='inlineCheckbox".$dat1[$i]."'>".$dat2[$i]."</label>";
-            echo "</div>";
+            //echo /*json_encode(*/$dat1[$i]/*)*/. ",";
+            //$p = $dat1[$i]."!";
+            
+            //echo /*json_encode*/($p);
+            array_push($look_arr,$dat1[$i]);
+            //$look_arr[] =  $dat1[$i];
             $dd++;
+            $ff++;
             $row = 0;
             $sea = $dat1[$i] . "";
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-                        sub_object($sea, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input);
+                    sub_object($sea, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input/*, $look_arr*/);
                         break;
                     }
                 }
             }
+            //return $dat1[$i];
 
-          
+
         }
     }
 
-
+  //return $look_arr;
 }
-//$look = 0;
-//echo json_encode($find3);
+$looka = 0;
+echo json_encode($look_arr);
 //echo $look;
 ?>

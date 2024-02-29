@@ -17,6 +17,18 @@ if (isset($_SESSION["user2_id"])) {
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
+
+    /*$sqlp = "SELECT * FROM user2
+    WHERE position = {$_SESSION["user2_position"]}";*/
+    $sqlp = "SELECT position FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $resultp = $mysqli->query($sqlp);
+
+    //$userp = $resultp->fetch_assoc();
+    while ($rrr = $resultp->fetch_assoc()) {
+        $userp = $rrr['position'];
+
+    }
+
 }
 
 $mysqli1 = require __DIR__ . "/database.php";
@@ -153,7 +165,7 @@ $mysqli1->close();
 
 <body onload="startTime()">
 
-    <?php if (isset($user)): ?>
+    <?php if (isset($user) && $userp == "admin"): ?>
 
 
         <div class="container">
@@ -263,95 +275,203 @@ $mysqli1->close();
 
                     <h5 style="display:inline;"> &nbsp;&nbsp;Status : &nbsp;&nbsp;</h5>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" style="display:inline;" type="checkbox" id="inlineCheckbox1"
-                            value="option1">
+                        <input class="form-check-input" style="display:inline;" onclick="pos_click(this.value)" name="pos"
+                            type="checkbox" id="inlineCheckbox1" value="admin">
                         <label class="form-check-label" style="display:inline;" for="inlineCheckbox1">Admin</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" style="display:inline;" type="checkbox" id="inlineCheckbox2"
-                            value="option2">
+                        <input class="form-check-input" style="display:inline;" onclick="pos_click(this.value)" name="pos"
+                            type="checkbox" id="inlineCheckbox2" value="manager">
                         <label class="form-check-label" style="display:inline;" for="inlineCheckbox2">Manager</label>
 
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" style="display:inline;" type="checkbox" id="inlineCheckbox3"
-                            value="option2">
+                        <input class="form-check-input" style="display:inline;" onclick="pos_click(this.value)" name="pos"
+                            type="checkbox" id="inlineCheckbox3" value="fulltime_employee">
                         <label class="form-check-label" style="display:inline;" for="inlineCheckbox3">Full-time
                             employee</label>
 
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" style="display:inline;" type="checkbox" id="inlineCheckbox4"
-                            value="option2">
+                        <input class="form-check-input" style="display:inline;" onclick="pos_click(this.value)" name="pos"
+                            type="checkbox" id="inlineCheckbox4" value="parttime_employee">
                         <label class="form-check-label" style="display:inline;" for="inlineCheckbox4">Part-time
                             employee</label>
                     </div>
+                    <script>
+                        var efdg = <?php echo json_encode($userp); ?>;
+                        //alert(efdg);
+                        var obj_search = new Array();
+                        var pos_search = new Array();
+                        function pos_click(clicked_val) {
+                            /*if (this.checked) {
+                                alert(this.value);
+                            }*/
+                            if (pos_search.includes(clicked_val) == true) {
+                                for (let i = 0; i < pos_search.length; i++) {
+                                    if (pos_search[i] === clicked_val) {
+                                        pos_search.splice(i, 1);
+                                        /*console.log("Removed element: " + spliced);
+                                        console.log("Remaining elements: " + arr);*/
+                                    }
+                                }
+                            } else {
+                                pos_search.push(clicked_val);
+                                //alert(pos_search);
+                            }
+                            //var input = $(this).val();
+                            var input = document.getElementById('live_search').value;
+                            $.ajax({
+                                url: "search_employee.php",
+                                method: "POST",
+                                data: { input: input, position: pos_search, object: obj_search, shift: shi_search },
+                                success: function (data) {
+                                    $("#searchresult").css("display", "inline");
+                                    $("#searchresult").html(data);
+                                }
+                            });
+
+                        }
+                    </script>
                     <br>
                     <br>
                     <h5 style="display:inline;"> &nbsp;&nbsp;Objects : &nbsp;&nbsp;</h5>
-                    <br>
+                    
                     <Select id="select_obj" style="display: inline">
-                                <!--<option value="0">Pick a object</option>-->
-                                <?php
-                                $counter = 0;
-                                if (mysqli_num_rows($result6) > 0) {
-                                    while ($row6 = mysqli_fetch_assoc($result6)) {
-                                        $id_obj = $row6['id_object'];
-                                        $name_obj = $row6['object_name'];
-                                        if ($counter == 0) {
-                                            $pick = $id_obj;
-                                        }
-                                        $counter++;
-                                        ?>
-                                        <option value="<?php echo $id_obj; ?>" seleted="selected">
-                                            <?php echo $name_obj; ?>
-                                        </option>
+                        <!--<option value="0">Pick a object</option>-->
+                        <?php
+                        $counter = 0;
+                        if (mysqli_num_rows($result6) > 0) {
+                            while ($row6 = mysqli_fetch_assoc($result6)) {
+                                $id_obj = $row6['id_object'];
+                                $name_obj = $row6['object_name'];
+                                if ($counter == 0) {
+                                    $pick = $id_obj;
+                                }
+                                $counter++;
+                                ?>
+                                <option value="<?php echo $id_obj; ?>" seleted="selected">
+                                    <?php echo $name_obj; ?>
+                                </option>
 
-                                        <?php
+                                <?php
+                            }
+                        }
+                        ?>
+                    </Select>
+                
+                    <script>
+                        var obj_search = new Array();
+                        function obj_click(clicked_val) {
+                            //alert("is");
+                            if (obj_search.includes(clicked_val) == true) {
+                                for (let i = 0; i < obj_search.length; i++) {
+                                    if (obj_search[i] === clicked_val) {
+                                        obj_search.splice(i, 1);
+                                        /*console.log("Removed element: " + spliced);
+                                        console.log("Remaining elements: " + arr);*/
                                     }
                                 }
-                                ?>
-                            </Select>
+                            } else {
+                                obj_search.push(clicked_val);
+                                //alert(pos_search);
+                            }
+                            var input = document.getElementById('live_search').value;
+                            $.ajax({
+                                url: "search_employee.php",
+                                method: "POST",
+                                data: { input: input, position: pos_search, object: obj_search, shift: shi_search },
+                                success: function (data) {
+                                    $("#searchresult").css("display", "inline");
+                                    $("#searchresult").html(data);
+                                }
+                            });
+                        }
+                        var shi_search = new Array();
+                        function shift_search(clicked_val) {
+                            //alert("vgfh");
+                            if (shi_search.includes(clicked_val) == true) {
+                                for (let i = 0; i < shi_search.length; i++) {
+                                    if (shi_search[i] === clicked_val) {
+                                        shi_search.splice(i, 1);
+                                    }
+                                }
+                            } else {
+                                shi_search.push(clicked_val);
+                            }
+                            //alert(shi_search);
+                            var input = document.getElementById('live_search').value;
+                            $.ajax({
+                                url: "search_employee.php",
+                                method: "POST",
+                                data: { input: input, position: pos_search, object: obj_search, shift: shi_search },
+                                success: function (data) {
+                                    $("#searchresult").css("display", "inline");
+                                    $("#searchresult").html(data);
+                                }
+                            });
+                        }
 
-                            <script>
+
+
+
+
+                    </script>
+
+                    <script>
                         var input_obj =
-                        <?php echo json_encode($pick); ?>;
+                            <?php echo json_encode($pick); ?>;
                         $.ajax({
-                          url: "load_list_object.php",
-                          method: "POST",
-                          data: { input: input_obj },
-                          success: function (data) {
-                            $("#object").html(data);
-                              
-                          }
+                            url: "load_list_object.php",
+                            method: "POST",
+                            data: { input: input_obj },
+                            success: function (data) {
+                                $("#object").html(data);
+
+                            }
                         });
 
                         $('#select_obj').change(function () {
-                        var inp = $(this).val();
-                        $.ajax({
-                          url: "load_list_object.php",
-                          method: "POST",
-                          data: { input: inp },
-                          success: function (data) {
-                            $("#object").html(data);
-                              
-                          }
-                        });
-                      });
-                            </script>
-                            <div id="object" style="display:inline;">
+                            bj_search = [];
+                            obj_search = [];
+                            shi_search = [];
+                            var inp = $(this).val();
+                            $.ajax({
+                                url: "load_list_object.php",
+                                method: "POST",
+                                data: { input: inp },
+                                success: function (data) {
+                                    $("#object").html(data);
 
-                            </div>
+                                }
+                            });
+
+
+                            $.ajax({
+                                url: "load_list_shift.php",
+                                method: "POST",
+                                data: { input: inp },
+                                success: function (data) {
+                                    //$("#searchresult").css("display", "inline");
+                                    $("#shi_load").html(data);
+                                }
+                            });
+
+                        });
+                    </script>
+                    <div id="object" style="display:inline;">
+
+                    </div>
                     <?php
                     /**Repeats print of rows */
                     while ($rowsob = $result4->fetch_assoc()) {
                         ?>
                         <!--<div class="form-check form-check-inline">
                             <input class="form-check-input" style="display:inline;" type="checkbox"
-                                id="inlineCheckbox<?php //echo $rowsob['id_object']; ?>" value="option2">
+                                id="inlineCheckbox<?php //echo $rowsob['id_object'];        ?>" value="option2">
                             <label class="form-check-label" style="display:inline;"
-                                for="inlineCheckbox<?php // echo $rowsob['id_object']; ?>">
-                                <?php // echo $rowsob['object_name']; ?>
+                                for="inlineCheckbox<?php // echo $rowsob['id_object'];        ?>">
+                                <?php // echo $rowsob['object_name'];        ?>
                             </label>
                         </div>-->
 
@@ -363,29 +483,32 @@ $mysqli1->close();
                     <br>
                     <br>
                     <h5 style="display:inline;"> &nbsp;&nbsp;Shift : &nbsp;&nbsp;</h5>
-                    <?php
-                    /**Repeats print of rows */
-                    $arr_sh = array();
-                    while ($rowssh = $result5->fetch_assoc()) {
-                        if (in_array($rowssh['shift_name'], $arr_sh)) { 
-                    }else{
-                        ?>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" style="display:inline;" type="checkbox"
-                                id="inlineCheckbox<?php echo $rowssh['id_shift']; ?>" value="option2">
-                            <label class="form-check-label" style="display:inline;"
-                                for="inlineCheckbox<?php echo $rowssh['id_shift']; ?>">
-                                <?php echo $rowssh['shift_name']; ?>
-                            </label>
-                        </div>
-
-
+                    <div id="shi_load" style="display:inline;">
                         <?php
-                        array_push($arr_sh,$rowssh['shift_name']);
-                    }
-                   
-                    }
-                    ?>
+                        /**Repeats print of rows */
+                        /*$arr_sh = array();
+                        while ($rowssh = $result5->fetch_assoc()) {
+                            if (in_array($rowssh['shift_name'], $arr_sh)) {
+                            } else {
+                                ?>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" style="display:inline;" type="checkbox"
+                                        id="sh<?php echo $rowssh['id_shift']; ?>" value="option2">
+                                    <label class="form-check-label" style="display:inline;" for="sh<?php echo $rowssh['id_shift']; ?>">
+                                        <?php echo $rowssh['shift_name']; ?>
+                                    </label>
+                                </div>
+
+
+                                <?php
+                                array_push($arr_sh, $rowssh['shift_name']);
+                            }
+
+                        }*/
+                        ?>
+
+                        <!--<div id="shi_load">-->
+                    </div>
                 </form>
                 <!--<input type="button" onclick="Vacant()" value="Sear" >-->
                 <br>
@@ -395,16 +518,29 @@ $mysqli1->close();
             <div id="searchresult">
 
                 <script>
+                    //alert(input_obj);
+                    $.ajax({
+                        url: "load_list_shift.php",
+                        method: "POST",
+                        data: { input: input_obj },
+                        success: function (data) {
+                            //$("#searchresult").css("display", "inline");
+                            $("#shi_load").html(data);
+                        }
+                    });
+
+
                     $(document).ready(function () {
 
                         $("#live_search").keyup(function () {
+                            //alert(obj_search);
 
                             var input = $(this).val();
 
                             $.ajax({
                                 url: "search_employee.php",
                                 method: "POST",
-                                data: { input: input },
+                                data: { input: input, position: pos_search, object: obj_search, shift: shi_search },
                                 success: function (data) {
                                     $("#searchresult").css("display", "inline");
                                     $("#searchresult").html(data);
@@ -413,7 +549,8 @@ $mysqli1->close();
                         });
                     });
 
-
+                    var man_arr = new Array();
+                    var em_arr = new Array();
                 </script>
                 <?php
                 /**Repeats print of rows */
@@ -460,13 +597,128 @@ $mysqli1->close();
                                 <?php echo $rows['phone']; ?>
                             </p>
                             <span class="popuptext" id="<?php echo $rows['id'] ?> pop2">Phone copied</span>
+                            <!--<div class="row">-->
+                            <?php
+                            if ($rows['position'] == "manager") {
+                                ?>
+                                <br>
+                                <br>
+                                <font size="+1"><label>Editing rights for :</label></font>
+                                <br>
+                                <div id="lr<?php echo $rows['id'] ?>"></div>
+
+                                <script>man_arr.push(<?php echo $rows['id'] ?>);</script>
+                                <!--<script>
+                                    //man_arr.push(<?php //echo $rows['id']        ?>);
+                                                            /*man_load();
+                                                            function man_load(){
+                                                            $.ajax({
+                                                                url: "load_rights_manager.php",
+                                                                method: "POST",
+                                                                data: { input: <?php //echo $rows['id']        ?> },
+                                    success: function (data) {
+                                        //$("#searchresult").css("display", "inline");
+                                        $("#rlr<?php //echo $rows['id']        ?>").html(data);
+                                        //alert(data);
+                                    }
+                                                            });
+                                                            }* /
+                                </script>-->
+                                <?php
+
+                            }
+                            if ($rows['position'] != "manager") { ?>
+
+                                <?php
+                            }
+                            ?>
+
+                            <!--<font size="+1"><label>Assigned shifts :</label></font>
+                                <br>-->
+                            <div id="sr<?php echo $rows['id'] ?>"></div>
+                            <!--</div>-->
+                            <script>em_arr.push(<?php echo $rows['id'] ?>);</script>
+
+
+
+
                         </div>
+
 
                     </div>
                     <br>
                     <?php
                 }
                 ?>
+                <script>
+                    /*if (man_arr.length != 0) {
+                        //alert(man_arr);
+                        for (let i = 0; i < man_arr.length; i++) {
+                            var mm = man_arr[i];
+                            $.ajax({
+                                url: "load_rights_manager.php",
+                                method: "POST",
+                                data: { input: mm },
+                                success: function (data) {
+                                    $("#lr" + mm).html(data);
+                                }
+                            });
+                        }
+                    }*/
+                    /*if (em_arr.length != 0) {
+                        //alert(man_arr);
+                        for (let i = 0; i < em_arr.length; i++) {
+                          //alert(em_arr[i]);
+                            var pm = em_arr[i];
+                            //alert("hjgasd");
+                                $.ajax({
+                                    url: "load_assignment_employee.php",
+                                    method: "POST",
+                                    data: { input: pm },
+                                    success: function (data) {
+                                        //$("#searchresult").css("display", "inline");
+                                        $("#sr"+mm).html(data);
+                                        alert(data);
+                                    }
+                            });
+                        }
+                    }*/
+                    var pm;
+                    if (em_arr.length != 0) {
+                        for (var i = 0; i < em_arr.length; i++) {
+                            shi(em_arr[i]);
+                        }
+                    }
+                    if (man_arr.length != 0) {
+                        for (var i = 0; i < man_arr.length; i++) {
+                            rig(man_arr[i]);
+                        }
+                    }
+                    function shi(index) {
+                        $.ajax({
+                            url: "load_assignment_employee.php",
+                            method: "POST",
+                            data: { input: index },
+                            success: function (data) {
+                                //$("#searchresult").css("display", "inline");
+                                $("#sr" + index).html(data);
+                                //alert(data);
+                            }
+                        });
+                    }
+                    function rig(index) {
+
+                        $.ajax({
+                            url: "load_rights_manager.php",
+                            method: "POST",
+                            data: { input: index },
+                            success: function (data) {
+                                $("#lr" + index).html(data);
+                            }
+                        });
+
+                    }
+                </script>
             </div>
 
         </div>

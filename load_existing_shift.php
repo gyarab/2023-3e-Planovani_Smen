@@ -12,7 +12,7 @@ $fetch2 = mysqli_query($conn2, "SELECT * FROM list_of_objects");
 $data2 = array();
 $data3 = array();
 $numberval = array();
-
+$type = $_POST['type'];
 
 if (mysqli_num_rows($fetch2) > 0) {
   /**Sorting data alphabetically */
@@ -26,6 +26,8 @@ if (mysqli_num_rows($fetch2) > 0) {
 }
 
 $input = $_POST['input'];
+
+//$type = 1;
 
 for ($x = 0; $x < count($data2); $x++) {
     if ($data1[$x] == $input) {
@@ -96,12 +98,13 @@ for ($x = 0; $x < count($data2); $x++) {
     //echo "</ul>";  
 
   }
-
+ 
   //certain_shift();
 function certain_shift($dat){
+    global $type;
     $mysqli = require __DIR__ . "/database.php";
     $conn = new mysqli($host, $username, $password, $dbname);
-$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' ");
+$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' /*ORDER BY object_name, shift_name*/ ");
 
 $id_shift = array();
 $start_shift = array();
@@ -174,7 +177,7 @@ for ($x = 0; $x < count($id_shift); $x++) {
     echo "<div class='row' >";
     echo "<div class='col-8'>";
    // $n1 = 
-    echo "<h6>".$object_name[$x]." - ".$shift_name[$x]."</h6>";
+    echo "<h6 id='h_obj-".$id_shift[$x]."' style='display:inline'>".$object_name[$x]." - </h6><h6 id='h_shi-".$id_shift[$x]."' style='display:inline'>".$shift_name[$x]."</h6>";
     echo "</div>";
     echo "<div class='col-4'>";
     echo "<div class='text-end'>";
@@ -233,7 +236,16 @@ for ($x = 0; $x < count($id_shift); $x++) {
         echo "Sunday: ". substr($sun_from[$x], 0, -3)." - ".substr($sun_to[$x], 0, -3)."<br><br>";
     }
     echo "</p>";
+    //echo "<div class='bottom-center'>";
+    //$type2 = 1;
+    //echo "<p>tue".$input."</p>";
+    //$tsay = $input;
+    if($type == 1){
     echo "<input type='button' class='btn btn-primary' id='edit-".$id_shift[$x]."' onclick='Open_edit(this.id)' value='EDIT'>";
+    }else{
+    echo "<input type='button' class='btn btn-primary' id='edit-".$id_shift[$x]."' onclick='Select_sh(this.id)' value='SELECT'>";
+    }
+    //echo "</div>";
     echo "</center>";
     echo "<br>";
     echo "</div>";

@@ -1217,7 +1217,7 @@ $mysqli1->close();
           <br>
 
           <script>
-
+            var typ_btn = 1;
             var inp0 =
               <?php echo json_encode($first); ?>;
             $.ajax({
@@ -1225,7 +1225,7 @@ $mysqli1->close();
 
               url: "load_existing_shift.php",
               method: "POST",
-              data: { input: inp0 },
+              data: { input: inp0, type : typ_btn },
               success: function (data) {
                 $("#shift_ex_load").html(data);
               }
@@ -1239,7 +1239,7 @@ $mysqli1->close();
 
                 url: "load_existing_shift.php",
                 method: "POST",
-                data: { input: inp },
+                data: { input: inp, type : typ_btn  },
                 success: function (data) {
                   $("#shift_ex_load").html(data);
                 }
