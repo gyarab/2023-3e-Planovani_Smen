@@ -1,13 +1,43 @@
+<?php
+
+session_start();
+
+if (isset($_SESSION["user2_id"])) {
+
+  $mysqli = require __DIR__ . "/database.php";
+
+  $sql = "SELECT * FROM user2
+            WHERE id = {$_SESSION["user2_id"]}";
+
+  $result = $mysqli->query($sql);
+
+  $user = $result->fetch_assoc();
+  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $resultp = $mysqli->query($sqlp);
+  while ($rrr = $resultp->fetch_assoc()) {
+    $userp = $rrr['position'];
+    $userid = $rrr['id'];
+
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+  <!--<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">-->
+  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>-->
+  <link rel="stylesheet" href="css/main_page.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     table,
     th,
@@ -38,9 +68,9 @@
     /* tr:hover {
       background-color: #e8e8e8;
     }*/
-    .container {
+    /*.container {
       position: relative;
-    }
+    }*/
 
     .topright {
       position: absolute;
@@ -52,57 +82,68 @@
 
 
     .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1;
+      /* Sit on top */
+      padding-top: 100px;
+      /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow: auto;
+      /* Enable scroll if needed */
+      background-color: rgb(0, 0, 0);
+      /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4);
+      /* Black w/ opacity */
+    }
 
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
 
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
 
 
-.myBox {
-border: none;
-font: 24px/36px sans-serif;
-width: 400px;
-height: 400px;
-overflow: scroll;
-}
 
-/* Scrollbar styles */
-/*::-webkit-scrollbar {
+
+    .myBox {
+      border: none;
+      font: 24px/36px sans-serif;
+      width: 400px;
+      height: 400px;
+      overflow: scroll;
+    }
+    p { font-size: 30px; 
+    }
+
+    /* Scrollbar styles */
+    /*::-webkit-scrollbar {
 width: 12px;
 height: 12px;
 }
@@ -120,1577 +161,1757 @@ border-radius: 10px;
 ::-webkit-scrollbar-thumb:hover {
 background: #88ba1c;  
 }*/
-
   </style>
 </head>
 
 <body>
-  <?php
-  $today = date("Y-m-d");
-  ?>
-  <div class="container">
-  <input type="hidden" id="kpk" name="kpk" value="2024-01">
-  <div >
-    <input type="hidden" id="help" name="help">
-    <input type="hidden" id="help2" name="help2">
-    <input type="hidden" id="hideYM">
-    <form id="form1" name="form1" method="post">
+  <?php if (isset($user) && $userp == "admin"): ?>
+    <?php
+    $today = date("Y-m-d");
+    ?>
 
-      <header>
-        <p class="current-date"></p>
-        <div class="icons">
-          <span id="prev" class="material-symbols-rounded">chevron_left</span>
-          <span id="next" class="material-symbols-rounded">chevron_right</span>
-        </div>
-      </header>
-      <div style="width: 100%;height: 100%;overflow: scroll;">
-      <div class="calendar">
-        <table>
-          <tr>
-          </tr>
-          <table class="days" style="border-collapse:collapse;">
-            <div class="hoverTable">
-              <tr>
-              </tr>
+
+    <div class="container">
+
+      <nav>
+
+        <div class="navbar container">
+
+          <i class='bx bx-menu'></i>
+          <div class="logo"><a href="admin_main_page.php" style="padding-left: 0px;">Home :
+              <?= $cons ?>
+              <?= htmlspecialchars($user["firstname"]) ?>
+              <?= htmlspecialchars($user["middlename"]) ?>
+              <?= htmlspecialchars($user["lastname"]) ?>
+            </a></div>
+          <div class="nav-links">
+            <div class="sidebar-logo">
+              <span class="logo-name">Home page</span>
+              <i class='bx bx-x'></i>
             </div>
-          </table>
-        </table>
-</div>
+            <ul class="links">
+              <li>
+                <a href="#">EMPLOYEES</a>
+                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                  <div>
+                    <li><a href="signup.php">ADD TO SYSTEM</a></li>
+                    <li><a href="list_of_employees.php">LIST</a></li>
+                    <li><a href="#">CHANGE DATA</a></li>
+                    <li><a href="rights.php">RIGTHS & ASSIGNMENT</a></li>
+                  </div>
+                </ul>
+
+              </li>
+              <li>
+                <a href="#">DATABASE</a>
+                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="create_object.php">CREATE OBJECT</a></li>
+                  <li><a href="create_shift.php">CREATE SHIFT</a></li>
+                  <li><a href="calendar.php">CURRENT SCHEDULE</a></li>
+                  <li class="more">
+                    <span><a href="#">More</a>
+                      <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                    </span>
+                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                      <li><a href="#"></a></li>
+                      <li><a href="#">Pre-loader</a></li>
+                      <li><a href="#">Glassmorphism</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">HISTORY</a>
+                <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="#">Dynamic Clock</a></li>
+                  <li><a href="#">Form Validation</a></li>
+                  <li><a href="#">Card Slider</a></li>
+                  <li><a href="#">Complete Website</a></li>
+                </ul>
+              </li>
+              <li><a href="#">STATISTICS</a></li>
+              <li><a href="logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+            </ul>
+          </div>
+
+          <div class="search-box">
+            <i class='bx bx-search'></i>
+            <div class="input-box">
+              <input type="text" placeholder="Search...">
+            </div>
+          </div>
+
+
+        </div>
+      </nav>
+      <script src="js/main_page.js"></script>
+      <br>
+      <br>
+      <br>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container">
+
+      <input type="hidden" id="kpk" name="kpk" value="2024-01">
+      <div>
+        <input type="hidden" id="help" name="help">
+        <input type="hidden" id="help2" name="help2">
+        <input type="hidden" id="hideYM">
+        <form id="form1" name="form1" method="post">
+
+          <header>
+            <br>
+            <br>
+            <br>
+            <br>
+            <center>
+              <h1 class="current-date"></h1>
+            </center>
+            <div class="icons">
+              <span id="prev" class="material-symbols-rounded" style="float:left"><i class="bi bi-arrow-left-circle h2"></i></span>
+              <h2 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h2>
+              <span id="next" class="material-symbols-rounded" style="float:right"><i class="bi bi-arrow-right-circle h2"></i></span>
+              <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
+            </div>
+          </header>
+           <br>
+           <br>
+           <div style="float: left">
+          <select class="form-select form-select-sm" name="option" id="option" style="font-size:15px">
+            <?php
+            $mysqli2 = require __DIR__ . "/database.php";
+            $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
+            $result3 = $mysqli2->query($sql2);
+            $mysqli2->close();
+            $counter = 0;
+            while ($rows_dat = mysqli_fetch_assoc($result3)) {
+              if (null == $rows_dat['superior_object_name']) {
+                if ($counter == 0) {
+                  $first = $rows_dat['id_object'];
+                }
+                $counter++;
+                ?>
+                <option style="font-size:15px" value="<?php echo $rows_dat['id_object'] ?>">
+                  <?php echo $rows_dat['object_name']; ?>
+                </option>
+                <?php
+              }
+            }
+            ?>
+          </select>
+          </div>
+          <br>
+          <br>
+          <br>
+
+
+          <div style="width: 100%;height: 1000px;overflow: auto; border: solid #777">
+            <div class="calendar">
+              <table>
+                <tr>
+                </tr>
+                <table class="days" style="border-collapse:collapse;">
+                  <div class="hoverTable">
+                    <tr>
+                    </tr>
+                  </div>
+                </table>
+              </table>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+
+            <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
+          </div>
+
+
+        </form>
+
+
+
+
+
+
       </div>
 
-
-      <div class="form-group">
-
-      <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
-
-
-
-    </form>
-
-
-
-
-
-
-  </div>
-  <div class="myBox">
-Efficient honorificabilitudinitatibus cross-media information without floccinaucinihilipilification cross-media value. Quickly maximize timely deliverables for real-time schemas plenipotentiary.
-</div>
-</div>
-
-
-
-
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-  <div class='text-end'>
-    <span class="close">&times;</span>
     </div>
-    <p>Search for employee..</p>
-    <input type="text" id="live_search" autocomplete="off" placeholder="Search...">
+
+
+
+
+
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class='text-end'>
+          <span class="close">&times;</span>
+        </div>
+        <p>Search for employee..</p>
+        <input type="text" id="live_search" autocomplete="off" placeholder="Search...">
+        <br>
+        <input type="button" onclick="Vacant()" value="Vacant">
+        <br>
+        <hr>
+        <br>
+        <hr>
+        <div id="searchresult"></div>
+      </div>
+      <form>
+        <!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
+        <div id="livesearch"></div>
+      </form>
+
+
+
+    </div>
+
+    <table>
+  <tr style="font-size:30px">
+    <th style="font-size:30px">Company</th>
+    <th style="font-size:30px">Contact</th>
+    <th style="font-size:30px">Country</th>
+  </tr>
+  <tr style="font-size:30px">
+    <td style="font-size:30px"><div style="padding-top: 10px; padding-left: 10px"><button style="position: relative;">X</button></div><center><input type="button"></center></td>
+    <td style="font-size:30px">Maria Anders</td>
+    <td style="font-size:30px">Germany</td>
+  </tr>
+  <tr style="font-size:30px">
+    <td style="font-size:30px">Centro comercial Moctezuma</td>
+    <td style="font-size:30px">Francisco Chang</td>
+    <td style="font-size:30px">Mexico</td>
+  </tr>
+</table> 
+
     <br>
-    <input type="button" onclick="Vacant()" value="Vacant" >
     <br>
-    <hr>
     <br>
-    <hr>
-    <div id="searchresult"></div>
-  </div>
-
-</div>
 
 
-<form>
-<!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
-<div id="livesearch"></div>
-</form>
-<br>
-<br>
-<br>
+
+    <script>
+      var modal = "";
+      var btn = "";
+      var idbtn = "xcxcz";
+      var qkk = "alsd";
+      function Vacant() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+        //let fkf = "bn"
+
+        let chch = document.getElementById(idbtn);
+        let mj = idbtn.substring(1, 9);
+        let vjvj = document.getElementById("h" + mj);
+        alert(mj);
+        vjvj.value = "";
+        chch.value = "vacant";
 
 
-<script>
-  var modal = "";
-  var btn = "";
-  var idbtn = "xcxcz";
-  var qkk = "alsd";
-  function Vacant(){
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
-    //let fkf = "bn"
-    
-    let chch = document.getElementById(idbtn);
-    let mj =idbtn.substring(1,9);
-    let vjvj = document.getElementById("h"+mj);
-    alert(mj);
-    vjvj.value= "";
-    chch.value = "vacant";
-    
-    
 
-  }
- function Open_name(clicked_id){
-  var modal = document.getElementById("myModal");
+      }
+      function Open_name(clicked_id) {
+        var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById(clicked_id);
-  idbtn =clicked_id;
-  //qkk = "kldsa";
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-modal.style.display = "block";
-  //alert("hjkfashjk");
-  var input = document.getElementById("live_search").value;
+        // Get the button that opens the modal
+        var btn = document.getElementById(clicked_id);
+        idbtn = clicked_id;
+        //qkk = "kldsa";
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        modal.style.display = "block";
+        //alert("hjkfashjk");
+        var input = document.getElementById("live_search").value;
         //var qkk = "kldsa";
         //var btna = "lasds";
         //alert(input);
-        if(input != ""){
-           $.ajax({
-            url:"livesearch.php",
+        if (input != "") {
+          $.ajax({
+            url: "livesearch.php",
             method: "POST",
-            data:{input : input, btns : idbtn},
-            success:function(data){
+            data: { input: input, btns: idbtn },
+            success: function (data) {
               $("#searchresult").css("display", "inline");
               $("#searchresult").html(data);
             }
-           });
-        }else{
+          });
+        } else {
           //alert(input);
           $("#searchresult").css("display", "none");
         }
-     
- }
+
+      }
 
 
 
-  $(document).ready(function(){
+      $(document).ready(function () {
 
-     $("#live_search").keyup(function(){
-       
-        var input = $(this).val();
-        //var qkk = "kldsa";
-        //var btna = "lasds";
-        //alert(input);
-        if(input != ""){
-           $.ajax({
-            url:"livesearch.php",
-            method: "POST",
-            data:{input : input, btns : idbtn},
-            success:function(data){
-              $("#searchresult").css("display", "inline");
-              $("#searchresult").html(data);
-            }
-           });
-        }else{
-          $("#searchresult").css("display", "none");
-        }
-     });
-  });
+        $("#live_search").keyup(function () {
 
-  function closebtn(clicked_id, vallue){
-    modal.style.display = "none";
-    //alert("hjkasd");
-   let vva = clicked_id;
-    let rr =vva.substring(1,9);
-    let mj =vva.substring(2,9);
-    var mjk =vva.substring(9);
-    //alert(rr);
-    let chch = document.getElementById(rr);
-    let vjvj = document.getElementById("h"+mj);
-    //let hhl = document.getElementById("live_search");
-    //hhl.value = "";
-   
-
-    var ttxx = document.getElementById(vva).innerText;
-    //var ssxx = document.getElementById(vva).innerText;
-    alert(ttxx);
-    chch.value = ttxx;
-    vjvj.value = mjk;
-    document.getElementById("searchresult").innerHTML = "";
-  }
-/*function showResult(str) {
-  if (str.length==0) {
-    document.getElementById("livesearch").innerHTML="";
-    document.getElementById("livesearch").style.border="0px";
-    return;
-  }
-  var xmlhttp=new XMLHttpRequest();
-  xmlhttp.onreadystatechange=function() {
-    if (this.readyState==4 && this.status==200) {
-      document.getElementById("livesearch").innerHTML=this.responseText;
-      document.getElementById("livesearch").style.border="1px solid #A5ACB2";
-    }
-  }
-  xmlhttp.open("GET","livesearch.php?q="+str,true);
-  xmlhttp.send();
-}*/
-</script>
-
-
-
-  <script>
-    $(document).ready(function () {
-      var id = 1;
-      /*Assigning id and class for tr and td tags for separation.*/
-      $("#butsend").click(function () {
-        var newid = id++;
-        $("#table1").append('<tr valign="top" id="' + newid + '">\n\
-    <td width="100px" >' + newid + '</td>\n\
-    <td width="100px" class="name'+ newid + '">' + $("#name").val() + '</td>\n\
-    <td width="100px" class="email'+ newid + '">' + $("#email").val() + '</td>\n\
-    <td width="100px"><a href="javascript:void(0);" class="remCF">Remove</a></td>\n\ </tr>');
-      });
-      $("#table1").on('click', '.remCF', function () {
-        $(this).parent().parent().remove();
-      });
-      /*crating new click event for save button*/
-      $("#butsave").click(function () {
-        var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
-        var from = new Array();
-        var to = new Array();
-        var date = new Array();
-        var nameid = new Array();
-        var name = new Array();
-        var id_shift = new Array();
-        var id_shift_delete = new Array();
-        //var id_shift_delete = new Array();
-        for (var x = 1; x <= 100; x++) {
-          for (var i = 1; i <= 31; i++) {
-            /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
-            //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
-
-            if (i < 10) {
-              var q = "0" + i;
-            } else {
-              var q = i;
-            }
-            if (x < 100) {
-              var p = "0" + "0" + x;
-            } else if (x < 10) {
-              var p = "0" + x;
-            }
-            var kla = "tf";
-            var kla2 = "-";
-            let ml = kla + q + kla2 + p;
-            var myElem = document.getElementById(ml);
-            if (myElem != null) {
-
-              to.push($("#tt" + q + "-" + p).val());
-              from.push($("#tf" + q + "-" + p).val());
-              id_shift.push($("#i00-" + p).val());
-              nameid.push($("#hn" + q + "-" + p).val());
-              name.push($("#bn" + q + "-" + p).val());
-              var ids = $("#i00-" + p).val();
-              if (id_shift_delete.includes(ids)) {
-              } else {
-                id_shift_delete.push(ids);
+          var input = $(this).val();
+          //var qkk = "kldsa";
+          //var btna = "lasds";
+          //alert(input);
+          if (input != "") {
+            $.ajax({
+              url: "livesearch.php",
+              method: "POST",
+              data: { input: input, btns: idbtn },
+              success: function (data) {
+                $("#searchresult").css("display", "inline");
+                $("#searchresult").html(data);
               }
-              var ym = $("#current_load_date").val();
-              let h = ym + "-" + q;
-              date.push(h);
-            }
-
-          }
-        }
-        var fromTime = JSON.stringify(from);
-        var toTime = JSON.stringify(to);
-        var idArr = JSON.stringify(id_shift);
-        var dateArr = JSON.stringify(date);
-        var deleteArr = JSON.stringify(id_shift_delete);
-        var nameidArr = JSON.stringify(nameid);
-        var nameArr = JSON.stringify(name);
-        var year_month = $("#current_load_date").val();
-        $.ajax({
-          url: "insert-ajax.php",
-          type: "post",
-          data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid : nameidArr, name : nameArr },
-          success: function (data) {
-            alert(data); /* alerts the response from php.*/
+            });
+          } else {
+            $("#searchresult").css("display", "none");
           }
         });
       });
-    });
-  </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-
-
-
-<script>
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-/*btn.onclick = function() {
-  modal.style.display = "block";
-}*/
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-  document.getElementById("searchresult").innerHTML = "";
-
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-    
-  }
-}
-</script>
-<script>
-
-</script>
+      function closebtn(clicked_id, vallue) {
+        modal.style.display = "none";
+        //alert("hjkasd");
+        let vva = clicked_id;
+        let rr = vva.substring(1, 9);
+        let mj = vva.substring(2, 9);
+        var mjk = vva.substring(9);
+        //alert(rr);
+        let chch = document.getElementById(rr);
+        let vjvj = document.getElementById("h" + mj);
+        //let hhl = document.getElementById("live_search");
+        //hhl.value = "";
 
 
-
-  <script>
-    var passedID = "";
-    const daysTag = document.querySelector(".days"),
-      currentDate = document.querySelector(".current-date"),
-      prevNextIcon = document.querySelectorAll(".icons span");
-
-    let items = [
-      [0, 1],
-      [4, 8],
-      [6, 5],
-      [6, 6],
-      [8, 28],
-      [9, 28],
-      [10, 17],
-      [11, 24],
-      [11, 25],
-      [11, 26]
-    ];
-    // getting new date, current year and month
-    let date = new Date(),
-      currYear = date.getFullYear(),
-      currMonth = date.getMonth();
-    <?php
-
-    $currentr = 0;
-
-
-    ?>
-    // storing full name of all months in array
-    const months = ["January", "February", "March", "April", "May", "June", "July",
-      "August", "September", "October", "November", "December"];
-    const months2 = [".1", ".2", ".3", ".4", ".5", ".6", ".7",
-      ".8", ".9", ".10", ".11", ".12"];
-    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var first = 0;
-
-
-
-
-    const renderCalendar = () => {
-
-      let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-        lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-        lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
-        lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-      let liTag = "";
-
-
-      const fr = new Date(currYear, currMonth, 0);
-      const f = new Date(currYear, currMonth, 0);
-      const kl = new Date(currYear, currMonth, 0);
-      const d = new Date();
-      const re = new Date();
-
-
-      let currMonthNull = "";
-      if (currMonth < 9) {
-        currMonthNull = "0" + (currMonth + 1);
-      } else {
-        currMonthNull = currMonth + 1;
+        var ttxx = document.getElementById(vva).innerText;
+        //var ssxx = document.getElementById(vva).innerText;
+        alert(ttxx);
+        chch.value = ttxx;
+        vjvj.value = mjk;
+        document.getElementById("searchresult").innerHTML = "";
       }
-      let tet = "<input type='hidden' id='current_load_date' name='current_load_date' value='" + currYear + "-" + (currMonthNull) + "'>";
-      liTag += `${tet}`;
-
-      var passedSavedata = [];
-      for (let i = 1; i <= lastDateofMonth; i++) {
-        if (i == 1) {
-          <?php
-          $jk = $_POST['current_load_date'];
-          $mysqli_cal = require __DIR__ . "/database.php";
-          $sql_cal = " SELECT * FROM create_shift ORDER BY id_shift ASC";
-          $cols[] = array();
-          $color[] = array();
-          $colordark[] = array();
-          $idc[] = array();
-          $wdw[][] = array();
-          $tish[][] = array();
-          $result_cal = $mysqli_cal->query($sql_cal);
-          $r = 0;
-          while ($rows_cal = $result_cal->fetch_assoc()) {
-            $idc[$r] = $rows_cal['id_shift'];
-            $cols[$r] = $rows_cal['shift_name'];
-            $color[$r] = $rows_cal['color'];
-            $wdw[0][$r] = $rows_cal['monday'];
-            $wdw[1][$r] = $rows_cal['tuesday'];
-            $wdw[2][$r] = $rows_cal['wednesday'];
-            $wdw[3][$r] = $rows_cal['thursday'];
-            $wdw[4][$r] = $rows_cal['friday'];
-            $wdw[5][$r] = $rows_cal['saturday'];
-            $wdw[6][$r] = $rows_cal['sunday'];
-
-
-            $red = substr($color[$r], 1, 2);
-            $green = substr($color[$r], 3, 2);
-            $blue = substr($color[$r], 5, 2);
-            $red = base_convert($red, 16, 10);
-            $green = base_convert($green, 16, 10);
-            $blue = base_convert($blue, 16, 10);
-            $red = round($red - $red / 100 * 30);
-            $green = round($green - $green / 100 * 30);
-            $blue = round($blue - $blue / 100 * 30);
-            $red = base_convert($red, 10, 16);
-            $green = base_convert($green, 10, 16);
-            $blue = base_convert($blue, 10, 16);
-            if (strlen($red) < 2) {
-              $red = "0" . $red;
-            }
-            if (strlen($green) < 2) {
-              $green = "0" . $green;
-            }
-            if (strlen($blue) < 2) {
-              $blue = "0" . $blue;
-            }
-            $colordark[$r] = "#" . $red . $green . $blue;
-            $tish[0][$r] = $rows_cal['mon_from'];
-            $tish[1][$r] = $rows_cal['mon_to'];
-            $tish[2][$r] = $rows_cal['tue_from'];
-            $tish[3][$r] = $rows_cal['tue_to'];
-            $tish[4][$r] = $rows_cal['wed_from'];
-            $tish[5][$r] = $rows_cal['wed_to'];
-            $tish[6][$r] = $rows_cal['thu_from'];
-            $tish[7][$r] = $rows_cal['thu_to'];
-            $tish[8][$r] = $rows_cal['fri_from'];
-            $tish[9][$r] = $rows_cal['fri_to'];
-            $tish[10][$r] = $rows_cal['sat_from'];
-            $tish[11][$r] = $rows_cal['sat_to'];
-            $tish[12][$r] = $rows_cal['sun_from'];
-            $tish[13][$r] = $rows_cal['sun_to'];
-
-
-            $r++;
-
+      /*function showResult(str) {
+        if (str.length==0) {
+          document.getElementById("livesearch").innerHTML="";
+          document.getElementById("livesearch").style.border="0px";
+          return;
+        }
+        var xmlhttp=new XMLHttpRequest();
+        xmlhttp.onreadystatechange=function() {
+          if (this.readyState==4 && this.status==200) {
+            document.getElementById("livesearch").innerHTML=this.responseText;
+            document.getElementById("livesearch").style.border="1px solid #A5ACB2";
           }
-
-          $sa[] = array();
-          $saved_data[][] = array();
-
-          if ($currentr == 0) {
-
-            $ch = "2024-01";
-            //$ch = 
-          } else {
-            $ch = "2024-02";
-          }
-          $currentr = 1;
-          $y = substr($ch, 0, -3);
-          $m = substr($ch, -2);
-          $mysqli_sav = require __DIR__ . "/database.php";
-          $conout = 0;
-          $con = new mysqli($host, $username, $password, $dbname);
-          if ($conout == 0) {
+        }
+        xmlhttp.open("GET","livesearch.php?q="+str,true);
+        xmlhttp.send();
+      }*/
+    </script>
 
 
 
-            for ($x = 0; $x < count($idc); $x++) {
-              $sql_check = " SELECT * FROM shift_check WHERE id_shift='$idc[$x]' AND year_shift='$y' AND month_shift ='$m' ";
-              $check_existance = mysqli_query($con, $sql_check);
+    <script>
+      $(document).ready(function () {
+        var id = 1;
+        /*Assigning id and class for tr and td tags for separation.*/
+        $("#butsend").click(function () {
+          var newid = id++;
+          $("#table1").append('<tr valign="top" id="' + newid + '">\n\
+                <td width="100px" >' + newid + '</td>\n\
+                <td width="100px" class="name'+ newid + '">' + $("#name").val() + '</td>\n\
+                <td width="100px" class="email'+ newid + '">' + $("#email").val() + '</td>\n\
+                <td width="100px"><a href="javascript:void(0);" class="remCF">Remove</a></td>\n\ </tr>');
+        });
+        $("#table1").on('click', '.remCF', function () {
+          $(this).parent().parent().remove();
+        });
+        /*crating new click event for save button*/
+        $("#butsave").click(function () {
+          var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
+          var from = new Array();
+          var to = new Array();
+          var date = new Array();
+          var nameid = new Array();
+          var name = new Array();
+          var id_shift = new Array();
+          var id_shift_delete = new Array();
+          //var id_shift_delete = new Array();
+          for (var x = 1; x <= 100; x++) {
+            for (var i = 1; i <= 31; i++) {
+              /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
+              //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
 
-              if (mysqli_num_rows($check_existance) == 0) {
-
-                $saved_data[$x][0] = "0";
-                $sa[$x] = 0;
-
+              if (i < 10) {
+                var q = "0" + i;
               } else {
-
-                $sa[$x] = "1";
-                $saved_data[$x][0] = "1";
-                for ($i = 1; $i < 32; $i++) {
-                  if ($i < 10) {
-                    $dt = "0" . $i;
-                  } else {
-                    $dt = $i;
-                  }
-
-                  $d = $ch . "-" . $dt;
-                  $sql_get = " SELECT * FROM saved_shift_data WHERE id_of_shift='$idc[$x]' AND saved_date='$d' ";
-                  $check_get = mysqli_query($con, $sql_get);
-                  if (mysqli_num_rows($check_get) == 0) {
-                    $saved_data[$x][$i] = "empty";
-                  } else {
-                    $result_get = $mysqli_sav->query($sql_get);
-                    while ($rows_get = $result_get->fetch_assoc()) {
-                      $get_from = $rows_get['saved_from'];
-                      $get_to = $rows_get['saved_to'];
-                    }
-                    $saved_data[$x][$i] = $get_from . "//" . $get_to;
-                  }
-                }
+                var q = i;
               }
+              /*if (x < 100) {
+                var p = "0" + "0" + x;
+              } else if (x < 10) {
+                var p = "0" + x;
+              }else{
+                var p = x;
+              }*/
+              if (x < 10) {
+                var p = "0" + "0" + x;
+              } else if (x < 100) {
+                var p = "0" + x;
+              } else {
+                var p = x;
+              }
+              var kla = "tf";
+              var kla2 = "-";
+              let ml = kla + q + kla2 + p;
+              //alert(ml);
+              var myElem = document.getElementById(ml);
+              if (myElem != null) {
+
+                to.push($("#tt" + q + "-" + p).val());
+                from.push($("#tf" + q + "-" + p).val());
+                id_shift.push($("#i00-" + p).val());
+                nameid.push($("#hn" + q + "-" + p).val());
+                name.push($("#bn" + q + "-" + p).val());
+                var ids = $("#i00-" + p).val();
+                if (id_shift_delete.includes(ids)) {
+                } else {
+                  id_shift_delete.push(ids);
+                }
+                var ym = $("#current_load_date").val();
+                let h = ym + "-" + q;
+                date.push(h);
+                //alert(ym);
+              }
+
             }
-            $conout = 1;
           }
-          global $number;
-          $number = count($cols);
-          $col_code = "<th id='00-000'>Date</th>";
-          for ($i = 0; $i < $number; $i++) {
-            $new = htmlspecialchars("<a href='test'>Test</a>", ENT_QUOTES);
-
-            $lp = $i + 1;
-
-            if ($lp < 10) {
-              $lp = '0' . '0' . $lp;
-            } else if ($lp < 100) {
-              $lp = '0' . $lp;
-            }
-
-
-            $col_code = $col_code . "<th id='00-" . $lp . "' >" . $cols[$i] . "</th><input type='hidden' id='h00-" . $lp . "' value='" . $cols[$i] . "'><input type='hidden' id='i00-" . $lp . "' value='" . $idc[$i] . "'>";
-
-          }
-
-          $final_col_code = "<table><tr>" . $col_code . "</tr><table>";
-          $mysqli_cal->close();
-          $ass = "2024-01";
-          $rt = 2024;
-          ?>
-
-          var passedID =
-            <?php echo json_encode($idc); ?>;
-          var passedY =
-            <?php echo json_encode($y); ?>;
-          var passedM =
-            <?php echo json_encode($m); ?>;
-          var passedCh =
-            <?php echo json_encode($ass); ?>;
-          var lena = "<?php echo "$number" ?>";
-          var tsaas = "1";
-          var idp = JSON.stringify(passedID);
-          var Yp = JSON.parse(currYear);
-          var Mp = JSON.stringify(currMonth);
-          var ChA = JSON.stringify(passedCh);
-          var passedSavedata1 = Array();
-          var tes;
-          //alert(currYear);
-          var ssaz =currMonth +1;
-          var MPa = JSON.stringify(ssaz);
-          //alert(ssaz);
-          var a1sa = new Array; 
-
+          var fromTime = JSON.stringify(from);
+          var toTime = JSON.stringify(to);
+          var idArr = JSON.stringify(id_shift);
+          var dateArr = JSON.stringify(date);
+          var deleteArr = JSON.stringify(id_shift_delete);
+          var nameidArr = JSON.stringify(nameid);
+          var nameArr = JSON.stringify(name);
+          alert(fromTime);
+          alert(toTime);
+          var year_month = $("#current_load_date").val();
           $.ajax({
-            type: "POST",
-            url: "get-ajax.php",
-            dataType: "json",
-            cache: false,
-            async: false,
-            data: {
-              id: idp, year: Yp, month: MPa, cha: ChA
-            },
-            success: function (data321) {
-              //alert(data321);
-              document.getElementById("help2").value = data321;
-              //var tes = JSON.parse(data);
-              //tes =  JSON.stringify(data);
-              //aja(data);
-              //document.getElementById("help").innerHTML = data321;
-              //r//eturn data;
-              a1sa = JSON.stringify(data321);
-
+            url: "insert-ajax.php",
+            type: "post",
+            data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr },
+            success: function (data) {
+              alert(data); /* alerts the response from php.*/
             }
           });
-          //let rrra = document.getElementById("help2").value;
-          var hhha =new Array();
-          var sks =new Array();
-          var qpw = [];
-          var bnm = "<?php echo "$number" ?>";
-          hhha = a1sa.split("]");
-          for(let i = 0; i< bnm;i++){
-            hhha[i] =hhha[i].substring(2);
-            //alert(hhha[i]);
-            passedSavedata[i] = [];
-            sks = hhha[i].split(",");
-            for(let j = 0; j< 32;j++){
-              passedSavedata[i][j] = sks[j].substring(1,sks[j].length-1);
-             //alert(qpw[j]);
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+
+
+
+
+    <script>
+      // Get the modal
+      var modal = document.getElementById("myModal");
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("myBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal 
+      /*btn.onclick = function() {
+        modal.style.display = "block";
+      }*/
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = "none";
+        document.getElementById("searchresult").innerHTML = "";
+
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+
+        }
+      }
+    </script>
+    <script>
+
+    </script>
+
+
+
+    <script>
+      var passedID = "";
+      const daysTag = document.querySelector(".days"),
+        currentDate = document.querySelector(".current-date"),
+        prevNextIcon = document.querySelectorAll(".icons span");
+
+      let items = [
+        [0, 1],
+        [4, 8],
+        [6, 5],
+        [6, 6],
+        [8, 28],
+        [9, 28],
+        [10, 17],
+        [11, 24],
+        [11, 25],
+        [11, 26]
+      ];
+      // getting new date, current year and month
+      let date = new Date(),
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth();
+      <?php
+
+      $currentr = 0;
+
+
+      ?>
+      // storing full name of all months in array
+      const months = ["January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"];
+      const months2 = [".1", ".2", ".3", ".4", ".5", ".6", ".7",
+        ".8", ".9", ".10", ".11", ".12"];
+      const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      var first = 0;
+
+
+
+
+      const renderCalendar = () => {
+
+        let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
+          lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
+          lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
+          lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
+        let liTag = "";
+
+
+        const fr = new Date(currYear, currMonth, 0);
+        const f = new Date(currYear, currMonth, 0);
+        const kl = new Date(currYear, currMonth, 0);
+        const d = new Date();
+        const re = new Date();
+
+
+        let currMonthNull = "";
+        if (currMonth < 9) {
+          currMonthNull = "0" + (currMonth + 1);
+        } else {
+          currMonthNull = currMonth + 1;
+        }
+        let tet = "<input type='hidden' id='current_load_date' name='current_load_date' value='" + currYear + "-" + (currMonthNull) + "'>";
+        liTag += `${tet}`;
+
+        var passedSavedata = [];
+        for (let i = 1; i <= lastDateofMonth; i++) {
+          if (i == 1) {
+
+
+
+            <?php
+            $jk = $_POST['current_load_date'];
+            $mysqli_cal = require __DIR__ . "/database.php";
+            $sql_cal = " SELECT * FROM create_shift ORDER BY id_shift ASC";
+            $cols[] = array();
+            $color[] = array();
+            $colordark[] = array();
+            $idc[] = array();
+            $wdw[][] = array();
+            $tish[][] = array();
+            $result_cal = $mysqli_cal->query($sql_cal);
+            $r = 0;
+            while ($rows_cal = $result_cal->fetch_assoc()) {
+              $idc[$r] = $rows_cal['id_shift'];
+              $cols[$r] = $rows_cal['shift_name'];
+              $color[$r] = $rows_cal['color'];
+              $wdw[0][$r] = $rows_cal['monday'];
+              $wdw[1][$r] = $rows_cal['tuesday'];
+              $wdw[2][$r] = $rows_cal['wednesday'];
+              $wdw[3][$r] = $rows_cal['thursday'];
+              $wdw[4][$r] = $rows_cal['friday'];
+              $wdw[5][$r] = $rows_cal['saturday'];
+              $wdw[6][$r] = $rows_cal['sunday'];
+
+
+              $red = substr($color[$r], 1, 2);
+              $green = substr($color[$r], 3, 2);
+              $blue = substr($color[$r], 5, 2);
+              $red = base_convert($red, 16, 10);
+              $green = base_convert($green, 16, 10);
+              $blue = base_convert($blue, 16, 10);
+              $red = round($red - $red / 100 * 30);
+              $green = round($green - $green / 100 * 30);
+              $blue = round($blue - $blue / 100 * 30);
+              $red = base_convert($red, 10, 16);
+              $green = base_convert($green, 10, 16);
+              $blue = base_convert($blue, 10, 16);
+              if (strlen($red) < 2) {
+                $red = "0" . $red;
+              }
+              if (strlen($green) < 2) {
+                $green = "0" . $green;
+              }
+              if (strlen($blue) < 2) {
+                $blue = "0" . $blue;
+              }
+              $colordark[$r] = "#" . $red . $green . $blue;
+              $tish[0][$r] = $rows_cal['mon_from'];
+              $tish[1][$r] = $rows_cal['mon_to'];
+              $tish[2][$r] = $rows_cal['tue_from'];
+              $tish[3][$r] = $rows_cal['tue_to'];
+              $tish[4][$r] = $rows_cal['wed_from'];
+              $tish[5][$r] = $rows_cal['wed_to'];
+              $tish[6][$r] = $rows_cal['thu_from'];
+              $tish[7][$r] = $rows_cal['thu_to'];
+              $tish[8][$r] = $rows_cal['fri_from'];
+              $tish[9][$r] = $rows_cal['fri_to'];
+              $tish[10][$r] = $rows_cal['sat_from'];
+              $tish[11][$r] = $rows_cal['sat_to'];
+              $tish[12][$r] = $rows_cal['sun_from'];
+              $tish[13][$r] = $rows_cal['sun_to'];
+
+
+              $r++;
+
+            }
+
+            $sa[] = array();
+            $saved_data[][] = array();
+
+            if ($currentr == 0) {
+
+              $ch = "2024-01";
+              //$ch = 
+            } else {
+              $ch = "2024-02";
+            }
+            $currentr = 1;
+            $y = substr($ch, 0, -3);
+            $m = substr($ch, -2);
+            $mysqli_sav = require __DIR__ . "/database.php";
+            $conout = 0;
+            $con = new mysqli($host, $username, $password, $dbname);
+            if ($conout == 0) {
+
+
+
+              for ($x = 0; $x < count($idc); $x++) {
+                $sql_check = " SELECT * FROM shift_check WHERE id_shift='$idc[$x]' AND year_shift='$y' AND month_shift ='$m' ";
+                $check_existance = mysqli_query($con, $sql_check);
+
+                if (mysqli_num_rows($check_existance) == 0) {
+
+                  $saved_data[$x][0] = "0";
+                  $sa[$x] = 0;
+
+                } else {
+
+                  $sa[$x] = "1";
+                  $saved_data[$x][0] = "1";
+                  for ($i = 1; $i < 32; $i++) {
+                    if ($i < 10) {
+                      $dt = "0" . $i;
+                    } else {
+                      $dt = $i;
+                    }
+
+                    $d = $ch . "-" . $dt;
+                    $sql_get = " SELECT * FROM saved_shift_data WHERE id_of_shift='$idc[$x]' AND saved_date='$d' ";
+                    $check_get = mysqli_query($con, $sql_get);
+                    if (mysqli_num_rows($check_get) == 0) {
+                      $saved_data[$x][$i] = "empty";
+                    } else {
+                      $result_get = $mysqli_sav->query($sql_get);
+                      while ($rows_get = $result_get->fetch_assoc()) {
+                        $get_from = $rows_get['saved_from'];
+                        $get_to = $rows_get['saved_to'];
+                      }
+                      $saved_data[$x][$i] = $get_from . "//" . $get_to;
+                    }
+                  }
+                }
+              }
+              $conout = 1;
+            }
+            global $number;
+            $number = count($cols);
+            $col_code = "<th id='00-000'>Date</th>";
+            for ($i = 0; $i < $number; $i++) {
+              $new = htmlspecialchars("<a href='test'>Test</a>", ENT_QUOTES);
+
+              $lp = $i + 1;
+
+              if ($lp < 10) {
+                $lp = '0' . '0' . $lp;
+              } else if ($lp < 100) {
+                $lp = '0' . $lp;
+              }
+
+
+              $col_code = $col_code . "<th id='00-" . $lp . "' style='padding:5px;border: solid black' >" . $cols[$i] . "</th><input type='hidden' id='h00-" . $lp . "' value='" . $cols[$i] . "'><input type='hidden' id='i00-" . $lp . "' value='" . $idc[$i] . "'>";
+
+            }
+
+            $final_col_code = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" . $col_code . "</tr><table>";
+            $mysqli_cal->close();
+            $ass = "2024-01";
+            $rt = 2024;
+            ?>
+
+            var passedID =
+              <?php echo json_encode($idc); ?>;
+            var passedY =
+              <?php echo json_encode($y); ?>;
+            var passedM =
+              <?php echo json_encode($m); ?>;
+            var passedCh =
+              <?php echo json_encode($ass); ?>;
+            var lena = "<?php echo "$number" ?>";
+            var tsaas = "1";
+            var idp = JSON.stringify(passedID);
+            var Yp = JSON.parse(currYear);
+            var Mp = JSON.stringify(currMonth);
+            var ChA = JSON.stringify(passedCh);
+            var passedSavedata1 = Array();
+            var tes;
+            //alert(currYear);
+            var ssaz = currMonth + 1;
+            var MPa = JSON.stringify(ssaz);
+            //alert(ssaz);
+            var a1sa = new Array;
+
+            $.ajax({
+              type: "POST",
+              url: "get-ajax.php",
+              dataType: "json",
+              cache: false,
+              async: false,
+              data: {
+                id: idp, year: Yp, month: MPa, cha: ChA
+              },
+              success: function (data321) {
+                //alert(data321);
+                document.getElementById("help2").value = data321;
+                //var tes = JSON.parse(data);
+                //tes =  JSON.stringify(data);
+                //aja(data);
+                //document.getElementById("help").innerHTML = data321;
+                //r//eturn data;
+                a1sa = JSON.stringify(data321);
+                alert(a1sa);
+
+              }
+
+            });
+            //let rrra = document.getElementById("help2").value;
+            var hhha = new Array();
+            var sks = new Array();
+            var qpw = [];
+            var bnm = "<?php echo "$number" ?>";
+            hhha = a1sa.split("]");
+            for (let i = 0; i < bnm; i++) {
+              hhha[i] = hhha[i].substring(2);
+              //alert(hhha[i]);
+              passedSavedata[i] = [];
+              sks = hhha[i].split(",");
+              for (let j = 0; j < 32; j++) {
+                passedSavedata[i][j] = sks[j].substring(1, sks[j].length - 1);
+                //alert(qpw[j]);
+              }
+            }
+            //alert(qpw);
+            //alert(passedSavedata[0][0]);
+            /*alert(hhha[0]);
+            alert(hhha[1]);
+
+            alert(hhha[2]);
+
+            alert(hhha[3]);
+            alert(hhha[4]);
+            alert(hhha[5]);
+            alert(hhha[6]);
+            alert(hhha[7]);
+            alert(hhha[8]);*/
+
+
+
+
+            let tet = "<?php echo "$final_col_code"; ?>"
+
+            liTag += `${tet}`;
+
+          } // creating li of all days of current month
+          // adding active class to li if the current day, month, and year matched
+          let find = 0;
+          let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+            && currYear === new Date().getFullYear() ? "active" : "";
+          /**source - https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript */
+          fr.setDate(fr.getDate() + 1);
+          f.setDate(f.getDate() + 1)
+          let day = weekday[fr.getDay()];
+          const m = fr.getMonth();
+          var dayy = day;
+
+
+          for (let e = 0; e < items.length; e++) {
+
+            if (m == items[e][0] && i == items[e][1]) {
+              find = 1;
+              break;
+            }
+
+          }
+          /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
+          var passedArray =
+            <?php echo json_encode($wdw); ?>;
+          var passedTime =
+            <?php echo json_encode($tish); ?>;
+          var passedColor =
+            <?php echo json_encode($color); ?>;
+          var passedColorDark =
+            <?php echo json_encode($colordark); ?>;
+                   /* var passedSavedata =
+                      <?php //echo json_encode($saved_data);        ?>;* /
+          var passedID =
+            <?php echo json_encode($idc); ?>;
+          var tas = 0;
+          //alert(passedSavedata[0][2]);
+
+
+          /** source https://www.geeksforgeeks.org/how-to-pass-variables-and-data-from-php-to-javascript/ */
+          var sz = "<?php echo "$number" ?>";
+          var numas = "<?php echo "$number" ?>";
+          let dts = "";
+          let cll = "background-color:#303030; color:white;";
+          let ppp = '<div><td>';
+          let ddd = '<div><td id="';
+          let xxx = "-";
+          let jjj = '">';
+          let ccc = '" style="border:solid black;position:relative;padding: 20px;background-color: ';
+          let zzz = ';">';
+          let qqq = "</td></div>";
+          let ttt = "<button>+</button>";
+          let mmm = '<center><button class="btn btn-light" style="border-radius: 20%;" onClick="reply_click(this.id)" id="b';
+          let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
+          let bbb = "<br>";
+          let ia = '<input type="time" value="';
+          let ib = '">';
+          let ib1 = '">';
+          let xcx = '<button align="right" style="position:absolute;font-size: 10px;pading: 10px" onClick="canceled(this.id)">X</button>';
+          let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;pading: 10px"" onClick="canceled(this.id)" id="x';
+          let b2 = '"><i class="bi bi-x"></i></button><br><input type="button" id="bn';
+          let b3 = '" onClick="Open_name(this.id)" value="';
+          let b6 = '"><input type="hidden" id="hn';
+          let b4 = '" value="';
+          let b5 = '"></center></div>';
+          let t1 = '<div class="form-group"><center><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline; mar" class="form-control" id="tf';
+          let t2 = '<input type="time" style="height: 38px;width: 75px;font-size:10px;" class="form-control" id="tt';
+          let tv = '" value="';
+          let open = 'vacant';
+          let s = "background-color:#585858;color:white;";
+          let ii = "";
+          let cen = "</center>";
+
+          if (day == "Monday") {
+            s = "background-color:#303030; color:white;";
+            for (let q = 0; q < sz; q++) {
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                }
+              } else if (passedArray[0][q] == 1) {
+                let str1 = passedTime[0][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[1][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+              } else {
+                let p = q + 1;
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Tuesday") {
+            s = "background-color:#585858; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                }
+              } else if (passedArray[1][q] == 1) {
+                let str1 = passedTime[2][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[3][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Wednesday") {
+            s = "background-color:#303030; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                }
+              } else if (passedArray[2][q] == 1) {
+                let str1 = passedTime[4][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[5][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Thursday") {
+            s = "background-color:#585858; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                }
+              } else if (passedArray[3][q] == 1) {
+                let str1 = passedTime[6][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[7][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Friday") {
+            s = "background-color:#303030; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                }
+              } else if (passedArray[4][q] == 1) {
+                let str1 = passedTime[8][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[9][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Saturday") {
+            s = "background-color:#585858; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                }
+              } else if (passedArray[5][q] == 1) {
+                let str1 = passedTime[10][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[11][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
+            }
+          } else if (day == "Sunday") {
+            s = "background-color:#303030; color:white;";
+            for (let q = 0; q < sz; q++) {
+
+              if (passedSavedata[q][0] == "1" && first == 0) {
+                if (passedSavedata[q][i] == "empty") {
+                  let p = q + 1;
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
+                } else {
+                  let str1 = passedSavedata[q][i];
+                  str1 = str1.substring(0, 5);
+                  let str2 = passedSavedata[q][i];
+                  str2 = str2.substring(10, 15);
+                  let p = q + 1;
+                  if (p < 10) {
+                    p = "0" + "0" + p;
+                  } else if (p < 100) {
+                    p = "0" + p;
+                  }
+
+                  if (i < 10) {
+                    ii = "0" + i;
+                  } else {
+                    ii = i;
+                  }
+                  var count = 0;
+                  var char = 20;
+                  var val3 = "";
+                  for (; ;) {
+                    let result = passedSavedata[q][i].charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = passedSavedata[q][i].substring(char);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                }
+              } else if (passedArray[6][q] == 1) {
+                let str1 = passedTime[12][q];
+                str1 = str1.substring(0, str1.length - 3);
+                let str2 = passedTime[13][q];
+                str2 = str2.substring(0, str2.length - 3);
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+              } else {
+                let p = q + 1;
+                if (p < 10) {
+                  p = "0" + "0" + p;
+                } else if (p < 100) {
+                  p = "0" + p;
+                }
+
+                if (i < 10) {
+                  ii = "0" + i;
+
+                } else {
+                  ii = i;
+                }
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+              }
             }
           }
-          //alert(qpw);
-          //alert(passedSavedata[0][0]);
-          /*alert(hhha[0]);
-          alert(hhha[1]);
-
-          alert(hhha[2]);
-
-          alert(hhha[3]);
-          alert(hhha[4]);
-          alert(hhha[5]);
-          alert(hhha[6]);
-          alert(hhha[7]);
-          alert(hhha[8]);*/
+          let nul = 0;
+          if (find == 1) {
 
 
+            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday </td>${dts}<tr>`;
+            <?php echo $dsa = ""; ?>
+          } else {
+            <?php echo $dsa = ""; ?>
+            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;;border: solid black">${i} ${months2[currMonth]} <br> ${day}</td>${dts}<tr>`;
 
 
-          let tet = "<?php echo "$final_col_code"; ?>"
-
-          liTag += `${tet}`;
-
-        } // creating li of all days of current month
-        // adding active class to li if the current day, month, and year matched
-        let find = 0;
-        let isToday = i === date.getDate() && currMonth === new Date().getMonth()
-          && currYear === new Date().getFullYear() ? "active" : "";
-        /**source - https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript */
-        fr.setDate(fr.getDate() + 1);
-        f.setDate(f.getDate() + 1)
-        let day = weekday[fr.getDay()];
-        const m = fr.getMonth();
-        var dayy = day;
-
-
-        for (let e = 0; e < items.length; e++) {
-
-          if (m == items[e][0] && i == items[e][1]) {
-            find = 1;
-            break;
+            <?php echo $dsa = ""; ?>
+          }
+          <?php echo $dsa = ""; ?>
+          if (day == "Sunday" && day != 31) {
+            let tet = "<?php echo "$final_col_code"; ?>";
+            liTag += `${tet}`;
+            daysTag.innerHTML = liTag;
           }
 
         }
-        /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
-        var passedArray =
-          <?php echo json_encode($wdw); ?>;
-        var passedTime =
-          <?php echo json_encode($tish); ?>;
-        var passedColor =
-          <?php echo json_encode($color); ?>;
-        var passedColorDark =
-          <?php echo json_encode($colordark); ?>;
-       /* var passedSavedata =
-          <?php //echo json_encode($saved_data); ?>;*/
-        var passedID =
-          <?php echo json_encode($idc); ?>;
-        var tas = 0;
-    //alert(passedSavedata[0][2]);
+        console.log("Hello");
+        console.log(passedArray);
+        <?php $dsa = ""; ?>
+        currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+        daysTag.innerHTML = liTag;
+
+      }
 
 
-        /** source https://www.geeksforgeeks.org/how-to-pass-variables-and-data-from-php-to-javascript/ */
-        var sz = "<?php echo "$number" ?>";
-        var numas = "<?php echo "$number" ?>";
-        let dts = "";
-        let cll = "background-color:#303030; color:white;";
-        let ppp = '<div><td>';
-        let ddd = '<div><td id="';
-        let xxx = "-";
-        let jjj = '">';
-        let ccc = '" style="position:relative;padding: 20px;border: 1px solid black;background-color: ';
-        let zzz = ';">';
-        let qqq = "</td></div>";
-        let ttt = "<button>+</button>";
+
+      renderCalendar();
+
+      <?php $dsa = ""; ?>
+      prevNextIcon.forEach(icon => { // getting prev and next icons
+        icon.addEventListener("click", () => { // adding click event on both icons
+          // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
+          currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+          if (currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
+            // creating a new date of current year & month and pass it as date value
+            date = new Date(currYear, currMonth, new Date().getDate());
+            currYear = date.getFullYear(); // updating current year with new date year
+            currMonth = date.getMonth(); // updating current month with new date month
+          } else {
+            date = new Date(); // pass the current date as date value
+          }
+          //first = 1;
+          renderCalendar(); // calling renderCalendar function
+
+
+          //add_dat();
+
+
+        });
+      });
+    </script>
+
+    <script>
+      <?php
+      $mysqli_open = require __DIR__ . "/database.php";
+      $sql_open = " SELECT * FROM create_shift ORDER BY id_shift ASC";
+      $result_open = $mysqli_open->query($sql_open);
+      $idb[] = array();
+      $b = 0;
+      while ($rows_open = $result_open->fetch_assoc()) {
+        $idb[$b] = $rows_open['id_shift'];
+        $b++;
+      }
+      $rr = $_GET['kpk'];
+      $L = substr($rr, 0, -3);
+      $P = substr($rr, -2);
+
+      ?>
+      function add_dat() {
+        var newww = document.getElementById("current_load_date").value;
+        var neww = newww.substring(0, 4);
+        var news = newww.substring(5, 7);
+        var passedIDB =
+          <?php echo json_encode($idb); ?>;
+        var passedYY =
+          <?php echo json_encode($L); ?>;
+        var passedMM =
+          <?php echo json_encode($P); ?>;
+        var passedChCH =
+          <?php echo json_encode($rr); ?>;
+        //var lena = "<?php //echo "$number"        ?>";
+        var tsaas = "1";
+        var idb = JSON.stringify(passedIDB);
+        var Ypb = JSON.parse(neww);
+        var Mpb = JSON.stringify(news);
+        var ChAb = JSON.stringify(passedChCH);
+        var Cdsa = JSON.stringify(newww);
+        var tess;
+        alert(newww);
+        $.ajax({
+          type: "POST",
+          url: "get-ajax.php",
+          dataType: "html",
+          data: {
+            id: idb, year: Ypb, month: Mpb, cha: ChAb, nn: Cdsa
+          },
+          success: function (data3211) {
+            document.getElementById("help").value = data3211;
+            vl();
+          }
+        });
+      }
+
+
+
+    </script>
+    <script>
+      function vl() {
+        tess = document.getElementById("help").textContent;
+        var a1 = JSON.parse(document.getElementById("help").value);
+        for (let x = 0; x < a1.length + 1; x++) {
+
+          for (let i = 1; i < 32; i++) {
+            if (a1[x][0] == "0") {
+
+            } else {
+              if (a1[x][i] == "empty") {
+                if (x < 10) {
+                  var mr = "0" + "0" + (x + 1);
+                } else if (x < 100) {
+                  var mr = "0" + (x + 1);
+                } else {
+                  var mr = (x + 1);
+                }
+                if (i < 10) {
+                  var mrs = "0" + i;
+                } else {
+                  var mrs = i;
+                }
+                let fa = mrs + "-" + mr;
+                let end = "";
+                let chq = document.getElementById(fa);
+                if (chq !== null) {
+                  let can = "";
+                  let mmm = '<center><button onClick="reply_click(this.id)" id="b';
+                  let nnn = '">V</button></center>';
+                  can = mmm + fa + nnn;
+                  chq.innerHTML = can;
+                }
+              } else {
+                if (x < 10) {
+                  var mr = "0" + "0" + (x + 1);
+                } else if (x < 100) {
+                  var mr = "0" + (x + 1);
+                } else {
+                  var mr = (x + 1);
+                }
+                if (i < 10) {
+                  var mrs = "0" + i;
+                } else {
+                  var mrs = i;
+                }
+                let fa = mrs + "-" + mr;
+                let end = " ";
+                let chp = document.getElementById(fa);
+                if (chp !== null) {
+                  let final = "";
+                  let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
+                  let btn2 = '">V</button><br><input type="button" id="bn';
+                  let b2 = '">X</button><br><input type="button" id="bn';
+                  let btn3 = '" onClick="Open_name(this.id)" value="'
+                  let btn6 = '"><input type="hidden" id="hn';
+                  //let b3 = '" onClick="Open_name(this.id)" value="open"><input type="hidden" id="hn';
+                  let btn4 = '" value="';
+                  let btn5 = '">';
+                  let val = a1[x][i];
+                  let val1 = val.substring(0, 5);
+                  let val2 = val.substring(10, 15);
+                  let val3 = "" /*val.substring(20)*/;
+                  var count = 0;
+                  var char = 20;
+                  for (; ;) {
+                    let result = val.charAt(char);
+                    if (result != "/") {
+                      val3 = val3 + result;
+                      char++;
+                    } else {
+                      break;
+                    }
+                  }
+                  char = char + 2;
+                  let namen = val.substring(char);
+                  let brr = "<br>";
+                  let tm1 = '<input type="time" id="tf';
+                  let tm2 = '<input type="time" id="tt';
+                  let tmv = '" value="';
+                  let tmc = '">';
+                  let asz = '<input type="time" id="tp01-001" value="00:00">';
+                  final = tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2 + fa + btn3 + namen + btn6 + fa + btn4 + val3 + btn5;
+                  chp.innerHTML = "";
+                  chp.innerHTML = final;
+                }
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <script>
+      function FFF() {
+        let r = 10;
+        let nulls = 0;
+        if (r < 10) {
+          r = "0" + r;
+        }
+        labelElement.innerHTML =
+          r;
+      }
+
+
+      function prependZero(number) {
+        if (number < 9)
+          return "0" + number;
+        else
+          return number;
+      }
+
+
+      function reply_click(clicked_id) {
+        let result123 = clicked_id.substring(1, 7);
+        let cha = document.getElementById(result123);
+        let final = "";
+        let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
+        let btn2 = '">x</button><br><input type="button" id="bn';
+        let btn3 = '" onClick="Open_name(this.id)" value="vacant"><input type="hidden" id="hn';
+        let btn4 = '" value="">';
+        let val = "00:00";
+        let brr = "<br>";
+        let tm1 = '<input type="time" id="tf';
+        let tm2 = '<input type="time" id="tt';
+        let tmv = '" value="';
+        let tmc = '">';
+        final = tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
+        cha.innerHTML = final;
+      }
+      function canceled(clicked_id) {
+        let result123 = clicked_id.substring(1, 7);
+        let cha = document.getElementById(result123);
+        let can = "";
         let mmm = '<center><button onClick="reply_click(this.id)" id="b';
         let nnn = '">+</button></center>';
-        let bbb = "<br>";
-        let ia = '<input type="time" value="';
-        let ib = '">';
-        let xcx = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 10px;" onClick="canceled(this.id)">X</button>';
-        let b1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-        let b2 = '">X</button><br><input type="button" id="bn';
-        let b3 = '" onClick="Open_name(this.id)" value="';
-        let b6 = '"><input type="hidden" id="hn';
-        let b4 = '" value="';
-        let b5 = '">';
-        let t1 = '<input type="time" id="tf';
-        let t2 = '<input type="time" id="tt';
-        let tv = '" value="';
-        let open  = 'vacant';
-        let s = "background-color:#585858;color:white;";
-        let ii = "";
-
-        if (day == "Monday") {
-          s = "background-color:#303030; color:white;";
-          for (let q = 0; q < sz; q++) {
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq);
-              }
-            } else if (passedArray[0][q] == 1) {
-              let str1 = passedTime[0][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[1][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-            } else {
-              let p = q + 1;
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Tuesday") {
-          s = "background-color:#585858; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
-              }
-            } else if (passedArray[1][q] == 1) {
-              let str1 = passedTime[2][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[3][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Wednesday") {
-          s = "background-color:#303030; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
-              }
-            } else if (passedArray[2][q] == 1) {
-              let str1 = passedTime[4][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[5][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Thursday") {
-          s = "background-color:#585858; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
-              }
-            } else if (passedArray[3][q] == 1) {
-              let str1 = passedTime[6][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[7][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Friday") {
-          s = "background-color:#303030; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
-              }
-            } else if (passedArray[4][q] == 1) {
-              let str1 = passedTime[8][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[9][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Saturday") {
-          s = "background-color:#585858; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq);
-              }
-            } else if (passedArray[5][q] == 1) {
-              let str1 = passedTime[10][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[11][q];
-              str2 = str2.substring(0, str2.length - 3);
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        } else if (day == "Sunday") {
-          s = "background-color:#303030; color:white;";
-          for (let q = 0; q < sz; q++) {
-
-            if (passedSavedata[q][0] == "1" && first == 0) {
-              if (passedSavedata[q][i] == "empty") {
-                let p = q + 1;
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-
-              } else {
-                let str1 = passedSavedata[q][i];
-                str1 = str1.substring(0, 5);
-                let str2 = passedSavedata[q][i];
-                str2 = str2.substring(10, 15);
-                let p = q + 1;
-                if (p < 10) {
-                  p = "0" + "0" + p;
-                } else if (p < 100) {
-                  p = "0" + p;
-                }
-
-                if (i < 10) {
-                  ii = "0" + i;
-                } else {
-                  ii = i;
-                }
-                var count = 0;
-              var char = 20;
-              var val3 = "";
-              for(;;){
-                let result = passedSavedata[q][i].charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = passedSavedata[q][i].substring(char);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,namen,b6,ii, xxx, p,b4,val3,b5, qqq)
-              }
-            } else if (passedArray[6][q] == 1) {
-              let str1 = passedTime[12][q];
-              str1 = str1.substring(0, str1.length - 3);
-              let str2 = passedTime[13][q];
-              str2 = str2.substring(0, str2.length - 3); 
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,open,b6,ii, xxx, p,b4,b5, qqq);
-            } else {
-              let p = q + 1;
-              if (p < 10) {
-                p = "0" + "0" + p;
-              } else if (p < 100) {
-                p = "0" + p;
-              }
-
-              if (i < 10) {
-                ii = "0" + i;
-
-              } else {
-                ii = i;
-              }
-              dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-            }
-          }
-        }
-        let nul = 0;
-        if (find == 1) {
-
-
-          liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s}">${i} ${months2[currMonth]} <br> ${day} - Holiday </td>${dts}<tr>`;
-          <?php echo $dsa = ""; ?>
-        } else {
-          <?php echo $dsa = ""; ?>
-          liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s}">${i} ${months2[currMonth]} <br> ${day}</td>${dts}<tr>`;
-
-
-          <?php echo $dsa = ""; ?>
-        }
-        <?php echo $dsa = ""; ?>
-        if (day == "Sunday" && day != 31) {
-          let tet = "<?php echo "$final_col_code"; ?>";
-          liTag += `${tet}`;
-          daysTag.innerHTML = liTag;
-        }
-
+        can = mmm + result123 + nnn;
+        cha.innerHTML = can;
       }
-      console.log("Hello");
-      console.log(passedArray);
-      <?php $dsa = ""; ?>
-      currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-      daysTag.innerHTML = liTag;
-
-    }
+    </script>
 
 
 
-    renderCalendar();
-
-    <?php $dsa = ""; ?>
-    prevNextIcon.forEach(icon => { // getting prev and next icons
-      icon.addEventListener("click", () => { // adding click event on both icons
-        // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
-        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-        
-        if (currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
-          // creating a new date of current year & month and pass it as date value
-          date = new Date(currYear, currMonth, new Date().getDate());
-          currYear = date.getFullYear(); // updating current year with new date year
-          currMonth = date.getMonth(); // updating current month with new date month
-        } else {
-          date = new Date(); // pass the current date as date value
-        }
-        //first = 1;
-        renderCalendar(); // calling renderCalendar function
-
-
-        //add_dat();
-
-
-      });
-    });
-  </script>
-
-  <script>
-    <?php
-    $mysqli_open = require __DIR__ . "/database.php";
-    $sql_open = " SELECT * FROM create_shift ORDER BY id_shift ASC";
-    $result_open = $mysqli_open->query($sql_open);
-    $idb[] = array();
-    $b = 0;
-    while ($rows_open = $result_open->fetch_assoc()) {
-      $idb[$b] = $rows_open['id_shift'];
-      $b++;
-    }
-    $rr = $_GET['kpk'];
-    $L = substr($rr, 0, -3);
-    $P = substr($rr, -2);
-
-    ?>
-    function add_dat() {
-      var newww = document.getElementById("current_load_date").value;
-      var neww = newww.substring(0, 4);
-      var news = newww.substring(5, 7);
-      var passedIDB =
-        <?php echo json_encode($idb); ?>;
-      var passedYY =
-        <?php echo json_encode($L); ?>;
-      var passedMM =
-        <?php echo json_encode($P); ?>;
-      var passedChCH =
-        <?php echo json_encode($rr); ?>;
-      //var lena = "<?php //echo "$number" ?>";
-      var tsaas = "1";
-      var idb = JSON.stringify(passedIDB);
-      var Ypb = JSON.parse(neww);
-      var Mpb = JSON.stringify(news);
-      var ChAb = JSON.stringify(passedChCH);
-      var Cdsa = JSON.stringify(newww);
-      var tess;
-      alert(newww);
-      $.ajax({
-        type: "POST",
-        url: "get-ajax.php",
-        dataType: "html",
-        data: {
-          id: idb, year: Ypb, month: Mpb, cha: ChAb, nn: Cdsa
-        },
-        success: function (data3211) {
-          document.getElementById("help").value = data3211;
-          vl();
-        }
-      });
-    }
-
-
-
-  </script>
-  <script>
-    function vl() {
-      tess = document.getElementById("help").textContent;
-      var a1 = JSON.parse(document.getElementById("help").value);
-      for (let x = 0; x < a1.length + 1; x++) {
-
-        for (let i = 1; i < 32; i++) {
-          if (a1[x][0] == "0") {
-
-          } else {
-            if (a1[x][i] == "empty") {
-              if (x < 10) {
-                var mr = "0" + "0" + (x + 1);
-              } else if (x < 100) {
-                var mr = "0" + (x + 1);
-              } else {
-                var mr = (x + 1);
-              }
-              if (i < 10) {
-                var mrs = "0" + i;
-              } else {
-                var mrs = i;
-              }
-              let fa = mrs + "-" + mr;
-              let end = "";
-              let chq = document.getElementById(fa);
-              if (chq !== null) {
-              let can = "";
-              let mmm = '<center><button onClick="reply_click(this.id)" id="b';
-              let nnn = '">V</button></center>';
-              can = mmm + fa + nnn;
-              chq.innerHTML = can;
-              }
-            } else {
-              if (x < 10) {
-                var mr = "0" + "0" + (x + 1);
-              } else if (x < 100) {
-                var mr = "0" + (x + 1);
-              } else {
-                var mr = (x + 1);
-              }
-              if (i < 10) {
-                var mrs = "0" + i;
-              } else {
-                var mrs = i;
-              }
-              let fa = mrs + "-" + mr;
-              let end = " ";
-              let chp = document.getElementById(fa);
-              if (chp !== null) {
-              let final = "";
-              let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-              let btn2 = '">V</button><br><input type="button" id="bn';
-              let b2 = '">X</button><br><input type="button" id="bn';
-              let btn3 = '" onClick="Open_name(this.id)" value="'
-              let btn6 = '"><input type="hidden" id="hn';
-              //let b3 = '" onClick="Open_name(this.id)" value="open"><input type="hidden" id="hn';
-              let btn4 = '" value="';
-              let btn5 = '">';
-              let val = a1[x][i];
-              let val1 = val.substring(0, 5);
-              let val2 = val.substring(10, 15);
-              let val3 = "" /*val.substring(20)*/;
-              var count = 0;
-              var char = 20;
-              for(;;){
-                let result = val.charAt(char);
-               if(result != "/"){
-                val3 = val3 +result;
-                char++;
-               }else{
-                break;
-               }
-              }
-              char = char+2;
-              let namen = val.substring(char);
-              let brr = "<br>";
-              let tm1 = '<input type="time" id="tf';
-              let tm2 = '<input type="time" id="tt';
-              let tmv = '" value="';
-              let tmc = '">';
-              let asz = '<input type="time" id="tp01-001" value="00:00">';
-              final = tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2+ fa+btn3+namen+btn6+fa+btn4+val3+btn5;
-              chp.innerHTML = "";
-              chp.innerHTML = final;
-            }
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <script>
-    function FFF() {
-      let r = 10;
-      let nulls = 0;
-      if (r < 10) {
-        r = "0" + r;
-      }
-      labelElement.innerHTML =
-        r;
-    }
-
-
-    function prependZero(number) {
-      if (number < 9)
-        return "0" + number;
-      else
-        return number;
-    }
-
-
-    function reply_click(clicked_id) {
-      let result123 = clicked_id.substring(1, 7);
-      let cha = document.getElementById(result123);
-      let final = "";
-      let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-      let btn2 = '">x</button><br><input type="button" id="bn';
-      let btn3 = '" onClick="Open_name(this.id)" value="vacant"><input type="hidden" id="hn';
-      let btn4 = '" value="">';
-      let val = "00:00";
-      let brr = "<br>";
-      let tm1 = '<input type="time" id="tf';
-      let tm2 = '<input type="time" id="tt';
-      let tmv = '" value="';
-      let tmc = '">';
-      final = tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc + btn1 + result123 + btn2+ result123 +btn3 + result123 + btn4;
-      cha.innerHTML = final;
-    }
-    function canceled(clicked_id) {
-      let result123 = clicked_id.substring(1, 7);
-      let cha = document.getElementById(result123);
-      let can = "";
-      let mmm = '<center><button onClick="reply_click(this.id)" id="b';
-      let nnn = '">+</button></center>';
-      can = mmm + result123 + nnn;
-      cha.innerHTML = can;
-    }
-  </script>
-
-
-
-
+  <?php else: ?>
+  <?php endif; ?>
 
 
 

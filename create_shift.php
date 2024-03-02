@@ -757,16 +757,19 @@ $mysqli1->close();
               hex = "#124072";
             });
 
-            function Color(clicked) {
-              let clicked_color = document.getElementById(clicked);
+            function Color(clicked1) {
+              let clicked_color = document.getElementById(clicked1);
               clicked_color.style.border = "solid black";
               codecolor = clicked_color.style.backgroundColor;
               /**hex source : http://www.java2s.com/example/nodejs/css/get-background-color-in-hex.html */
               var rgb = codecolor.match(/\d+/g);
               hex = '#' + ('0' + parseInt(rgb[0], 10).toString(16)).slice(-2) + ('0' + parseInt(rgb[1], 10).toString(16)).slice(-2) + ('0' + parseInt(rgb[2], 10).toString(16)).slice(-2);
               let clicked_color_prev = document.getElementById(previous2);
-              clicked_color_prev.style.border = "";
-
+              //clicked_color_prev.style.border = "";
+              if (clicked1 != previous2) {
+                clicked_color_prev.style.border = "";
+                previous2 = clicked1;
+              }
             }
             let sprevious2 = "scolor-1";
             let scodecolor = "#124072";

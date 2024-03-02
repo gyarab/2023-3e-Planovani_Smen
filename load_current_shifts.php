@@ -87,25 +87,31 @@ $dd = 1;
             $fetchc = mysqli_query($conn2, $sqlsh);
             //echo"<p>".$date."</p>";
             if (mysqli_num_rows($fetchc) > 0) {
+              
                 
                 while ($rows_c = mysqli_fetch_assoc($fetchc)) {
                     //$shi_id[] = $rows_c['id_shift'];
                     array_push($shi_id, $rows_c['id_shift']);
                     array_push($shi_name, $rows_c['shift_name']);
+                   
                 }
                 for($k = 0; $k < count($shi_id); $k++){
                     //echo"<p>".$shi_id[$k]."adsads</p>";
                     //$sqldd= "";
+                   
                     $sqldd[$k] = "SELECT * FROM saved_shift_data WHERE id_of_shift='$shi_id[$k]' AND saved_date='$date' ";
                 }
                 for($k = 0; $k < count($shi_id); $k++){
+                  
                     $fetchdd = mysqli_query($conn2, $sqldd[$k]);
-                    if (mysqli_num_rows($fetchdd) > 0) {
+                    //echo"<p>".$sqldd[$k]."</p>";
+                    //if (mysqli_num_rows($fetchdd) > 0) {
+                      
                         //echo"<p>".$date."1111</p>";
                         while ($rows_d = mysqli_fetch_assoc($fetchdd)) {
                             echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." | ".$rows_d['user_name']."</p><p style='margin:auto;float:right'>asd</p></div></small>";
                         }
-                    }
+                    //}
                 }
                 
             }
