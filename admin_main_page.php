@@ -185,14 +185,36 @@ $mysqli1->close();
             $fetchtd = mysqli_query($conn, $sqltd);
             $fetchtm = mysqli_query($conn, $sqltm);
             $checkfrom = 0;
+            $cs = 0;
+            $yb = false;
             if (mysqli_num_rows($fetchtd) > 0) {
                 $have = 1;
                 $sqlfr = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
                 $fetchfr = mysqli_query($conn, $sqlfr);
+                $sqlfry = "SELECT * FROM saved_shift_data WHERE saved_date='$y' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
+                $fetchfry = mysqli_query($conn, $sqlfry);
                 $sqlch = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' AND (att_from IS NULL OR att_to IS NULL)";
                 $fetchch = mysqli_query($conn, $sqlch);
+            
                 if (mysqli_num_rows($fetchfr) > 0) {
                     $checkfrom = 1;
+                }
+                 if(mysqli_num_rows($fetchfry) > 0){
+                    //$checkfrom = 1;
+                    $r = 0;
+                    while ($row_r = mysqli_fetch_assoc($fetchfry)) {
+                    $t1[$r] = $row_r['saved_from'];
+                    if (strtotime($t1[$r]) >= strtotime(date('H:i:s'))) {
+                        $yb =true;
+                        $p = strtotime($t1[$r]);
+                        //$status[2] = true;
+                    }
+                    $r++;
+     
+                }
+                if($yb ==true){
+                    $checkfrom = 1;
+                }
                 }
                 if (mysqli_num_rows($fetchch) > 0) {
                     $have = 1;
@@ -228,7 +250,8 @@ $mysqli1->close();
                             //alert("dsadsa");
                        } );
                        var checks =  <?php echo json_encode($checkfrom); ?>;
-                       //alert(checks);
+                       let zxz =  <?php echo json_encode($p); ?>;
+                       alert(zxz);
                        if(checks == 1){
                        document.getElementById("pause").style.display = "";
                     document.getElementById("confirm").style.display = "none";
@@ -258,13 +281,14 @@ $mysqli1->close();
                           status = JSON.stringify(data);
                           status1 = status.substring(1,2);
                           status2 = status.substring(3,4);
-                          //alert(status1);
+                          alert(status);
                           
                         }
                         
                            });
                            //alert(status);
                             if(status1 == 0){
+                                alert("Your arrival is confirm");
                             document.getElementById("pause").style.display = "";
                             document.getElementById("confirm").style.display = "none";
                             document.getElementById("departure").style.display = "";
@@ -300,14 +324,19 @@ $mysqli1->close();
                           left = JSON.stringify(data);
                           left1 = left.substring(1,2);
                           left2 = left.substring(3,4);
-                          //alert(left1);
+                          alert(left);
                           
                         }});
                         if(left1 == 0){
+                            alert("Your departure is confirm");
                             document.getElementById("pause").style.display = "none";
                             document.getElementById("confirm").style.display = "";
                             document.getElementById("departure").style.display = "none";
-                        }
+                        }else if(left1 == 1){
+                               alert("Please enter comment why are leaving late");
+                            }else{
+                                alert("Please enter comment why are you leaving early");
+                            }
                         }
                         </script>
                 </div>

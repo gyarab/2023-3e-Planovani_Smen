@@ -139,7 +139,9 @@ if (isset($_SESSION["user2_id"])) {
       height: 400px;
       overflow: scroll;
     }
-    p { font-size: 30px; 
+
+    p {
+      font-size: 30px;
     }
 
     /* Scrollbar styles */
@@ -165,12 +167,14 @@ background: #88ba1c;
 </head>
 
 <body>
-  <?php if (isset($user) && $userp == "admin"): ?>
+  <?php if (isset($user) /*&& $userp == "admin"*/): ?>
     <?php
     $today = date("Y-m-d");
+
     ?>
-
-
+    <script>
+      var usid = <?php echo json_encode($userid); ?>;
+    </script>
     <div class="container">
 
       <nav>
@@ -284,45 +288,454 @@ background: #88ba1c;
             <center>
               <h1 class="current-date"></h1>
             </center>
-            <div class="icons">
-              <span id="prev" class="material-symbols-rounded" style="float:left"><i class="bi bi-arrow-left-circle h2"></i></span>
+
+          </header>
+          <br>
+          <br>
+          <div style="float: left">
+            <p>Objects:&nbsp;&nbsp;</p>
+
+
+            <select id="select_obj" class="form-select form-select-sm" name="option" id="option"
+              style="font-size:15px;display:inline">
+              <?php
+              $mysqli2 = require __DIR__ . "/database.php";
+              $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
+              $result3 = $mysqli2->query($sql2);
+              $mysqli2->close();
+              $counter = 0;
+              while ($rows_dat = mysqli_fetch_assoc($result3)) {
+                if (null == $rows_dat['superior_object_name']) {
+                  if ($counter == 0) {
+                    $first = $rows_dat['id_object'];
+                  }
+                  $counter++;
+                  ?>
+                  <option style="font-size:15px" value="<?php echo $rows_dat['id_object'] ?>">
+                    <?php echo $rows_dat['object_name']; ?>
+                  </option>
+                  <?php
+                }
+              }
+              ?>
+            </select>
+          </div>
+
+          <div id="object" style="display:inline;"></div>
+          <br>
+          <br>
+          <p style="display:inline">Shift:&nbsp;&nbsp;</p>
+          <div id="shi_load" style="display:inline;"></div>
+          <br>
+          <input type="button" class="btn btn-primary" value="Filter" style="float:left;font-size: 16px;">
+          <br>
+          <br>
+          <br>
+          <div class="icons">
+              <span id="prev" class="material-symbols-rounded" style="float:left"><i
+                  class="bi bi-arrow-left-circle h2"></i></span>
               <h2 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h2>
-              <span id="next" class="material-symbols-rounded" style="float:right"><i class="bi bi-arrow-right-circle h2"></i></span>
+              <span id="next" class="material-symbols-rounded" style="float:right"><i
+                  class="bi bi-arrow-right-circle h2"></i></span>
               <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
             </div>
-          </header>
-           <br>
-           <br>
-           <div style="float: left">
-          <select class="form-select form-select-sm" name="option" id="option" style="font-size:15px">
-            <?php
-            $mysqli2 = require __DIR__ . "/database.php";
-            $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
-            $result3 = $mysqli2->query($sql2);
-            $mysqli2->close();
-            $counter = 0;
-            while ($rows_dat = mysqli_fetch_assoc($result3)) {
-              if (null == $rows_dat['superior_object_name']) {
-                if ($counter == 0) {
-                  $first = $rows_dat['id_object'];
-                }
-                $counter++;
-                ?>
-                <option style="font-size:15px" value="<?php echo $rows_dat['id_object'] ?>">
-                  <?php echo $rows_dat['object_name']; ?>
-                </option>
-                <?php
+          <script>
+            var obj_search = new Array();
+            var pos_search = new Array();
+            var input_obj =
+              <?php echo json_encode($first); ?>;
+            $.ajax({
+              url: "cal_obj_load.php",
+              method: "POST",
+              data: { input: input_obj, id: usid },
+              success: function (data) {
+                $("#object").html(data);
+
               }
+            });
+
+            $.ajax({
+              url: "cal_shi_load.php",
+              method: "POST",
+              data: { input: input_obj, id: usid },
+              success: function (data) {
+                $("#shi_load").html(data);
+              }
+            });
+            var inp = <?php echo json_encode($first); ?>;
+            $('#select_obj').change(function () {
+              obj_search = [];
+              shi_search = [];
+              inp = $(this).val();
+              $.ajax({
+                url: "cal_obj_load.php",
+                method: "POST",
+                data: { input: inp, id: usid },
+                success: function (data) {
+                  $("#object").html(data);
+
+                }
+              });
+
+              $.ajax({
+                url: "cal_shi_load.php",
+                method: "POST",
+                data: { input: inp, id: usid },
+                success: function (data) {
+                  $("#shi_load").html(data);
+
+                }
+              });
+
+            });
+            /*function rum(inp,usid){
+              $.ajax({
+                url: "cal_shi_load.php",
+                method: "POST",
+                data: { input: inp, id: usid },
+                success: function (data) {
+                  //$("#searchresult").css("display", "inline");
+                  $("#shi_load").html(data);
+                  /*let lshi = document.getElementsByName("nshi").length;
+                  let elements = document.getElementsByName("nshi");
+                  if (lshi != 0) {
+                    for (var b = 0; b < lshi; b++) {
+
+                      shiftall_arr.push(elements[b].value);
+                    }
+                  }*/
+            /*shift_all();
+            //shift_all();
+
+          }
+        });
+      }*/
+
+            var load_check1 = 0;
+            var load_check2 = 0;
+            $(document).on("ajaxComplete", function () {
+              //$( ".log" ).text( "Triggered ajaxComplete handler." );
+              //alert("true");
+              let lshi = document.getElementsByName("nshi").length;
+              let elements = document.getElementsByName("nshi");
+              if (lshi != 0 && load_check1 == 0) {
+                load_check1 = 1;
+                for (var b = 0; b < lshi; b++) {
+
+                  shi_search.push(elements[b].value);
+                }
+              }
+              let lobj = document.getElementsByName("nobj").length;
+              let elements2 = document.getElementsByName("nobj");
+              if (lobj != 0 && load_check2 == 0) {
+                load_check2 = 1;
+                for (var b = 0; b < lobj; b++) {
+
+                  obj_search.push(elements2[b].value);
+                }
+              }
+            });
+
+            var shiftall = 1;
+            var objectall = 1;
+            let lshi;
+            var shiftall_arr = new Array();
+            function shift_all() {
+
+              if (shiftall == 0) {
+                shiftall = 1;
+                shi_search = [];
+                lshi = document.getElementsByName("nshi").length;
+                let elements = document.getElementsByName("nshi");
+                if (lshi != 0) {
+                  for (var b = 0; b < lshi; b++) {
+
+                    shi_search.push(elements[b].value);
+                  }
+                }
+
+              } else {
+
+                shiftall = 0;
+                shi_search = [];
+                lshi = document.getElementsByName("nshi").length;
+                let elements = document.getElementsByName("nshi");
+                if (lshi != 0) {
+                  for (var b = 0; b < lshi; b++) {
+                    if (elements[b].checked) {
+                      shi_search.push(elements[b].value);
+                    }
+                  }
+                }
+
+              }
+              //alert(shi_search);
+              filter();
+
+
             }
-            ?>
-          </select>
-          </div>
+            var objectall = 1;
+            var objectall_arr = new Array();
+            function object_all() {
+
+              if (objectall == 0) {
+                objectall = 1;
+                obj_search = [];
+                lobj = document.getElementsByName("nobj").length;
+                let elements = document.getElementsByName("nobj");
+                if (lobj != 0) {
+                  for (var b = 0; b < lobj; b++) {
+
+                    obj_search.push(elements[b].value);
+                  }
+                }
+
+              } else {
+                objectall = 0;
+                obj_search = [];
+                lobj = document.getElementsByName("nobj").length;
+                let elements = document.getElementsByName("nobj");
+                if (lobj != 0) {
+                  for (var b = 0; b < lobj; b++) {
+                    if (elements[b].checked) {
+                      obj_search.push(elements[b].value);
+                    }
+                  }
+                }
+              }
+              //alert(obj_search);
+              filter();
+
+            }
+            var shi_search = new Array();
+
+            function shift_search(clicked_val) {
+              if (shi_search.includes(clicked_val) == true && shiftall == 0) {
+                for (let i = 0; i < shi_search.length; i++) {
+                  if (shi_search[i] === clicked_val) {
+                    shi_search.splice(i, 1);
+                  }
+                }
+              } else if(shiftall== 0){
+                shi_search.push(clicked_val);
+              }
+              //alert(shi_search);
+              filter();
+            }
+            var arridc = new Array();
+              var arrcols = new Array();
+              var arrcolor = new Array();
+              var arrwdw = new Array(7);
+              var arrcolordark = new Array();
+              var arrtish = new Array();
+              var arrobj = new Array();
+
+              function filter(){
+              var results = new Array();
+              $.ajax({
+                url: "cal_arr_load.php",
+                method: "POST",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: { shall: shiftall,oball: objectall, shift_arr: shi_search, object_arr: obj_search, input: inp,user: usid },
+                success: function (data) {
+                  results = JSON.stringify(data);
+                }
+
+              });
+              //alert(results);
+               arridc = [];
+               arrcols = [];
+              arrcolor =[]; //new Array();
+              arrwdw =[]; //new Array(7);
+             arrcolordark =[]; //new Array();
+               arrtish =[]; //new Array();
+               arrobj =[]; //new Array();
+              //if (shiftall == 1) {
+                results = results.substring(1, results.length - 1);
+                if(results.length >7){
+                alert(results);
+                var hhha = new Array();
+                var sks = new Array();
+                var qpw = [];
+                var bnm = lshi;
+                hhha = results.split("]");
+                var bnm = hhha.length;
+                //alert(hhha[i]);
+                //alert(hhha[0]);
+                for (let i = 0; i < bnm; i++) {
+                  var tt = hhha[i].length;
+                  if (i == 0) {
+                    hhha[i] = hhha[i].substring(1, tt);
+
+                  } else {
+                    hhha[i] = hhha[i].substring(2, tt);
+                  }
+                  //alert(hhha[i]);
+                  if (i == 0) {
+                    for (let z = 0; z < 7; z++) {
+                      arrwdw[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrwdw[z][j] = 0;
+                      }
+                    }
+                    for (let z = 0; z < 14; z++) {
+                      arrtish[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrtish[z][j] = 0;
+                      }
+                    }
+                  }
+
+                  sks = hhha[i].split(",");
+                  //alert(hhha[i]);
+                  arridc[i] = sks[0].substring(1, sks[0].length - 1);
+                  arrcols[i] = sks[1].substring(1, sks[1].length - 1);
+                  arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
+                  arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
+                  arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
+                  arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
+                  arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
+                  arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
+                  arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
+                  arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
+                  arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
+                  arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
+                  arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
+                  arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
+                  arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
+                  arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
+                  arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
+                  arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
+                  arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
+                  arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
+                  arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
+                  arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
+                  arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
+                  arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
+                  arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
+                  arrobj[i] = sks[25].substring(1, sks[25].length - 1);
+                 //alert( arrobj[i]);
+
+                }
+              }
+                //alert( arrobj[0]);
+
+              //}
+
+
+
+            }
+
+            var obj_search = new Array();
+            function object_search(clicked_val) {
+              if (obj_search.includes(clicked_val) == true && objectall == 0) {
+                for (let i = 0; i < obj_search.length; i++) {
+                  if (obj_search[i] === clicked_val) {
+                    obj_search.splice(i, 1);
+                  }
+                }
+              } else if(objectall == 0){
+                obj_search.push(clicked_val);
+              }
+              alert(obj_search);
+              filter();
+              /*var results = new Array();
+              $.ajax({
+                url: "cal_arr_load.php",
+                method: "POST",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: { shall: shiftall, shift_arr: shi_search, object: obj_search, shift: shi_search, input: inp },
+                success: function (data) {
+                  results = JSON.stringify(data);
+                }
+
+              });
+              //alert(results);
+              var arridc = new Array();
+              var arrcols = new Array();
+              var arrcolor = new Array();
+              var arrwdw = new Array(7);
+              var arrcolordark = new Array();
+              var arrtish = new Array();
+              var arrobj = new Array();
+              if (shiftall == 1) {
+                results = results.substring(1, results.length - 1);
+                alert(results);
+                var hhha = new Array();
+                var sks = new Array();
+                var qpw = [];
+                var bnm = lshi;
+                hhha = results.split("]");
+                //alert(hhha[0]);
+                for (let i = 0; i < bnm; i++) {
+                  var tt = hhha[i].length;
+                  if (i == 0) {
+                    hhha[i] = hhha[i].substring(1, tt);
+
+                  } else {
+                    hhha[i] = hhha[i].substring(2, tt);
+                  }
+                  if (i == 0) {
+                    for (let z = 0; z < 7; z++) {
+                      arrwdw[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrwdw[z][j] = 0;
+                      }
+                    }
+                    for (let z = 0; z < 14; z++) {
+                      arrtish[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrtish[z][j] = 0;
+                      }
+                    }
+                  }
+
+                  sks = hhha[i].split(",");
+                  arridc[i] = sks[0].substring(1, sks[0].length - 1);
+                  arrcols[i] = sks[1].substring(1, sks[1].length - 1);
+                  arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
+                  arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
+                  arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
+                  arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
+                  arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
+                  arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
+                  arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
+                  arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
+                  arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
+                  arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
+                  arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
+                  arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
+                  arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
+                  arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
+                  arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
+                  arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
+                  arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
+                  arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
+                  arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
+                  arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
+                  arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
+                  arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
+                  arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
+                  arrobj[i] = sks[25].substring(1, sks[25].length - 1);
+
+
+                }
+              }*/
+
+
+            }
+
+          </script>
           <br>
           <br>
           <br>
 
 
-          <div style="width: 100%;height: 1000px;overflow: auto; border: solid #777">
+          <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
             <div class="calendar">
               <table>
                 <tr>
@@ -387,23 +800,7 @@ background: #88ba1c;
 
     </div>
 
-    <table>
-  <tr style="font-size:30px">
-    <th style="font-size:30px">Company</th>
-    <th style="font-size:30px">Contact</th>
-    <th style="font-size:30px">Country</th>
-  </tr>
-  <tr style="font-size:30px">
-    <td style="font-size:30px"><div style="padding-top: 10px; padding-left: 10px"><button style="position: relative;">X</button></div><center><input type="button"></center></td>
-    <td style="font-size:30px">Maria Anders</td>
-    <td style="font-size:30px">Germany</td>
-  </tr>
-  <tr style="font-size:30px">
-    <td style="font-size:30px">Centro comercial Moctezuma</td>
-    <td style="font-size:30px">Francisco Chang</td>
-    <td style="font-size:30px">Mexico</td>
-  </tr>
-</table> 
+
 
     <br>
     <br>
@@ -424,9 +821,9 @@ background: #88ba1c;
         let chch = document.getElementById(idbtn);
         let mj = idbtn.substring(1, 9);
         let vjvj = document.getElementById("h" + mj);
-        alert(mj);
+        //alert(mj);
         vjvj.value = "";
-        chch.value = "vacant";
+        chch.value = "Vacant";
 
 
 
@@ -505,7 +902,7 @@ background: #88ba1c;
 
         var ttxx = document.getElementById(vva).innerText;
         //var ssxx = document.getElementById(vva).innerText;
-        alert(ttxx);
+        //alert(ttxx);
         chch.value = ttxx;
         vjvj.value = mjk;
         document.getElementById("searchresult").innerHTML = "";
@@ -537,10 +934,10 @@ background: #88ba1c;
         $("#butsend").click(function () {
           var newid = id++;
           $("#table1").append('<tr valign="top" id="' + newid + '">\n\
-                <td width="100px" >' + newid + '</td>\n\
-                <td width="100px" class="name'+ newid + '">' + $("#name").val() + '</td>\n\
-                <td width="100px" class="email'+ newid + '">' + $("#email").val() + '</td>\n\
-                <td width="100px"><a href="javascript:void(0);" class="remCF">Remove</a></td>\n\ </tr>');
+                                <td width="100px" >' + newid + '</td>\n\
+                                <td width="100px" class="name'+ newid + '">' + $("#name").val() + '</td>\n\
+                                <td width="100px" class="email'+ newid + '">' + $("#email").val() + '</td>\n\
+                                <td width="100px"><a href="javascript:void(0);" class="remCF">Remove</a></td>\n\ </tr>');
         });
         $("#table1").on('click', '.remCF', function () {
           $(this).parent().parent().remove();
@@ -612,8 +1009,8 @@ background: #88ba1c;
           var deleteArr = JSON.stringify(id_shift_delete);
           var nameidArr = JSON.stringify(nameid);
           var nameArr = JSON.stringify(name);
-          alert(fromTime);
-          alert(toTime);
+          //alert(fromTime);
+          //alert(toTime);
           var year_month = $("#current_load_date").val();
           $.ajax({
             url: "insert-ajax.php",
@@ -664,6 +1061,11 @@ background: #88ba1c;
         }
       }
     </script>
+
+
+
+
+
     <script>
 
     </script>
@@ -823,7 +1225,7 @@ background: #88ba1c;
             $mysqli_sav = require __DIR__ . "/database.php";
             $conout = 0;
             $con = new mysqli($host, $username, $password, $dbname);
-            if ($conout == 0) {
+            /*if ($conout == 0) {
 
 
 
@@ -864,7 +1266,7 @@ background: #88ba1c;
                 }
               }
               $conout = 1;
-            }
+            }*/
             global $number;
             $number = count($cols);
             $col_code = "<th id='00-000'>Date</th>";
@@ -889,6 +1291,14 @@ background: #88ba1c;
             $ass = "2024-01";
             $rt = 2024;
             ?>
+
+
+            /*var count_number =  arrcols.length;
+            var col_code = "<th id='00-000'>Date</th>";
+            for (var ps = 0; ps < count_number; ps++) {
+            }*/
+
+
 
             var passedID =
               <?php echo json_encode($idc); ?>;
@@ -930,7 +1340,7 @@ background: #88ba1c;
                 //document.getElementById("help").innerHTML = data321;
                 //r//eturn data;
                 a1sa = JSON.stringify(data321);
-                alert(a1sa);
+                //alert(a1sa);
 
               }
 
@@ -1002,8 +1412,8 @@ background: #88ba1c;
             <?php echo json_encode($color); ?>;
           var passedColorDark =
             <?php echo json_encode($colordark); ?>;
-                   /* var passedSavedata =
-                      <?php //echo json_encode($saved_data);        ?>;* /
+                                   /* var passedSavedata =
+                                      <?php //echo json_encode($saved_data);                ?>;* /
           var passedID =
             <?php echo json_encode($idc); ?>;
           var tas = 0;
@@ -1019,7 +1429,7 @@ background: #88ba1c;
           let ddd = '<div><td id="';
           let xxx = "-";
           let jjj = '">';
-          let ccc = '" style="border:solid black;position:relative;padding: 20px;background-color: ';
+          let ccc = '" style="min-width:170px;min-height:200px;border:solid black;padding: 20px;background-color: ';
           let zzz = ';">';
           let qqq = "</td></div>";
           let ttt = "<button>+</button>";
@@ -1030,19 +1440,28 @@ background: #88ba1c;
           let ib = '">';
           let ib1 = '">';
           let xcx = '<button align="right" style="position:absolute;font-size: 10px;pading: 10px" onClick="canceled(this.id)">X</button>';
-          let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;pading: 10px"" onClick="canceled(this.id)" id="x';
-          let b2 = '"><i class="bi bi-x"></i></button><br><input type="button" id="bn';
-          let b3 = '" onClick="Open_name(this.id)" value="';
-          let b6 = '"><input type="hidden" id="hn';
+          //let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;padding: 10px"" onClick="canceled(this.id)" id="x';
+          let b1 = '<button class="btn-close btn-close-white" style="position:relative;border: 1px blackfont-size: 12px;padding-top: 10px;padding-left: 10px" onClick="canceled(this.id)" id="x';
+          let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
+          let b2 = '"></button><br><input type="button" id="bn';
+          let b7 = '<br><br><br><input type="button" id="bn';
+          let b3 = '" onClick="Open_name(this.id)" style="margin-top:10px" value="';
+          let b6 = '"><br><input type="hidden" id="hn';
           let b4 = '" value="';
           let b5 = '"></center></div>';
-          let t1 = '<div class="form-group"><center><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline; mar" class="form-control" id="tf';
-          let t2 = '<input type="time" style="height: 38px;width: 75px;font-size:10px;" class="form-control" id="tt';
+          let t1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right" class="form-control" id="tf';
+          let t3 = '<div class="form-group"><center><label for="tf';
+          let t4 = '" class="text-light" style="display:inline;font-size:17px;float:left;clear: left;">FROM:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
+          let t2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
+          let t5 = '<label for="tt';
+          let t6 = '" class="text-light" style="display:inline;font-size:17px;float:left">TO:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;;display:inline;float:right" class="form-control" id="tt';
+
           let tv = '" value="';
           let open = 'vacant';
           let s = "background-color:#585858;color:white;";
           let ii = "";
           let cen = "</center>";
+          let bt2 = '"><i class="bi bi-trash"></i></button>';
 
           if (day == "Monday") {
             s = "background-color:#303030; color:white;";
@@ -1061,6 +1480,8 @@ background: #88ba1c;
                     p = "0" + p;
                   }
                   dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
+
 
                 } else {
                   let str1 = passedSavedata[q][i];
@@ -1093,7 +1514,9 @@ background: #88ba1c;
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t3,ii, xxx, p,t4, ii, xxx, p, tv, str1, ib, bbb, t5,ii, xxx, p,t6, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[0][q] == 1) {
                 let str1 = passedTime[0][q];
@@ -1112,7 +1535,8 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
               } else {
                 let p = q + 1;
                 if (i < 10) {
@@ -1179,7 +1603,9 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+
                 }
               } else if (passedArray[1][q] == 1) {
                 let str1 = passedTime[2][q];
@@ -1198,7 +1624,8 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -1266,7 +1693,9 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+
                 }
               } else if (passedArray[2][q] == 1) {
                 let str1 = passedTime[4][q];
@@ -1285,7 +1714,9 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+
 
               } else {
                 let p = q + 1;
@@ -1354,7 +1785,8 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[3][q] == 1) {
                 let str1 = passedTime[6][q];
@@ -1373,7 +1805,9 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -1441,7 +1875,8 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[4][q] == 1) {
                 let str1 = passedTime[8][q];
@@ -1460,7 +1895,8 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
 
               } else {
                 let p = q + 1;
@@ -1530,7 +1966,8 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[5][q] == 1) {
                 let str1 = passedTime[10][q];
@@ -1549,7 +1986,9 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -1617,7 +2056,8 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[6][q] == 1) {
                 let str1 = passedTime[12][q];
@@ -1636,7 +2076,8 @@ background: #88ba1c;
                 } else {
                   ii = i;
                 }
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -1659,17 +2100,17 @@ background: #88ba1c;
           if (find == 1) {
 
 
-            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday </td>${dts}<tr>`;
+            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:200px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday </td>${dts}<tr>`;
             <?php echo $dsa = ""; ?>
           } else {
             <?php echo $dsa = ""; ?>
-            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;;border: solid black">${i} ${months2[currMonth]} <br> ${day}</td>${dts}<tr>`;
+            liTag += `<tr style="min-height:200px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:200px;border: solid black">${i} ${months2[currMonth]} <br> ${day}</td>${dts}<tr>`;
 
 
             <?php echo $dsa = ""; ?>
           }
           <?php echo $dsa = ""; ?>
-          if (day == "Sunday" && day != 31) {
+          if (day == "Sunday" && i != 31) {
             let tet = "<?php echo "$final_col_code"; ?>";
             liTag += `${tet}`;
             daysTag.innerHTML = liTag;
@@ -1741,7 +2182,7 @@ background: #88ba1c;
           <?php echo json_encode($P); ?>;
         var passedChCH =
           <?php echo json_encode($rr); ?>;
-        //var lena = "<?php //echo "$number"        ?>";
+        //var lena = "<?php //echo "$number"                ?>";
         var tsaas = "1";
         var idb = JSON.stringify(passedIDB);
         var Ypb = JSON.parse(neww);
@@ -1749,7 +2190,7 @@ background: #88ba1c;
         var ChAb = JSON.stringify(passedChCH);
         var Cdsa = JSON.stringify(newww);
         var tess;
-        alert(newww);
+        //alert(newww);
         $.ajax({
           type: "POST",
           url: "get-ajax.php",
@@ -1819,13 +2260,57 @@ background: #88ba1c;
                 if (chp !== null) {
                   let final = "";
                   let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-                  let btn2 = '">V</button><br><input type="button" id="bn';
+                  let btn2 = '">V</button><br><br><br><br><br><input type="button" id="bn';
                   let b2 = '">X</button><br><input type="button" id="bn';
                   let btn3 = '" onClick="Open_name(this.id)" value="'
                   let btn6 = '"><input type="hidden" id="hn';
+
+
+                  /*let cll = "background-color:#303030; color:white;";
+          let ppp = '<div><td>';
+          let ddd = '<div><td id="';
+          let xxx = "-";
+          let jjj = '">';
+          let ccc = '" style="min-width:170px;border:solid black;padding: 20px;background-color: ';
+          let zzz = ';">';
+          let qqq = "</td></div>";
+          let ttt = "<button>+</button>";
+          let mmm = '<center><button class="btn btn-light" style="border-radius: 20%;" onClick="reply_click(this.id)" id="b';
+          let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
+          let bbb = "<br>";
+          let ia = '<input type="time" value="';
+          let ib = '">';
+          let ib1 = '">';
+          let xcx = '<button align="right" style="position:absolute;font-size: 10px;pading: 10px" onClick="canceled(this.id)">X</button>';
+          //let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;padding: 10px"" onClick="canceled(this.id)" id="x';
+          let b1 = '<button class="btn-close btn-close-white" style="position:relative;border: 1px blackfont-size: 12px;padding-top: 10px;padding-left: 10px" onClick="canceled(this.id)" id="x';
+          let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
+          let b2 = '"></button><br><input type="button" id="bn';
+          let b7 = '<br><br><br><input type="button" id="bn';
+          let b3 = '" onClick="Open_name(this.id)" style="margin-top:10px" value="';
+          let b6 = '"><br><input type="hidden" id="hn';
+          let b4 = '" value="';
+          let b5 = '"></center></div>';
+          let t1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right" class="form-control" id="tf';
+          let t3 = '<div class="form-group"><center><label for="tf';
+          let t4 = '" class="text-light" style="display:inline;font-size:17px;float:left;clear: left;">FROM:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
+          let t2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
+          let t5 = '<label for="tt';
+          let t6 = '" class="text-light" style="display:inline;font-size:17px;float:left">TO:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;;display:inline;float:right" class="form-control" id="tt';
+
+          let tv = '" value="';
+          let open = 'vacant';
+          let s = "background-color:#585858;color:white;";
+          let ii = "";
+          let cen = "</center>";
+          let bt2 = '"><i class="bi bi-trash"></i></button>';*/
+
+
+
+
                   //let b3 = '" onClick="Open_name(this.id)" value="open"><input type="hidden" id="hn';
                   let btn4 = '" value="';
-                  let btn5 = '">';
+                  let btn5 = '"></center></div>';
                   let val = a1[x][i];
                   let val1 = val.substring(0, 5);
                   let val2 = val.substring(10, 15);
@@ -1844,12 +2329,14 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = val.substring(char);
                   let brr = "<br>";
-                  let tm1 = '<input type="time" id="tf';
-                  let tm2 = '<input type="time" id="tt';
+                  let tm1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
+                  let tm2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
                   let tmv = '" value="';
                   let tmc = '">';
                   let asz = '<input type="time" id="tp01-001" value="00:00">';
-                  final = tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2 + fa + btn3 + namen + btn6 + fa + btn4 + val3 + btn5;
+                  let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
+                  let bt2 = '"><i class="bi bi-trash"></i></button>';
+                  final = bt + fa + bt2 + tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2 + fa + btn3 + namen + btn6 + fa + btn4 + val3 + btn5;
                   chp.innerHTML = "";
                   chp.innerHTML = final;
                 }
@@ -1885,16 +2372,19 @@ background: #88ba1c;
         let cha = document.getElementById(result123);
         let final = "";
         let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-        let btn2 = '">x</button><br><input type="button" id="bn';
-        let btn3 = '" onClick="Open_name(this.id)" value="vacant"><input type="hidden" id="hn';
-        let btn4 = '" value="">';
+        let btn2 = '">x</button><br><br><br><br><br><input type="button" id="bn';
+        let btn3 = '" onClick="Open_name(this.id)" value="Vacant"><input type="hidden" id="hn';
+        let btn4 = '" value=""></center></div>';
         let val = "00:00";
         let brr = "<br>";
-        let tm1 = '<input type="time" id="tf';
-        let tm2 = '<input type="time" id="tt';
+        let tm1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
+        let tm2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
         let tmv = '" value="';
         let tmc = '">';
-        final = tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
+        let tmc2 = '">';
+        let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;" onClick="canceled(this.id)" id="x';
+        let bt2 = '"><i class="bi bi-trash"></i></button>';
+        final = bt + result123 + bt2 + tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc2 + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
         cha.innerHTML = final;
       }
       function canceled(clicked_id) {
