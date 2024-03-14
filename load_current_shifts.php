@@ -109,7 +109,19 @@ $dd = 1;
                       
                         //echo"<p>".$date."1111</p>";
                         while ($rows_d = mysqli_fetch_assoc($fetchdd)) {
-                            echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." | ".$rows_d['user_name']."</p><p style='margin:auto;float:right'>asd</p></div></small>";
+                            echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." | ".$rows_d['user_name']."</p><p style='margin:auto;float:right'>";
+                            if($rows_d['att_from'] == null && strtotime($rows_d['saved_from']) > strtotime(date('H:i:s'))){
+                              
+                              echo "<div style='border: solid #808080;border-width: thin;float:righ;padding-left:2px;padding-right:2px'>--:-- / --:--</div><div style='float:right'>Has not started:&nbsp;&nbsp;</div>";
+                            }else if($rows_d['att_from'] == null){
+                              echo "<div style='border: solid red;border-width: thin;float:right;color:red;padding-left:2px;padding-right:2px'>--:-- / --:--</div><div style='float:right;color:red'>Has not started:&nbsp;&nbsp;</div>";
+                            }else if($rows_d['att_to'] != null && $rows_d['att_from'] != null){
+                              echo "<div style='border: solid #808080;border-width: thin;float:right;color:#808080;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / ".substr($rows_d['att_to'], 0, -3)."</div><div style='float:right;color:#808080'>Ended:&nbsp;&nbsp;</div>";
+                            }else if($rows_d['att_to'] == null && $rows_d['att_from'] != null){
+                              echo "<div style='border: solid green;border-width: thin;float:right;color:green;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / --:--</div><div style='float:right;color:green'>Active:&nbsp;&nbsp;</div>";
+                            }
+                            //echo "<p>".strtotime($rows_d['saved_from'])."--". strtotime(date('H:i:s'))."</p>";
+                            echo "</p></div></small>";
                         }
                     //}
                 }

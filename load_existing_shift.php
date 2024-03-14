@@ -104,7 +104,7 @@ function certain_shift($dat){
     global $type;
     $mysqli = require __DIR__ . "/database.php";
     $conn = new mysqli($host, $username, $password, $dbname);
-$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' /*ORDER BY object_name, shift_name*/ ");
+$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' ORDER BY shift_name /*ORDER BY object_name, shift_name*/ ");
 
 $id_shift = array();
 $start_shift = array();

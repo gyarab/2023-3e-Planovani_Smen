@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 <div class="login-page">
 <div class="form">
-    <h1>Login in</h1>
+    <h1>Log-in</h1>
     <form method="post" class="login-form">
         <label for="email">Email</label>
         <input type="email" name="email" id="email"

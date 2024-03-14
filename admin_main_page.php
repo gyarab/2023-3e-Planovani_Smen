@@ -184,6 +184,9 @@ $mysqli1->close();
             $fetchy = mysqli_query($conn, $sqly);
             $fetchtd = mysqli_query($conn, $sqltd);
             $fetchtm = mysqli_query($conn, $sqltm);
+            $t1 = array();
+            $t2 = array();
+            $t2 = array();
             $checkfrom = 0;
             $cs = 0;
             $yb = false;
@@ -197,27 +200,87 @@ $mysqli1->close();
                 $fetchch = mysqli_query($conn, $sqlch);
             
                 if (mysqli_num_rows($fetchfr) > 0) {
+                    //while ($row_fr = mysqli_fetch_assoc($fetchfr)) {
+                        $r = 0;
+                        /*while ($row_r = mysqli_fetch_assoc($fetchfr)) {
+                           
+                            $t1[$r] = $row_r['saved_from'];
+                            $t2[$r] = $row_r['saved_to'];
+                            if (strtotime($t1[$r]) >= strtotime($t2[$r])){
+
+                            }else{
+                                if(strtotime($t2[$r]) > strtotime(date('H:i:s'))){
+                                    //$checkfrom = 1;
+                                }
+                            }
+
+                        }*/
                     $checkfrom = 1;
+                    //}
                 }
                  if(mysqli_num_rows($fetchfry) > 0){
                     //$checkfrom = 1;
                     $r = 0;
-                    while ($row_r = mysqli_fetch_assoc($fetchfry)) {
+                    /*while ($row_r = mysqli_fetch_assoc($fetchfry)) {
                     $t1[$r] = $row_r['saved_from'];
                     if (strtotime($t1[$r]) >= strtotime(date('H:i:s'))) {
                         $yb =true;
                         $p = strtotime($t1[$r]);
                         //$status[2] = true;
-                    }
+
+                    }*/
                     $r++;
      
-                }
+                /*}*/
                 if($yb ==true){
                     $checkfrom = 1;
                 }
                 }
                 if (mysqli_num_rows($fetchch) > 0) {
-                    $have = 1;
+                    $r = 0;
+                    while ($row_r = mysqli_fetch_assoc($fetchch)) {
+                        $t1[$r] = $row_r['saved_from'];
+                        $t2[$r] = $row_r['saved_to'];
+                        $t3[$r] = $row_r['att_from'];
+
+                        if($row_r['att_from'] == null){
+                            if (strtotime($t1[$r]) >= strtotime($t2[$r])){
+                                if(strtotime($t2[$r])+84600 > strtotime(date('H:i:s'))){
+                                    //$checkfrom = 1;
+                                    ?><script>
+                                    //alert("1");
+                                    </script>
+                                    <?php
+                                    $have = 1;
+                                }else{
+                                    $have = 0;
+                                }
+                            }else{
+                                if(strtotime($t2[$r]) > strtotime(date('H:i:s'))){
+                                    //$checkfrom = 1;
+                                    ?><script>
+                                    //alert("2");
+                                    </script>
+                                    <?php
+                                    $have = 1;
+                                }else{
+                                    $have = 0;
+                                ?><script>
+                                //alert("4");
+                                </script>
+                                <?php
+                                }
+                            }
+                        }else{
+                            ?><script>
+                            alert("3");
+                            </script>
+                            <?php
+                            $have = 1;
+                        }
+                        $r++;
+                    }
+                    
                 }else{
                     $have = 0;
                 }
@@ -478,6 +541,21 @@ $mysqli1->close();
                         </div>
                     </div>
                     <script>
+            $('#option').change(function () {
+              var inp = $(this).val();
+              $.ajax({
+                        url: "load_current_shifts.php",
+                        method: "POST",
+                        data: { input: inp },
+                        success: function (data) {
+                          $("#current").html(data);
+                          //alert("hjasdsdhjg");
+                        }
+                      });
+            });
+
+
+
                         var input_obj =
                         <?php echo json_encode($first); ?>;
                         //alert("hjasdhjg");

@@ -327,7 +327,7 @@ background: #88ba1c;
           <p style="display:inline">Shift:&nbsp;&nbsp;</p>
           <div id="shi_load" style="display:inline;"></div>
           <br>
-          <input type="button" class="btn btn-primary" value="Filter" style="float:left;font-size: 16px;">
+          <input type="button" class="btn btn-primary" value="Filter" onclick="filter()" style="float:left;font-size: 16px;">
           <br>
           <br>
           <br>
@@ -340,6 +340,7 @@ background: #88ba1c;
               <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
             </div>
           <script>
+            var f_load = 0;
             var obj_search = new Array();
             var pos_search = new Array();
             var input_obj =
@@ -366,6 +367,14 @@ background: #88ba1c;
             $('#select_obj').change(function () {
               obj_search = [];
               shi_search = [];
+              load_check1 = 0;
+            load_check2 = 0;
+          load_check3 = 0;
+           /*   objectall = 0;
+              shiftall = 0;
+              object_all();
+              shift_all();*/
+
               inp = $(this).val();
               $.ajax({
                 url: "cal_obj_load.php",
@@ -386,7 +395,9 @@ background: #88ba1c;
 
                 }
               });
-
+              alert(shi_search);
+              alert(obj_search);
+              filter();
             });
             /*function rum(inp,usid){
               $.ajax({
@@ -413,7 +424,10 @@ background: #88ba1c;
 
             var load_check1 = 0;
             var load_check2 = 0;
-            $(document).on("ajaxComplete", function () {
+            var load_check3 = 0;
+            var arridc = new Array();
+
+           $(document).on("ajaxComplete", function () {
               //$( ".log" ).text( "Triggered ajaxComplete handler." );
               //alert("true");
               let lshi = document.getElementsByName("nshi").length;
@@ -434,6 +448,15 @@ background: #88ba1c;
                   obj_search.push(elements2[b].value);
                 }
               }
+              if(load_check1 ==1 && load_check2==1 && load_check3 ==0 ){
+                //alert("went");
+                load_check3 = 1;
+                f_load = 0;
+                filter();
+                
+                /*load_check3 = 1;
+                load_check3 = 1;*/
+              }
             });
 
             var shiftall = 1;
@@ -441,7 +464,7 @@ background: #88ba1c;
             let lshi;
             var shiftall_arr = new Array();
             function shift_all() {
-
+              f_load = 0;
               if (shiftall == 0) {
                 shiftall = 1;
                 shi_search = [];
@@ -470,14 +493,14 @@ background: #88ba1c;
 
               }
               //alert(shi_search);
-              filter();
+              //filter();
 
 
             }
             var objectall = 1;
             var objectall_arr = new Array();
             function object_all() {
-
+              f_load = 0;
               if (objectall == 0) {
                 objectall = 1;
                 obj_search = [];
@@ -504,12 +527,13 @@ background: #88ba1c;
                 }
               }
               //alert(obj_search);
-              filter();
+              //filter();
 
             }
             var shi_search = new Array();
 
             function shift_search(clicked_val) {
+              f_load = 0;
               if (shi_search.includes(clicked_val) == true && shiftall == 0) {
                 for (let i = 0; i < shi_search.length; i++) {
                   if (shi_search[i] === clicked_val) {
@@ -520,17 +544,17 @@ background: #88ba1c;
                 shi_search.push(clicked_val);
               }
               //alert(shi_search);
-              filter();
+              //filter();
             }
-            var arridc = new Array();
               var arrcols = new Array();
               var arrcolor = new Array();
               var arrwdw = new Array(7);
               var arrcolordark = new Array();
               var arrtish = new Array();
               var arrobj = new Array();
+              var arrname = new Array();
 
-              function filter(){
+              /*function filter(){
               var results = new Array();
               $.ajax({
                 url: "cal_arr_load.php",
@@ -616,6 +640,7 @@ background: #88ba1c;
                   arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
                   arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
                   arrobj[i] = sks[25].substring(1, sks[25].length - 1);
+                  renderCalendar();
                  //alert( arrobj[i]);
 
                 }
@@ -626,10 +651,11 @@ background: #88ba1c;
 
 
 
-            }
+            }*/
 
             var obj_search = new Array();
             function object_search(clicked_val) {
+              f_load = 0;
               if (obj_search.includes(clicked_val) == true && objectall == 0) {
                 for (let i = 0; i < obj_search.length; i++) {
                   if (obj_search[i] === clicked_val) {
@@ -639,94 +665,8 @@ background: #88ba1c;
               } else if(objectall == 0){
                 obj_search.push(clicked_val);
               }
-              alert(obj_search);
-              filter();
-              /*var results = new Array();
-              $.ajax({
-                url: "cal_arr_load.php",
-                method: "POST",
-                dataType: "json",
-                cache: false,
-                async: false,
-                data: { shall: shiftall, shift_arr: shi_search, object: obj_search, shift: shi_search, input: inp },
-                success: function (data) {
-                  results = JSON.stringify(data);
-                }
-
-              });
-              //alert(results);
-              var arridc = new Array();
-              var arrcols = new Array();
-              var arrcolor = new Array();
-              var arrwdw = new Array(7);
-              var arrcolordark = new Array();
-              var arrtish = new Array();
-              var arrobj = new Array();
-              if (shiftall == 1) {
-                results = results.substring(1, results.length - 1);
-                alert(results);
-                var hhha = new Array();
-                var sks = new Array();
-                var qpw = [];
-                var bnm = lshi;
-                hhha = results.split("]");
-                //alert(hhha[0]);
-                for (let i = 0; i < bnm; i++) {
-                  var tt = hhha[i].length;
-                  if (i == 0) {
-                    hhha[i] = hhha[i].substring(1, tt);
-
-                  } else {
-                    hhha[i] = hhha[i].substring(2, tt);
-                  }
-                  if (i == 0) {
-                    for (let z = 0; z < 7; z++) {
-                      arrwdw[z] = [];
-                      for (let j = 0; j < hhha.length; j++) {
-                        arrwdw[z][j] = 0;
-                      }
-                    }
-                    for (let z = 0; z < 14; z++) {
-                      arrtish[z] = [];
-                      for (let j = 0; j < hhha.length; j++) {
-                        arrtish[z][j] = 0;
-                      }
-                    }
-                  }
-
-                  sks = hhha[i].split(",");
-                  arridc[i] = sks[0].substring(1, sks[0].length - 1);
-                  arrcols[i] = sks[1].substring(1, sks[1].length - 1);
-                  arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
-                  arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
-                  arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
-                  arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
-                  arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
-                  arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
-                  arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
-                  arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
-                  arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
-                  arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
-                  arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
-                  arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
-                  arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
-                  arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
-                  arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
-                  arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
-                  arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
-                  arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
-                  arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
-                  arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
-                  arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
-                  arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
-                  arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
-                  arrobj[i] = sks[25].substring(1, sks[25].length - 1);
-
-
-                }
-              }*/
-
-
+              //alert(obj_search);
+              //filter();
             }
 
           </script>
@@ -782,19 +722,34 @@ background: #88ba1c;
           <span class="close">&times;</span>
         </div>
         <p>Search for employee..</p>
-        <input type="text" id="live_search" autocomplete="off" placeholder="Search...">
+        <div class="row">
+        <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+        <input type="text" id="live_search" style="float: left; font-size: 16px" autocomplete="off" placeholder="Search...">
+        
+        <input type="button" onclick="Vacant()" style="float: right;font-size: 16px" value="Set shift to vacant">
         <br>
-        <input type="button" onclick="Vacant()" value="Vacant">
+        <br>
         <br>
         <hr>
         <br>
-        <hr>
+        <h2>Assigned employees:</h2>
+        <br>
+        <div id="searchresult_assign"></div>
+
+        </div>
+      <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+        <h2>All employees:</h2>
+        <br>
         <div id="searchresult"></div>
-      </div>
+        
+      
       <form>
         <!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
         <div id="livesearch"></div>
       </form>
+
+      </div>
+      </div>
 
 
 
@@ -828,12 +783,15 @@ background: #88ba1c;
 
 
       }
+      var shfft;
       function Open_name(clicked_id) {
         var modal = document.getElementById("myModal");
 
         // Get the button that opens the modal
         var btn = document.getElementById(clicked_id);
         idbtn = clicked_id;
+        shfft = document.getElementById("i00-"+clicked_id.substring(5)).value;
+        //alert(shfft);
         //qkk = "kldsa";
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
@@ -853,9 +811,19 @@ background: #88ba1c;
               $("#searchresult").html(data);
             }
           });
+          $.ajax({
+            url: "livesearch_assign.php",
+            method: "POST",
+            data: { input: input, btns: idbtn, id_sh: shfft },
+            success: function (data) {
+              $("#searchresult_assign").css("display", "inline");
+              $("#searchresult_assign").html(data);
+            }
+          });
         } else {
           //alert(input);
           $("#searchresult").css("display", "none");
+          $("#searchresult_assign").css("display", "none");
         }
 
       }
@@ -880,8 +848,18 @@ background: #88ba1c;
                 $("#searchresult").html(data);
               }
             });
+            $.ajax({
+              url: "livesearch_assign.php",
+              method: "POST",
+              data: { input: input, btns: idbtn, id_sh: shfft },
+              success: function (data) {
+                $("#searchresult_assign").css("display", "inline");
+                $("#searchresult_assign").html(data);
+              }
+            });
           } else {
             $("#searchresult").css("display", "none");
+            $("#searchresult_assign").css("display", "none");
           }
         });
       });
@@ -906,6 +884,36 @@ background: #88ba1c;
         chch.value = ttxx;
         vjvj.value = mjk;
         document.getElementById("searchresult").innerHTML = "";
+        document.getElementById("searchresult_assign").innerHTML = "";
+      }
+
+
+      function Pick_em(cid,cvalue){
+        modal.style.display = "none";
+        //alert("hjkasd");
+        let vva = cid;
+        let rr = vva.substring(1, 9);
+        let mj = vva.substring(2, 9);
+        var mjk = vva.substring(9);
+        //alert(rr);
+        let chch = document.getElementById(rr);
+        let vjvj = document.getElementById("h" + mj);
+        //let hhl = document.getElementById("live_search");
+        //hhl.value = "";
+
+
+        var ttxx = document.getElementById(vva).innerText;
+        var ttxx = cvalue;
+        //var ssxx = document.getElementById(vva).innerText;
+        //alert(ttxx);
+        chch.value = ttxx;
+        vjvj.value = mjk;
+        /*alert(rr);
+        alert(mj);
+        alert(mjk);*/
+        document.getElementById("searchresult").innerHTML = "";
+        document.getElementById("searchresult_assign").innerHTML = "";
+
       }
       /*function showResult(str) {
         if (str.length==0) {
@@ -1050,6 +1058,7 @@ background: #88ba1c;
       span.onclick = function () {
         modal.style.display = "none";
         document.getElementById("searchresult").innerHTML = "";
+        document.getElementById("searchresult_assign").innerHTML = "";
 
       }
 
@@ -1111,7 +1120,12 @@ background: #88ba1c;
 
 
 
-      const renderCalendar = () => {
+      //const renderCalendar = () => {
+       function renderCalendar(){
+        /*for(var sd = 0; sd < arridc.length; sd++){
+          alert(arridc[sd]);
+
+        }*/
 
         let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
           lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
@@ -1293,24 +1307,82 @@ background: #88ba1c;
             ?>
 
 
-            /*var count_number =  arrcols.length;
-            var col_code = "<th id='00-000'>Date</th>";
+            var count_number =  arrcols.length;
+            //alert(count_number+ " Len");
+            var col_code = /*"<th id='00-000'>Date</th>"*/"";
             for (var ps = 0; ps < count_number; ps++) {
-            }*/
+
+              let ff = ps + 1;
+              if(ff <10){
+                ff = "0" + "0" + ff;
+              }else if(ff < 100){
+                ff = "0" + ff;
+              }
+              col_code = col_code + "<th id='00-" +ff+ "' style='padding:5px;border: solid black' >" + arrcols[ps] + "</th><input type='hidden' id='h00-" + ff + "' value='" + arrcols[i] +"'><input type='hidden' id='i00-" + ff + "' value='" + arridc[ps] + "'>";
+
+            }
+            let final_col_code = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code + "</tr><table>";
 
 
 
-            var passedID =
-              <?php echo json_encode($idc); ?>;
+            //var count_number =  arrcols.length;
+            //alert(count_number+ " Len");
+            var col_code_obj = "<th id='00-000' rowspan='2'>Date</th>";
+            var sea_obj = 0;
+            var cou_obj = 0;
+            var prea = "";
+            //var lst = 0;
+            for (var ps = 0; ps < count_number; ps++) {
+              if(sea_obj == 0){
+                sea_obj = arrobj[ps];
+                cou_obj++;
+              }else if(arrobj[ps] != sea_obj){
+                col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='"+cou_obj+"' >" + arrname[ps-1] + "</th>";
+                sea_obj = arrobj[ps];
+                cou_obj = 1;
+                //prea
+              }else{
+                cou_obj++;
+              }
+              prea = arrname[ps];
+              /*let ff = ps + 1;
+              if(ff <10){
+                ff = "0" + "0" + ff;
+              }else if(ff < 100){
+                ff = "0" + ff;
+              }*/
+              //col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' >" + arrname[ps] + "</th>";
+
+            }
+            col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='"+cou_obj+"' >" + prea + "</th>";
+             let final_col_code_obj = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code_obj + "</tr><table>";
+            //alert(col_code);
+
+
+          /**moe */
+          /*var passedID =
+              <?php echo json_encode($idc); ?>;*/
+              /*var gig =arridc;*/
+              //var passedID = new Array();
+              var passedID =arridc;
+               /*for(var jk = 0; jk < arridc.length; jk++){
+                passedID[jk] = arridc[jk];
+
+               }*/
             var passedY =
               <?php echo json_encode($y); ?>;
             var passedM =
               <?php echo json_encode($m); ?>;
             var passedCh =
               <?php echo json_encode($ass); ?>;
-            var lena = "<?php echo "$number" ?>";
+              
+            //var lena = "<?php //echo "$number" ?>";
+            var lena = count_number;
             var tsaas = "1";
             var idp = JSON.stringify(passedID);
+            //var idps = JSON.stringify(gig);
+            //alert(idps[0]);
+            //var idp = gig;
             var Yp = JSON.parse(currYear);
             var Mp = JSON.stringify(currMonth);
             var ChA = JSON.stringify(passedCh);
@@ -1349,7 +1421,9 @@ background: #88ba1c;
             var hhha = new Array();
             var sks = new Array();
             var qpw = [];
-            var bnm = "<?php echo "$number" ?>";
+            /*moe*/
+            //var bnm = "<?php //echo "$number" ?>";
+            var bnm =arridc.length;
             hhha = a1sa.split("]");
             for (let i = 0; i < bnm; i++) {
               hhha[i] = hhha[i].substring(2);
@@ -1380,7 +1454,10 @@ background: #88ba1c;
 
             let tet = "<?php echo "$final_col_code"; ?>"
 
-            liTag += `${tet}`;
+            //liTag += `${tet}`;
+            liTag += `${final_col_code_obj}`;
+            liTag += `${final_col_code}`;
+            col_code = "<th id='00-000'>Date</th>"+col_code; 
 
           } // creating li of all days of current month
           // adding active class to li if the current day, month, and year matched
@@ -1404,32 +1481,51 @@ background: #88ba1c;
 
           }
           /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
-          var passedArray =
-            <?php echo json_encode($wdw); ?>;
+
+          /**moe */
+          /*var passedArray =
+            <?php //echo json_encode($wdw); ?>;
           var passedTime =
-            <?php echo json_encode($tish); ?>;
+            <?php //echo json_encode($tish); ?>;
           var passedColor =
-            <?php echo json_encode($color); ?>;
+            <?php //echo json_encode($color); ?>;
           var passedColorDark =
-            <?php echo json_encode($colordark); ?>;
+            <?php //echo json_encode($colordark); ?>;*/
+            //alert("jkhasd");
+           var passedArray = arrwdw;
+          var passedTime = arrtish;
+          var passedColor =arrcolor;
+          var passedColorDark = arrcolordark;
+          
+
                                    /* var passedSavedata =
                                       <?php //echo json_encode($saved_data);                ?>;* /
           var passedID =
-            <?php echo json_encode($idc); ?>;
+            <?php //echo json_encode($idc); ?>;
           var tas = 0;
           //alert(passedSavedata[0][2]);
 
 
           /** source https://www.geeksforgeeks.org/how-to-pass-variables-and-data-from-php-to-javascript/ */
-          var sz = "<?php echo "$number" ?>";
-          var numas = "<?php echo "$number" ?>";
+          /* moe*/
+         // var sz = "<?php //echo "$number" ?>";
+          //var numas = "<?php //echo "$number" ?>";
+          
+          if(f_load == 0){
+          var sz =arridc.length;
+          var numas =arridc.length;
+          }else{
+            var sz =arridc.length-1;
+          var numas =arridc.length-1;   
+          }
+          //alert("jkhasd2");
           let dts = "";
           let cll = "background-color:#303030; color:white;";
           let ppp = '<div><td>';
           let ddd = '<div><td id="';
           let xxx = "-";
           let jjj = '">';
-          let ccc = '" style="min-width:170px;min-height:200px;border:solid black;padding: 20px;background-color: ';
+          let ccc = '" style="min-width:170px;height:200px;border:solid black;padding: 20px;background-color: ';
           let zzz = ';">';
           let qqq = "</td></div>";
           let ttt = "<button>+</button>";
@@ -2112,11 +2208,14 @@ background: #88ba1c;
           <?php echo $dsa = ""; ?>
           if (day == "Sunday" && i != 31) {
             let tet = "<?php echo "$final_col_code"; ?>";
-            liTag += `${tet}`;
+            //liTag += `${tet}`;
+            //let blank = "<th><th>" + `${col_code}`;
+            liTag += `${col_code}`;
             daysTag.innerHTML = liTag;
           }
 
         }
+        f_load = 1;
         console.log("Hello");
         console.log(passedArray);
         <?php $dsa = ""; ?>
@@ -2127,7 +2226,7 @@ background: #88ba1c;
 
 
 
-      renderCalendar();
+      //renderCalendar();
 
       <?php $dsa = ""; ?>
       prevNextIcon.forEach(icon => { // getting prev and next icons
@@ -2209,6 +2308,175 @@ background: #88ba1c;
 
     </script>
     <script>
+                  //renderCalendar();
+
+
+
+
+                  function filter(){
+                    f_load = 0;
+              var results = new Array();
+              $.ajax({
+                url: "cal_arr_load.php",
+                method: "POST",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: { shall: shiftall,oball: objectall, shift_arr: shi_search, object_arr: obj_search, input: inp,user: usid },
+                success: function (data) {
+                  results = JSON.stringify(data);
+                }
+
+              });
+              //alert(results);
+               arridc = [];
+               arrcols = [];
+              arrcolor =[]; //new Array();
+              arrwdw =[]; //new Array(7);
+             arrcolordark =[]; //new Array();
+               arrtish =[]; //new Array();
+               arrobj =[]; //new Array();
+               arrname =[];
+              //if (shiftall == 1) {
+                results = results.substring(1, results.length - 1);
+                if(results.length >7){
+                alert(results);
+                var hhha = new Array();
+                var sks = new Array();
+                var qpw = [];
+                var bnm = lshi;
+                hhha = results.split("]");
+                var bnm = hhha.length;
+                //alert(hhha[i]);
+                //alert(hhha[0]);
+                for (let i = 0; i < bnm; i++) {
+                  var tt = hhha[i].length;
+                  if (i == 0) {
+                    hhha[i] = hhha[i].substring(1, tt);
+
+                  } else {
+                    hhha[i] = hhha[i].substring(2, tt);
+                  }
+                  //alert(hhha[i]);
+                  if (i == 0) {
+                    for (let z = 0; z < 7; z++) {
+                      arrwdw[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrwdw[z][j] = 0;
+                      }
+                    }
+                    for (let z = 0; z < 14; z++) {
+                      arrtish[z] = [];
+                      for (let j = 0; j < hhha.length; j++) {
+                        arrtish[z][j] = 0;
+                      }
+                    }
+                  }
+
+                  sks = hhha[i].split(",");
+                  //alert(hhha[i]);
+                  arridc[i] = sks[0].substring(1, sks[0].length - 1);
+                  arrcols[i] = sks[1].substring(1, sks[1].length - 1);
+                  arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
+                  arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
+                  arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
+                  arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
+                  arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
+                  arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
+                  arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
+                  arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
+                  arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
+                  arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
+                  arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
+                  arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
+                  arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
+                  arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
+                  arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
+                  arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
+                  arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
+                  arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
+                  arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
+                  arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
+                  arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
+                  arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
+                  arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
+                  arrobj[i] = sks[25].substring(1, sks[25].length - 1);
+                  arrname[i] = sks[26].substring(1, sks[26].length - 1);
+                  //if (i ==bnm-1) {
+                  //renderCalendar();
+                  
+                  if(i == bnm-2){
+                  call_cal();
+                  }
+                  //}
+                  //call_cal();
+                 //alert( arrobj[i]);
+                
+
+                }
+                //call_cal();
+                //renderCalendar();
+                //renderCalendar();
+               
+
+              }else{
+                daysTag.innerHTML = "";
+                /*let Tac = "<table><tr><th>JAJK</th></tr></table>";
+                daysTag.innerHTML = Tac;*/
+                Empty();
+              }
+              
+              //renderCalendar();
+                //alert( arrobj[0]);
+
+              //}
+
+
+
+            }
+            function call_cal (){
+              renderCalendar();
+
+            }
+            function Empty(){
+              let head = "<table><tr style='font-size: 15px;pading:10px;border: solid black'><th>"+lastDateofMonth+"</th></tr><table>";
+              //let Tac = "<table><tr><th>JAJK</th></tr></table>";
+              let Tac = head;
+              /*for (let i = 1; i <= lastDateofMonth; i++) {
+                Tac = Tac + "<tr><td>" +i +"</td></tr>";
+              }*/
+                daysTag.innerHTML = head;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       function vl() {
         tess = document.getElementById("help").textContent;
         var a1 = JSON.parse(document.getElementById("help").value);

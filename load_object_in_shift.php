@@ -8,7 +8,7 @@ $sql2 = " SELECT * FROM list_of_objects ORDER BY id_object ASC";
 $result3 = $mysqli2->query($sql2);
 $mysqli2->close();
 $data_name = array();
-
+$input = $_POST['input'];
 
 $mysqli2 = require __DIR__ . "/database.php";
 //require __DIR__ . '/load_object2.php';
@@ -39,14 +39,14 @@ $dd = 1;
 echo "<div class='row' style='justify-content : space-between' >";
 
 for ($x = 0; $x < count($data2); $x++) {
-    if ($data3[$x] == null) {
+    if ($data3[$x] == null && $input == $data1[$x]) {
         static $dd = 1;
 
         $search = $data1[$x] . "";
         $numberval[$count] = $data1[$x] . "";
         $count = 1;
 
-        echo "<div class='col-12 col-sm-6 p-2' style='border: 1px solid;box-shadow: 5px 10px #888888;'>";
+        //echo "<div class='col-12 col-sm-6 p-2' style='border: 1px solid;box-shadow: 5px 10px #888888;'>";
         echo "<div class='overflow-auto'>";
         echo "<ul>";
         echo "<li>";
@@ -75,7 +75,7 @@ for ($x = 0; $x < count($data2); $x++) {
         //echo "<hr style='height:5px'>";
         echo "<br>";
         echo "</div>";
-        echo "</div>";
+        //echo "</div>";
 
         /**This part calls the function in order to check if this object is superior to some other object*/
         //require __DIR__ . '/load_object.php';

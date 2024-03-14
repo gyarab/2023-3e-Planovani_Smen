@@ -5,13 +5,43 @@ $mysqli = require __DIR__ . "/database.php";
 //$mysqli = require __DIR__ . "/database.php";
 //include("database.php");
 $conn = new mysqli($host, $username, $password, $dbname);
-
+//$input = array();
 $input = $_POST['input'];
 
 //$query = "SELECT * FROM user2 WHERE firstname LIKE '{$input}%' OR middlename LIKE '{$input}%' OR lastname LIKE '{$input}%' OR position LIKE '{$input}%'";
 $arr = array();
 $arr = explode(" ", $input);
 $query = "SELECT * FROM user2 WHERE firstname LIKE '$arr[0]%' AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
+if (count($arr) != 0) {
+  
+  for ($i = 0; $i < count($arr); $i++) {
+    if($arr[$i] == " "){
+      array_splice($arr, $i);
+    }
+  }
+  for ($i = 0; $i < count($arr); $i++) {
+    //echo"<p>".$i."-".$arr[$i]."-</p>";
+  }
+}
+
+if (count($arr) > 2 && ($arr[count($arr)- 1] !="" || $arr[count($arr)- 1] !=" ")) {
+  
+  for ($i = 2; $i < count($arr)-1; $i++) {
+    /*if($arr[$i] == " "){
+      array_splice($arr, $i);
+    }**/
+    $arr[1] = $arr[1]." ".$arr[$i];
+
+  }
+  $arr[3] =  $arr[count($arr)- 1];
+
+  for ($i = 0; $i < count($arr); $i++) {
+    echo"<p>".$i."-".$arr[$i]."-</p>";
+  }
+}
+//echo"<p>".$input."</p>";
+
+
 //}else{
 //$query = "SELECT * FROM user2 WHERE (firstname LIKE '$arr[0]%' OR firstname LIKE '$arr[1]%') AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
 //}
@@ -24,7 +54,7 @@ $c = 0;
 if ($arr[0] == null) {
   $quer[$c] = "SELECT * FROM user2";
   $c++;
-} else if ($arr[0] != null && $arr[1] == null) {
+} else if ($arr[0] != " "&& $arr[1] == null) {
   for ($i = 0; $i < 1; $i++) {
     for ($x = 0; $x < 1; $x++) {
       for ($z = 0; $z < 1; $z++) {
@@ -40,7 +70,7 @@ if ($arr[0] == null) {
       }
     }
   }
-} else if ($arr[0] != null && $arr[1] != null && $arr[2] == null) {
+} else if ($arr[0] != " " && $arr[1] != null && $arr[2] == null) {
   for ($i = 0; $i < 2; $i++) {
     for ($x = 0; $x < 2; $x++) {
 

@@ -28,6 +28,7 @@ $arr1= array();
 $arr2= array();
 $arr3= array();
 $arr4= array();
+$arr5= array();
 $r_filter[]= array(); 
 
 if(count($shi_arr) == 0){
@@ -65,6 +66,7 @@ for ($x = 0; $x < count($data2); $x++) {
                 while ($row_shim = mysqli_fetch_assoc($fetchshim)) {
                     array_push($arr3,$row_shim['id_shift']);
                     array_push($arr4,$data1[$x]);
+                    array_push($arr5,$row_shim['shift_name']);
                 }
             }
         }
@@ -97,6 +99,7 @@ for ($x = 0; $x < count($data2); $x++) {
 $sort_arr[] = array(); 
 $sort_arr_id[] = array(); 
 $sort_arr_obj[] = array();
+array_multisort($arr5, $arr4,$arr3);
 
 $us = 0;
 $position = "";
@@ -211,6 +214,7 @@ if(count($shi_arr) != 0){
             $final[$index][23] = $rows['sun_from'];
             $final[$index][24] = $rows['sun_to'];
             $final[$index][25] = $rows['object_id'];
+            $final[$index][26] = $rows['object_name'];
             $index++;
         }
        }
@@ -230,6 +234,7 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
     global $arr2;
     global $arr3;
     global $arr4;
+    global $arr5;
     global $obj_arr;
     global $conn;
     $find = 0;
@@ -243,6 +248,7 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
                     while ($row_shi = mysqli_fetch_assoc($fetchshi)) {
                         array_push($arr3,$row_shi['id_shift']);
                         array_push($arr4,$dat1[$i]);
+                        array_push($arr5,$row_shi['shift_name']);
                     }
                 }
             }

@@ -544,6 +544,7 @@ $mysqli1->close();
                                 success: function (data) {
                                     $("#searchresult").css("display", "inline");
                                     $("#searchresult").html(data);
+                                    //alert(data);
                                 }
                             });
                         });
