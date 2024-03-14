@@ -22,6 +22,7 @@ if (isset($_SESSION["user2_id"])) {
     <title>Manager page</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     
@@ -62,6 +63,22 @@ function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
 }
+
+        document.addEventListener("DOMContentLoaded", function() {
+        <?php if ($_SESSION["popup"] == 0) { ?>
+            function popup() {
+                Swal.fire({
+                    title: "Welcome!",
+                    text: "",
+                    icon: "success"
+                });
+                console.log("grgeh");
+                <?php $_SESSION["popup"] = 1; ?>
+            }
+            popup();
+        <?php } ?>
+    });
+        
 </script>
 </body>
 </html>
