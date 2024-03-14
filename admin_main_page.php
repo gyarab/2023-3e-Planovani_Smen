@@ -48,6 +48,7 @@ $mysqli1->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body onload="startTime()">
@@ -541,6 +542,22 @@ $mysqli1->close();
                         </div>
                     </div>
                     <script>
+                        
+                                document.addEventListener("DOMContentLoaded", function() {
+                    <?php if ($_SESSION["popup"] == 0) { ?>
+                    function popup() {
+                        Swal.fire({
+                            title: "Welcome!",
+                            text: "",
+                            icon: "success"
+                        });
+                        console.log("grgeh");
+                        <?php $_SESSION["popup"] = 1; ?>
+                    }
+                    popup();
+                <?php } ?>
+            });
+                        
             $('#option').change(function () {
               var inp = $(this).val();
               $.ajax({
