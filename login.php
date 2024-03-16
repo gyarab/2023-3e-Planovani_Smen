@@ -25,6 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             session_regenerate_id();
             /** start of global sessions*/
             $_SESSION["user2_id"] = $user["id"];
+            
+            /** popup logic*/
+            $_SESSION["popup"] = 0;
+            
             if($user["position"] == "admin"){
                 //header("Location: admin_main_page.php");
                 header("Location: admin_main_page.php");
