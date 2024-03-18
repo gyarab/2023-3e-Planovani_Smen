@@ -3,7 +3,7 @@ $mysqli2 = require __DIR__ . "/database.php";
 
 $input = $_POST['input'];
 $date = date('Y-m-d');
-$yesterday = date('Y-m-d', strtotime($date. ' + 1 days'));
+$yesterday = date('Y-m-d', strtotime($date. ' - 1 days'));
 $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
       $result3 = $mysqli2->query($sql2);
       $mysqli2->close();
@@ -57,6 +57,7 @@ $dd = 1;
           }
 
           echo "</div>";
+          //echo "<p>".$yesterday."</p>";
 
 
           
@@ -111,7 +112,12 @@ $dd = 1;
                       
                         //echo"<p>".$date."1111</p>";
                         while ($rows_d = mysqli_fetch_assoc($fetchdd)) {
-                            echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." | ".$rows_d['user_name']."</p><p style='margin:auto;float:right'>";
+                          if($rows_d['saved_date'] == $yesterday){
+                             $add_y = "(yesterday)";
+                          }else{
+                            $add_y = "";
+                          }
+                            echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." ".$add_y." | ".$rows_d['user_name']." </p><p style='margin:auto;float:right'>";
                             /**Smena jeste nezacala */
                             if($rows_d['att_from'] == null && strtotime($rows_d['saved_from']) > strtotime(date('H:i:s'))){
                               echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>--:-- / --:--</div><div style='float:right'>Has not started:&nbsp;&nbsp;</div>";

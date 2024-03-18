@@ -58,9 +58,6 @@ if ($arr[0] == null) {
   for ($i = 0; $i < 1; $i++) {
     for ($x = 0; $x < 1; $x++) {
       for ($z = 0; $z < 1; $z++) {
-        /*$quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '$arr[$i]%' AND middlename LIKE '$arr[$x]%' AND lastname LIKE '$arr[$z]%' ";
-        $c++;*/
-        //echo "<h6>One</h6>";
         $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '$arr[$i]%' ";
         $c++;
         $quer[$c] = "SELECT * FROM user2 WHERE middlename LIKE '$arr[$x]%' ";
@@ -89,7 +86,6 @@ if ($arr[0] == null) {
   for ($i = 0; $i < 3; $i++) {
     for ($x = 0; $x < 3; $x++) {
       for ($z = 0; $z < 3; $z++) {
-        //echo "<h6>three</h6>";
         if ($i != $x && $i != $z && $z != $x) {
           $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '{$arr[$i]}%' AND middlename LIKE '{$arr[$x]}%' AND lastname LIKE '{$arr[$z]}%' ";
           $c++;

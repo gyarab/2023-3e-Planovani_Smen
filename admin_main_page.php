@@ -191,6 +191,21 @@ $mysqli1->close();
             $checkfrom = 0;
             $cs = 0;
             $yb = false;
+            $sqlfry = "SELECT * FROM saved_shift_data WHERE saved_date='$y' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
+            $fetchfryy = mysqli_query($conn, $sqlfry);
+            if (mysqli_num_rows($fetchfryy) > 0) {
+                //$have = 1;
+               while ($row_y = mysqli_fetch_assoc($fetchfryy)) {
+                   $st = $row_y['saved_from'];
+                   $en = $row_y['saved_to'];
+
+               
+               if (strtotime($st) >= strtotime(date('H:i:s'))){
+               $have = 1;
+               $checkfrom = 1;
+               }
+            }
+           }
             if (mysqli_num_rows($fetchtd) > 0) {
                 $have = 1;
                 $sqlfr = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
@@ -218,6 +233,14 @@ $mysqli1->close();
                         }*/
                     $checkfrom = 1;
                     //}
+                }
+                if (mysqli_num_rows($fetchfry) > 0) {
+                     $have = 1;
+                    while ($row_y = mysqli_fetch_assoc($fetchfry)) {
+                        $st = $row_y['saved_from'];
+                        $en = $row_y['saved_to'];
+
+                    }
                 }
                  if(mysqli_num_rows($fetchfry) > 0){
                     //$checkfrom = 1;
@@ -274,7 +297,7 @@ $mysqli1->close();
                             }
                         }else{
                             ?><script>
-                            alert("3");
+                            //alert("3");
                             </script>
                             <?php
                             $have = 1;
