@@ -75,6 +75,8 @@ $dd = 1;
         $find = 0;
         $shi_id = array();
         $shi_name = array();
+
+        //echo "<p>".$yesterday."</p>";
         for ($i = 0; $i < count($dat2); $i++) {
             $shi_id = [];
             if ($searching == $dat4[$i]) {
@@ -85,6 +87,7 @@ $dd = 1;
                 
             }
             echo "<div style='border: solid #aaa;padding: 5px;border-width: thin'>";
+            
             echo "<h6 >".$dat2[$i]." : </h6>";
             $sqlsh = "SELECT * FROM create_shift WHERE object_id='$dat1[$i]' ";
             $fetchc = mysqli_query($conn2, $sqlsh);
@@ -102,8 +105,10 @@ $dd = 1;
                     //echo"<p>".$shi_id[$k]."adsads</p>";
                     //$sqldd= "";
                    
-                    $sqldd[$k] = "SELECT * FROM saved_shift_data WHERE (id_of_shift='$shi_id[$k]' AND saved_date='$date') OR (id_of_shift='$shi_id[$k]' AND saved_date='$yesterday' AND att_from IS NOT NULL AND att_to IS NULL) ";
-                }
+                    //$sqldd[$k] = "SELECT * FROM saved_shift_data WHERE (id_of_shift='$shi_id[$k]' AND saved_date='$date') OR (id_of_shift='$shi_id[$k]' AND saved_date='$yesterday' AND att_from IS NOT NULL AND att_to IS NULL) ";
+                    //$sqldd[$k] = "SELECT * FROM saved_shift_data WHERE (id_of_shift='$shi_id[$k]' AND saved_date='$date') OR (id_of_shift='$shi_id[$k]' AND saved_date='$yesterday' AND att_from IS NOT NULL AND att_to IS NULL) ";
+                    $sqldd[$k] = "SELECT * FROM saved_shift_data LEFT JOIN attendance ON saved_shift_data.id = attendance.planned_id WHERE (id_of_shift='$shi_id[$k]' AND saved_date='$date') OR (id_of_shift='$shi_id[$k]' AND saved_date='$yesterday' AND log_from IS NOT NULL AND log_to IS NULL) ";
+                  }
                 for($k = 0; $k < count($shi_id); $k++){
                   
                     $fetchdd = mysqli_query($conn2, $sqldd[$k]);
@@ -119,47 +124,47 @@ $dd = 1;
                           }
                             echo"<small><div ><p style='display:inline'>".substr($rows_d['saved_from'], 0, -3)."-".substr($rows_d['saved_to'], 0, -3)." ".$shi_name[$k]." ".$add_y." | ".$rows_d['user_name']." </p><p style='margin:auto;float:right'>";
                             /**Smena jeste nezacala */
-                            if($rows_d['att_from'] == null && strtotime($rows_d['saved_from']) > strtotime(date('H:i:s'))){
+                            if($rows_d['log_from'] == null && strtotime($rows_d['saved_from']) > strtotime(date('H:i:s'))){
                               echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>--:-- / --:--</div><div style='float:right'>Has not started:&nbsp;&nbsp;</div>";
                             /**Smena zacal, ale prichod neni potvrzeny */
-                            }else if($rows_d['att_from'] == null){
+                            }else if($rows_d['log_from'] == null){
                               echo "<div style='border-width: thin;float:right;color:red;padding-left:2px;padding-right:2px'>--:-- / --:--</div><div style='float:right;color:red'>Has not started:&nbsp;&nbsp;</div>";
                             /**Potvrzeny prichod, nepotvrzeny odchod */
-                            }else if($rows_d['att_to'] == null && $rows_d['att_from'] != null ){
+                            }else if($rows_d['log_to'] == null && $rows_d['log_from'] != null ){
                               if(strtotime($rows_d['saved_to']) > strtotime($rows_d['saved_from'])){
                                 if(strtotime($rows_d['saved_to']) < strtotime(date('H:i:s'))){
-                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / --:--</div><div style='float:right;color:#E49B0F'>Active:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / --:--</div><div style='float:right;color:#E49B0F'>Active:&nbsp;&nbsp;</div>";
                                 }else{
-                                  echo "<div style='border-width: thin;float:right;color:green;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / --:--</div><div style='float:right;color:green'>Active:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:green;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / --:--</div><div style='float:right;color:green'>Active:&nbsp;&nbsp;</div>";
                                 }
                               }else{
                                 if(strtotime($rows_d['saved_to'])+86400 < strtotime(date('H:i:s'))){
-                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / --:--</div><div style='float:right;color:#E49B0F'>Active:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / --:--</div><div style='float:right;color:#E49B0F'>Active:&nbsp;&nbsp;</div>";
                                 }else{
-                                  echo "<div style='border-width: thin;float:right;color:green;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / --:--</div><div style='float:right;color:green'>Active:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:green;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / --:--</div><div style='float:right;color:green'>Active:&nbsp;&nbsp;</div>";
                                 }
                               }
                               /**Potvrzeny prichod, potvrzeny odchod */
-                            }else if($rows_d['att_to'] != null && $rows_d['att_from'] != null){
+                            }else if($rows_d['log_to'] != null && $rows_d['log_from'] != null){
                               if(strtotime($rows_d['saved_to']) > strtotime($rows_d['saved_from'])){
-                                if(strtotime($rows_d['saved_to'])+420 > strtotime($rows_d['att_to'])){
-                                  echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / ".substr($rows_d['att_to'], 0, -3)."</div><div style='float:right'>Ended:&nbsp;&nbsp;</div>";
+                                if(strtotime($rows_d['saved_to'])+420 > strtotime($rows_d['log_to'])){
+                                  echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / ".substr($rows_d['log_to'], 0, -3)."</div><div style='float:right'>Ended:&nbsp;&nbsp;</div>";
                                  
                                 }else{
-                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / ".substr($rows_d['att_to'], 0, -3)."</div><div style='float:right;color:#E49B0F'>Ended:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / ".substr($rows_d['log_to'], 0, -3)."</div><div style='float:right;color:#E49B0F'>Ended:&nbsp;&nbsp;</div>";
                                 }
                               
                               }else{
-                                if(strtotime($rows_d['saved_from']) < strtotime($rows_d['att_to'])){
+                                if(strtotime($rows_d['saved_from']) < strtotime($rows_d['log_to'])){
                                     $plus = 0;
                                 }else{
                                   $plus = 86400;
                                 }
-                                if(strtotime($rows_d['saved_to'])+86820 > strtotime($rows_d['att_to'])+$plus){
-                                  echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / ".substr($rows_d['att_to'], 0, -3)."</div><div style='float:right'>Ended:&nbsp;&nbsp;</div>";
+                                if(strtotime($rows_d['saved_to'])+86820 > strtotime($rows_d['log_to'])+$plus){
+                                  echo "<div style='border-width: thin;float:right;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / ".substr($rows_d['log_to'], 0, -3)."</div><div style='float:right'>Ended:&nbsp;&nbsp;</div>";
                                   //echo "<p> 1 ".(strtotime($rows_d['saved_to'])+86820)."-".(strtotime($rows_d['att_to'])+$plus)."- ".$plus."</p>";
                                 }else{
-                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['att_from'], 0, -3)." / ".substr($rows_d['att_to'], 0, -3)."</div><div style='float:right;color:#E49B0F'>Ended:&nbsp;&nbsp;</div>";
+                                  echo "<div style='border-width: thin;float:right;color:#E49B0F;padding-left:2px;padding-right:2px'>".substr($rows_d['log_from'], 0, -3)." / ".substr($rows_d['log_to'], 0, -3)."</div><div style='float:right;color:#E49B0F'>Ended:&nbsp;&nbsp;</div>";
                                   //echo "<p> 2 ".(strtotime($rows_d['saved_to'])+86820)."-".(strtotime($rows_d['att_to'])+$plus)."- ".$plus."</p>";
                                 }
 

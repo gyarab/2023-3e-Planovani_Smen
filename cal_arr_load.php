@@ -3,11 +3,11 @@ $mysqli = require __DIR__ . "/database.php";
 $conn = new mysqli($host, $username, $password, $dbname);
 $saved_data[0] = "das";
 $saved_data[1] = "sad";
-$shi_arr =$_POST['shift_arr'];
-$obj_arr =$_POST['object_arr'];
-$user  =$_POST['user'];
+$shi_arr = $_POST['shift_arr'];
+$obj_arr = $_POST['object_arr'];
+$user = $_POST['user'];
 $shall = $_POST['shall'];
-$sql[]  = array();
+$sql[] = array();
 $final[][] = array();
 $pas[][] = array();
 $pas[0][0] = "dasdsas";
@@ -24,15 +24,15 @@ $data2[] = array();
 $data3[] = array();
 $data1[] = array();
 $data4[] = array();
-$arr1= array();
-$arr2= array();
-$arr3= array();
-$arr4= array();
-$arr5= array();
-$r_filter[]= array(); 
+$arr1 = array();
+$arr2 = array();
+$arr3 = array();
+$arr4 = array();
+$arr5 = array();
+$r_filter[] = array();
 
-if(count($shi_arr) == 0){
-    $shi_arr[0]= "";
+if (count($shi_arr) == 0) {
+    $shi_arr[0] = "";
 }
 
 sort($shi_arr);
@@ -58,19 +58,19 @@ for ($x = 0; $x < count($data2); $x++) {
     if ($data3[$x] == null && $data1[$x] == $input) {
         static $dd = 1;
         $look = $data1[$x];
-        array_push($arr1,$data1[$x]);
-        array_push($arr2,$data2[$x]);
-        if(in_array($data1[$x], $obj_arr) == true){
+        array_push($arr1, $data1[$x]);
+        array_push($arr2, $data2[$x]);
+        if (in_array($data1[$x], $obj_arr) == true) {
             $fetchshim = mysqli_query($conn, "SELECT shift_name, id_shift FROM create_shift WHERE object_id='$data1[$x]' ");
             if (mysqli_num_rows($fetchshim) > 0) {
                 while ($row_shim = mysqli_fetch_assoc($fetchshim)) {
-                    array_push($arr3,$row_shim['id_shift']);
-                    array_push($arr4,$data1[$x]);
-                    array_push($arr5,$row_shim['shift_name']);
+                    array_push($arr3, $row_shim['id_shift']);
+                    array_push($arr4, $data1[$x]);
+                    array_push($arr5, $row_shim['shift_name']);
                 }
             }
         }
-        
+
 
         $search = $data1[$x] . "";
         $numberval[$count] = $data1[$x] . "";
@@ -96,15 +96,15 @@ for ($x = 0; $x < count($data2); $x++) {
     }
 
 }
-$sort_arr[] = array(); 
-$sort_arr_id[] = array(); 
+$sort_arr[] = array();
+$sort_arr_id[] = array();
 $sort_arr_obj[] = array();
-array_multisort($arr5, $arr4,$arr3);
+array_multisort($arr5, $arr4, $arr3);
 
 $us = 0;
 $position = "";
-if(count($arr3) != 0){
-    
+if (count($arr3) != 0) {
+
     $sql_admin = "SELECT position FROM user2 WHERE id='$user'";
     $fetchadmin = mysqli_query($conn, $sql_admin);
     if (mysqli_num_rows($fetchadmin) > 0) {
@@ -112,14 +112,16 @@ if(count($arr3) != 0){
             $position = $rowadm['position'];
         }
     }
-    if($position == "admin"){
-        for($i = 0; $i < count($arr3);$i++){
+    if ($position == "admin" || $position == "manager") {
+        for ($i = 0; $i < count($arr3); $i++) {
             array_push($sort_arr_id, $arr3[$i]);
             array_push($sort_arr_obj, $arr4[$i]);
         }
-    }else{
-    for($i = 0; $i < count($arr3);$i++){
-        
+    } else {
+
+        /* ***Nefunguje, pojistka, neni potrebna***/
+        for ($i = 0; $i < count($arr3); $i++) {
+
             $sql_fil = "SELECT * FROM manager_rights WHERE object_id='$arr3[$i]' AND id_user='$user'";
             $fetchfil = mysqli_query($conn, $sql_fil);
             if (mysqli_num_rows($fetchfil) > 0) {
@@ -127,42 +129,42 @@ if(count($arr3) != 0){
                 array_push($sort_arr_obj, $$arr4[$i]);
             }
         }
-    
+
+    }
 }
-}
-if(count($shi_arr) != 0){
+if (count($shi_arr) != 0) {
     $index = 0;
-    for($i = 0; $i < count($shi_arr);$i++){
+    for ($i = 0; $i < count($shi_arr); $i++) {
         $sqlkk = "SELECT * FROM create_shift WHERE shift_name='$shi_arr[$i]'";
         $fetchkk = mysqli_query($conn, $sqlkk);
         if (mysqli_num_rows($fetchkk) > 0) {
             while ($rowkk = mysqli_fetch_assoc($fetchkk)) {
                 $checkk = $rowkk['object_id'];
-               
-                if(in_array($checkk, $arr1) == true){
-                    
-                    if(in_array($rowkk['id_shift'], $sort_arr_id) == false){
-                    array_push($sort_arr_id, $rowkk['id_shift']);
-                    array_push($sort_arr_obj, $rowkk['object_id']);
+
+                if (in_array($checkk, $arr1) == true) {
+
+                    if (in_array($rowkk['id_shift'], $sort_arr_id) == false) {
+                        array_push($sort_arr_id, $rowkk['id_shift']);
+                        array_push($sort_arr_obj, $rowkk['object_id']);
                     }
                 }
             }
         }
     }
 }
-    for($i = 0; $i < count($arr1);$i++){
-        $srch = $arr1[$i];
-        for($l = 0; $l < count($sort_arr_id);$l++){
-            if($sort_arr_obj[$l] == $srch){
-                array_push($sort_arr, $sort_arr_id[$l]);
+for ($i = 0; $i < count($arr1); $i++) {
+    $srch = $arr1[$i];
+    for ($l = 0; $l < count($sort_arr_id); $l++) {
+        if ($sort_arr_obj[$l] == $srch) {
+            array_push($sort_arr, $sort_arr_id[$l]);
 
-            }
         }
     }
-    for($i = 0; $i < count($sort_arr);$i++){
-       $sql[0] = "SELECT * FROM create_shift WHERE id_shift='$sort_arr[$i]'";
-       $fetch = mysqli_query($conn, $sql[0]);
-       if (mysqli_num_rows($fetch) > 0) {
+}
+for ($i = 0; $i < count($sort_arr); $i++) {
+    $sql[0] = "SELECT * FROM create_shift WHERE id_shift='$sort_arr[$i]'";
+    $fetch = mysqli_query($conn, $sql[0]);
+    if (mysqli_num_rows($fetch) > 0) {
         $us = 1;
         while ($rows = mysqli_fetch_assoc($fetch)) {
             $check = $rows['object_id'];
@@ -182,13 +184,13 @@ if(count($shi_arr) != 0){
             $green = base_convert($green, 10, 16);
             $blue = base_convert($blue, 10, 16);
             if (strlen($red) < 2) {
-              $red = "0" . $red;
+                $red = "0" . $red;
             }
             if (strlen($green) < 2) {
-              $green = "0" . $green;
+                $green = "0" . $green;
             }
             if (strlen($blue) < 2) {
-              $blue = "0" . $blue;
+                $blue = "0" . $blue;
             }
             $colordark = "#" . $red . $green . $blue;
             $final[$index][3] = $colordark;
@@ -217,9 +219,9 @@ if(count($shi_arr) != 0){
             $final[$index][26] = $rows['object_name'];
             $index++;
         }
-       }
     }
-    //}
+}
+//}
 
 
 
@@ -240,15 +242,15 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
     $find = 0;
     for ($i = 0; $i < count($dat2); $i++) {
         if ($searching == $dat4[$i]) {
-            array_push($arr1,$dat1[$i]);
-            array_push($arr2,$dat2[$i]);
-            if(in_array($dat1[$i], $obj_arr) == true){
+            array_push($arr1, $dat1[$i]);
+            array_push($arr2, $dat2[$i]);
+            if (in_array($dat1[$i], $obj_arr) == true) {
                 $fetchshi = mysqli_query($conn, "SELECT shift_name, id_shift FROM create_shift WHERE object_id='$dat1[$i]'");
                 if (mysqli_num_rows($fetchshi) > 0) {
                     while ($row_shi = mysqli_fetch_assoc($fetchshi)) {
-                        array_push($arr3,$row_shi['id_shift']);
-                        array_push($arr4,$dat1[$i]);
-                        array_push($arr5,$row_shi['shift_name']);
+                        array_push($arr3, $row_shi['id_shift']);
+                        array_push($arr4, $dat1[$i]);
+                        array_push($arr5, $row_shi['shift_name']);
                     }
                 }
             }
@@ -262,7 +264,7 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
                 }
             }
 
-          
+
         }
     }
 
@@ -270,6 +272,6 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
 }
 
 
-
 echo json_encode($final);
+//echo json_encode($final);
 ?>

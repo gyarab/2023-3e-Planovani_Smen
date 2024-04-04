@@ -395,8 +395,8 @@ background: #88ba1c;
 
                 }
               });
-              alert(shi_search);
-              alert(obj_search);
+              //alert(shi_search);
+              //alert(obj_search);
               filter();
             });
             /*function rum(inp,usid){
@@ -778,7 +778,7 @@ background: #88ba1c;
         let vjvj = document.getElementById("h" + mj);
         //alert(mj);
         vjvj.value = "";
-        chch.value = "Vacant";
+        chch.value = "--vacant--";
 
 
 
@@ -958,6 +958,7 @@ background: #88ba1c;
           var date = new Array();
           var nameid = new Array();
           var name = new Array();
+          var area = new Array();
           var id_shift = new Array();
           var id_shift_delete = new Array();
           //var id_shift_delete = new Array();
@@ -997,6 +998,7 @@ background: #88ba1c;
                 id_shift.push($("#i00-" + p).val());
                 nameid.push($("#hn" + q + "-" + p).val());
                 name.push($("#bn" + q + "-" + p).val());
+                area.push($("#tx" + q + "-" + p).val());
                 var ids = $("#i00-" + p).val();
                 if (id_shift_delete.includes(ids)) {
                 } else {
@@ -1017,13 +1019,14 @@ background: #88ba1c;
           var deleteArr = JSON.stringify(id_shift_delete);
           var nameidArr = JSON.stringify(nameid);
           var nameArr = JSON.stringify(name);
+          var areaArr = JSON.stringify(area);
           //alert(fromTime);
           //alert(toTime);
           var year_month = $("#current_load_date").val();
           $.ajax({
             url: "insert-ajax.php",
             type: "post",
-            data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr },
+            data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr, area: areaArr },
             success: function (data) {
               alert(data); /* alerts the response from php.*/
             }
@@ -1151,6 +1154,8 @@ background: #88ba1c;
         liTag += `${tet}`;
 
         var passedSavedata = [];
+
+        var final_arr = [];
         for (let i = 1; i <= lastDateofMonth; i++) {
           if (i == 1) {
 
@@ -1393,7 +1398,56 @@ background: #88ba1c;
             var MPa = JSON.stringify(ssaz);
             //alert(ssaz);
             var a1sa = new Array;
+            var text_return = new Array;
+           // alert(idp);
+            $.ajax({
+              type: "POST",
+              url: "cal_get_comment.php",
+              dataType: "json",
+              cache: false,
+              async: false,
+              data: {
+                id: idp, year: Yp, month: MPa, cha: ChA
+              },
+              success: function (data) {
+                  //alert(JSON.stringify(data));
+                  text_return  = JSON.stringify(data);
+                  //alert(JSON.stringify(data));
+              }
 
+            });
+            text_return =text_return.substring(1,text_return.length-1);
+            //alert(text_return);
+            var middle_arr = new Array();
+            var second_arr = new Array();
+            //let final_arr = Array();
+            middle_arr = text_return.split("]");
+            //alert(middle_arr[0]);
+            for (let jh = 0; jh < middle_arr.length; jh++) {
+              second_arr = [];
+              if(jh == 0){
+              middle_arr[jh] = middle_arr[jh].substring(1);
+              }else{
+                middle_arr[jh] = middle_arr[jh].substring(2);
+              }
+              final_arr[jh] = [];
+              //alert(middle_arr[jh]);
+            second_arr = middle_arr[jh].split(",");
+              for (let j = 0; j < 31; j++) {
+                //alert(second_arr[j]);
+                var xs = second_arr[j];
+                //xs = xs.substring(1);
+                //let xk = second_arr[j];
+                //let xk = xs.length;
+                /*alert(xs);
+                alert(xk);*/
+                final_arr[jh][j] = xs;
+                //final_arr[jh][j] = final_arr[jh][j].substring(1);
+                //final_arr[jh][j] = 0;
+              }
+            }
+            //alert(middle_arr[0]);
+            //alert(final_arr[4][0]);
             $.ajax({
               type: "POST",
               url: "get-ajax.php",
@@ -1525,7 +1579,7 @@ background: #88ba1c;
           let ddd = '<div><td id="';
           let xxx = "-";
           let jjj = '">';
-          let ccc = '" style="min-width:170px;height:200px;border:solid black;padding: 20px;background-color: ';
+          let ccc = '" style="min-width:143px;height:180px;border:solid black;background-color: ';
           let zzz = ';">';
           let qqq = "</td></div>";
           let ttt = "<button>+</button>";
@@ -1541,24 +1595,50 @@ background: #88ba1c;
           let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
           let b2 = '"></button><br><input type="button" id="bn';
           let b7 = '<br><br><br><input type="button" id="bn';
-          let b3 = '" onClick="Open_name(this.id)" style="margin-top:10px" value="';
+          let b3 = '" onClick="Open_name(this.id)" style="margin-top:0px" value="';
           let b6 = '"><br><input type="hidden" id="hn';
           let b4 = '" value="';
-          let b5 = '"></center></div>';
-          let t1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right" class="form-control" id="tf';
+          let b5 = '"></center><br><div class="mb-3"><textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea></div></div>';
+          let t1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:14px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 30px;width: 75px;font-size:13px;display:inline;float:right" id="tf';/**class="form-control" */
           let t3 = '<div class="form-group"><center><label for="tf';
-          let t4 = '" class="text-light" style="display:inline;font-size:17px;float:left;clear: left;">FROM:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
-          let t2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
+          let t4 = '" class="text-light" style="display:inline;font-size:14px;float:left;clear: left;">FROM:</label><input type="time" style="height: 30px;width: 75px;font-size:12px;display:inline;float:right;clear: right;" class="form-control" id="tf';
+          let t2 = '<p class="text-light" style="display:inline;font-size:14px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 30px;width: 75px;font-size:13px;display:inline;float:right;clear: right;margin-bottom:5px" id="tt';/**class="form-control" */
           let t5 = '<label for="tt';
-          let t6 = '" class="text-light" style="display:inline;font-size:17px;float:left">TO:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;;display:inline;float:right" class="form-control" id="tt';
+          let t6 = '" class="text-light" style="display:inline;font-size:17px;float:left">TO:</label><input type="time" style="height: 30px;width: 75px;font-size:10px;display:inline;float:right" class="form-control" id="tt';
 
           let tv = '" value="';
-          let open = 'vacant';
+          let open = '--vacant--';
           let s = "background-color:#585858;color:white;";
           let ii = "";
           let cen = "</center>";
           let bt2 = '"><i class="bi bi-trash"></i></button>';
+          let txa = '<div class="mb-3"><label for="exampleFormControlTextarea1" class="form-label">Example textarea</label><textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea></div>';
 
+
+          let td_start = '<td id="'; 
+          let td_body = '" style="width: 140px;height: 120px;border:solid black;background-color: ';
+          let td_end = '"><div style="margin: 5px"><div class="row"><div class="col-6"><p class="text-light" style="float: left;font-size: 15px">From</p></div>';
+          let timepicker_first_start = '<div class="col-6"><input type="time" style="float:right" title="Time selector" id="tf';
+          let timepicker_first_body = '" value="';
+          let timepicker_first_end = '"></div></div><div class="row"><div class="col-6"><p class="text-light" style="float: left;font-size: 15px">To</p></div>';
+          let timepicker_second_start ='<div class="col-6"><input type="time" style="float:right" title="Time selector" id="tt';
+          let timepicker_second_body = '" value="';
+          let timepicker_second_end = '"></div></div><div class="row"><div class="col-12"><div class="text-center">';
+          let employee_selector_start = '<input type="button" id="bn';
+          let employee_selector_end = '" onClick="Open_name(this.id)" title="Employee selector" style="width: 130px;height: 32px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;font-size:12px" value="';
+          let em_hidden_selector_start = '"><input type="hidden" id="hn';
+          let em_hidden_selector_body = '" value="';
+          let em_hidden_selector_end = '"></div></div></div><div class="row"><div class="col-12">';
+          let textarea_start = '<textarea class="form-control" id="tx';
+          let textarea_body = '" style="height: 40px;font-size:12px;margin-top:3px;" title="Comment" rows="1">';
+          let textarea_end = '</textarea></div></div><div class="row"><div class="col-4">';
+          let delete_start = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px" title="Delete" onClick="canceled(this.id)" id="x';
+          let delete_end = '"><i class="bi bi-trash"></i></button></div><div class="col-8">';
+          let paste_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-left:2px;width: 25px;height: 25px;padding:0px;float:right" title="Paste" onClick="paste_cell(this.id)" id="pa';
+          let paste_end = '">P</button>';
+          let copy_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:right" title="Copy" onClick="copy_cell(this.id)" id="co';
+          let copy_end = '">C</button></div></div></div></td>';
+          //dts = dts.concat(td_start, td_body, td_end, timepicker_first_start, timepicker_first_body, timepicker_first_end, timepicker_second_start, timepicker_second_body, timepicker_second_end, employee_selector_start, employee_selector_end, em_hidden_selector_start, em_hidden_selector_body, em_hidden_selector_end, textarea_start, textarea_end, delete_start, paste_start, paste_end, copy_start, copy_end);
           if (day == "Monday") {
             s = "background-color:#303030; color:white;";
             for (let q = 0; q < sz; q++) {
@@ -1584,6 +1664,10 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
+                  //alert(str3 + "ass"+ str1);
+                  
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1611,7 +1695,8 @@ background: #88ba1c;
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t3,ii, xxx, p,t4, ii, xxx, p, tv, str1, ib, bbb, t5,ii, xxx, p,t6, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[0][q] == 1) {
@@ -1619,6 +1704,9 @@ background: #88ba1c;
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[1][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                str3 = str3.substring(1, str3.length-1);
+
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1632,7 +1720,8 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
               } else {
                 let p = q + 1;
                 if (i < 10) {
@@ -1672,6 +1761,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1700,7 +1791,8 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
                 }
               } else if (passedArray[1][q] == 1) {
@@ -1708,6 +1800,8 @@ background: #88ba1c;
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[3][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1721,7 +1815,9 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
+
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -1762,6 +1858,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1790,14 +1888,16 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[2][q] == 1) {
                 let str1 = passedTime[4][q];
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[5][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1811,7 +1911,8 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
 
               } else {
@@ -1854,6 +1955,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1882,13 +1985,16 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[3][q] == 1) {
                 let str1 = passedTime[6][q];
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[7][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1902,7 +2008,8 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
                 let p = q + 1;
@@ -1944,6 +2051,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1972,13 +2081,16 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[4][q] == 1) {
                 let str1 = passedTime[8][q];
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[9][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1992,7 +2104,8 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
                 let p = q + 1;
@@ -2035,6 +2148,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -2063,13 +2178,16 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[5][q] == 1) {
                 let str1 = passedTime[10][q];
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[11][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2083,7 +2201,8 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
                 let p = q + 1;
@@ -2125,6 +2244,8 @@ background: #88ba1c;
                   str1 = str1.substring(0, 5);
                   let str2 = passedSavedata[q][i];
                   str2 = str2.substring(10, 15);
+                  let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -2153,13 +2274,17 @@ background: #88ba1c;
                   let namen = passedSavedata[q][i].substring(char);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
                   //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
+                  dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
+
                 }
               } else if (passedArray[6][q] == 1) {
                 let str1 = passedTime[12][q];
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[13][q];
                 str2 = str2.substring(0, str2.length - 3);
+                let str3 = final_arr[q][i-1];
+                  str3 = str3.substring(1, str3.length-1);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2173,7 +2298,9 @@ background: #88ba1c;
                   ii = i;
                 }
                 //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
+                dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
+
               } else {
                 let p = q + 1;
                 if (p < 10) {
@@ -2196,11 +2323,11 @@ background: #88ba1c;
           if (find == 1) {
 
 
-            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:200px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday </td>${dts}<tr>`;
+            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:100px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" title="Paste">P</button> </td>${dts}<tr>`;
             <?php echo $dsa = ""; ?>
           } else {
             <?php echo $dsa = ""; ?>
-            liTag += `<tr style="min-height:200px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:200px;border: solid black">${i} ${months2[currMonth]} <br> ${day}</td>${dts}<tr>`;
+            liTag += `<tr style="min-height:100px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 15px;min-height:100px;border: solid black;margin-left:10px">${i} ${months2[currMonth]} <br> ${day} <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" title="Paste">P</button> </td>${dts}<tr>`;
 
 
             <?php echo $dsa = ""; ?>
@@ -2314,6 +2441,11 @@ background: #88ba1c;
 
 
                   function filter(){
+                    /*alert("1");
+                    alert(shi_search);
+                    alert("2");
+                    alert(obj_search);
+                    alert("3");*/
                     f_load = 0;
               var results = new Array();
               $.ajax({
@@ -2340,7 +2472,7 @@ background: #88ba1c;
               //if (shiftall == 1) {
                 results = results.substring(1, results.length - 1);
                 if(results.length >7){
-                alert(results);
+                //alert(results);
                 var hhha = new Array();
                 var sks = new Array();
                 var qpw = [];
@@ -2641,7 +2773,7 @@ background: #88ba1c;
         let final = "";
         let btn1 = '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
         let btn2 = '">x</button><br><br><br><br><br><input type="button" id="bn';
-        let btn3 = '" onClick="Open_name(this.id)" value="Vacant"><input type="hidden" id="hn';
+        let btn3 = '" onClick="Open_name(this.id)" value="--vacant--"><input type="hidden" id="hn';
         let btn4 = '" value=""></center></div>';
         let val = "00:00";
         let brr = "<br>";
@@ -2652,17 +2784,123 @@ background: #88ba1c;
         let tmc2 = '">';
         let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;" onClick="canceled(this.id)" id="x';
         let bt2 = '"><i class="bi bi-trash"></i></button>';
-        final = bt + result123 + bt2 + tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc2 + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
+
+
+
+          let new_start = '<div style="margin: 5px"><div class="row"><div class="col-6"><p class="text-light" style="float: left;font-size: 15px">From</p></div>';
+          let timepicker_first_start = '<div class="col-6"><input type="time" style="float:right" title="Time selector" id="tf';
+          let timepicker_first_body = '" value="';
+          let timepicker_first_end = '"></div></div><div class="row"><div class="col-6"><p class="text-light" style="float: left;font-size: 15px">To</p></div>';
+          let timepicker_second_start ='<div class="col-6"><input type="time" style="float:right" title="Time selector" id="tt';
+          let timepicker_second_body = '" value="';
+          let timepicker_second_end = '"></div></div><div class="row"><div class="col-12"><div class="text-center">';
+          let employee_selector_start = '<input type="button" id="bn';
+          let employee_selector_end = '" onClick="Open_name(this.id)" title="Employee selector" style="width: 130px;height: 32px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;font-size:12px" value="--vacant--';
+          let em_hidden_selector_start = '"><input type="hidden" id="hn';
+          let em_hidden_selector_body = '" value="';
+          let em_hidden_selector_end = '"></div></div></div><div class="row"><div class="col-12">';
+          let textarea_start = '<textarea class="form-control" id="tx';
+          let textarea_body = '" style="height: 40px;font-size:12px;margin-top:3px;" title="Comment" rows="1">';
+          let textarea_end = '</textarea></div></div><div class="row"><div class="col-4">';
+          let delete_start = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px" title="Delete" onClick="canceled(this.id)" id="x';
+          let delete_end = '"><i class="bi bi-trash"></i></button></div><div class="col-8">';
+          let paste_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-left:2px;width: 25px;height: 25px;padding:0px;float:right" title="Paste" onClick="paste_cell(this.id)" id="pa';
+          let paste_end = '">P</button>';
+          let copy_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:right" title="Copy" onClick="copy_cell(this.id)" id="co';
+          let copy_end = '">C</button></div></div></div>';
+
+
+
+
+          final = new_start+timepicker_first_start + result123+timepicker_first_body + val +timepicker_first_end +timepicker_second_start+result123 + timepicker_second_body+ val +timepicker_second_end+employee_selector_start+ result123 +  employee_selector_end + em_hidden_selector_start+ result123+ em_hidden_selector_body+ em_hidden_selector_end + textarea_start + result123 + textarea_body +textarea_end+delete_start+result123+delete_end +paste_start + result123+paste_end +copy_start +result123 +copy_end;
+
+        //final = bt + result123 + bt2 + tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc2 + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
         cha.innerHTML = final;
       }
       function canceled(clicked_id) {
         let result123 = clicked_id.substring(1, 7);
         let cha = document.getElementById(result123);
         let can = "";
-        let mmm = '<center><button onClick="reply_click(this.id)" id="b';
-        let nnn = '">+</button></center>';
+        let mmm = '<center><button class="btn btn-light" style="border-radius: 20%;" onClick="reply_click(this.id)" id="b';
+        let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
         can = mmm + result123 + nnn;
         cha.innerHTML = can;
+      }
+      var from_paste = "";
+      var to_paste = "";
+      var exist_arr = new Array()
+      var from_paste_arr = new Array();
+      var to_paste_arr = new Array();
+      function paste_cell(paste_id) {
+        
+        paste_id = paste_id.substring(2);
+        //document.getElementById("tf"+paste_id).value;
+        //alert(document.getElementById("tf"+paste_id).value);
+        //from_paste = document.getElementById("tf"+paste_id).value;
+        //to_paste = document.getElementById("tf"+paste_id).value;
+
+        if(from_paste != ""){
+        document.getElementById("tf"+paste_id).value = from_paste;
+        document.getElementById("tt"+paste_id).value = to_paste
+      }
+      }
+      function copy_cell(copy_id) {
+        //alert(copy_id);
+        copy_id = copy_id.substring(2);
+
+        from_paste = document.getElementById("tf"+copy_id).value;
+        to_paste = document.getElementById("tt"+copy_id).value;
+
+
+      }
+      function copy_row(copy_id) {
+        from_paste_arr = [];
+        to_paste_arr = [];
+        exist_arr = [];
+      copy_id = copy_id.substring(2);
+      //alert(copy_id);
+      if(copy_id < 10){
+          copy_id = "0"+copy_id;
+        }
+      var sz =arridc.length;
+      for(var i = 1; i < sz; i++){
+        //var col = i+1; 
+        
+
+        var col_id = i; 
+        if(col_id < 10){
+          //var row_ = i+1; 
+          col_id = "0" + "0" +col_id;
+        }else if(col_id < 100){
+          col_id = "0" +col_id;
+        }
+        //alert("tf"+copy_id+"-"+col_id);
+        if (document.getElementById('tf' + copy_id+"-"+col_id) != null) {
+            exist_arr[i-1] = 1;
+            from_paste_arr[i-1] = document.getElementById("tf"+copy_id+"-"+col_id).value;
+          to_paste_arr[i-1] = to_paste = document.getElementById("tt"+copy_id+"-"+col_id).value;
+        }else{
+          exist_arr[i-1] = 0;
+          from_paste_arr[i-1] = "00:00";
+          to_paste_arr[i-1] = "00:00";
+        }
+
+      }
+      alert(exist_arr);
+      alert(from_paste_arr);
+      alert(to_paste_arr);
+      }
+      function paste_row(paste_id) {
+        paste_id = paste_id.substring(2);
+      alert(paste_id);
+      if(paste_id < 10){
+          paste_id = "0"+paste_id;
+        }
+      var sz =arridc.length;
+      for(var i = 1; i < from_paste_arr.length; i++){
+
+      }
+
       }
     </script>
 

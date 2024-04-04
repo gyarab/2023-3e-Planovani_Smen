@@ -213,6 +213,8 @@ $mysqli1->close();
     <h1>List of objects</h1>
   </div>
   <div class="cont">
+  <div class="row">
+  <div class='col-12 col-md-6'>
     <h2>Create new object: </h2>
     <form method="post" name="myform" novalidate>
       <label for="new_object"></label>
@@ -257,7 +259,7 @@ $mysqli1->close();
      <!-- <button onclick="<?php create_table() ?>" style="display:inline">Submit</button>-->
      
      <div class="popup">
-     <input id="savemain" type="button" onclick="submit_table()" style="display:inline" value="Submit 2a">
+     <input id="savemain" type="button" onclick="submit_table()" class="btn btn-primary" style="display:inline" value="Create object">
 
      
     </div>
@@ -276,7 +278,7 @@ $mysqli1->close();
       ?>
 
       <!-- source: https://www.geeksforgeeks.org/how-to-fetch-data-from-localserver-database-and-display-on-html-table-using-php/ -->
-      <table>
+      <!--<table>
         <tr>
           <th>ID</th>
           <th>OBJECT NAME</th>
@@ -286,31 +288,32 @@ $mysqli1->close();
           <?php
           /**prints the row of list_of_objects*/
           /**is here for just testing  */
-          while ($rows = $result2->fetch_assoc()) {
+          //while ($rows = $result2->fetch_assoc()) {
             ?>
             <tr>
               <td>
-                <?php echo $rows['id_object']; ?>
+                <?php //echo $rows['id_object']; ?>
               </td>
               <td>
-                <?php echo $rows['object_name']; ?>
+                <?php //echo $rows['object_name']; ?>
               </td>
               <td>
-                <?php echo $rows['superior_object_name']; ?>
+                <?php //echo $rows['superior_object_name']; ?>
               </td>
             </tr>
             <?php
-          }
+          //}
           ?>
         </section>
-      </table>
+      </table>-->
       <br>
-
+          </div>
+      <div class='col-12 col-md-6'>
       <h2>Create new sub object: </h2>
       <input id="new_sub_object" name="new_sub_object" style="display:inline" type="text">
       <!--<button style="display:inline" onclick="<?php //create_sub_table() ?>">Submit</button>-->
     
-      <input id="savesub" type="button" onclick="submit_subtable()" style="display:inline" value="Submit sub">
+      <input id="savesub" type="button" onclick="submit_subtable()" class="btn btn-primary" style="display:inline" value="Create sub-object">
       <br>
      <label id="label2" style="visibility:hidden;color:red"></label>
 
@@ -377,8 +380,8 @@ $mysqli1->close();
 --*/
       ?>
 
-
-
+</div>
+</div>
 <button id="butsave"></button>
 
 <div class="tree">

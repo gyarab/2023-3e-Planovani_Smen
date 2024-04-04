@@ -87,6 +87,7 @@ for ($x = 0; $x < count($data2); $x++) {
             }
         }
         //echo "<p>".$arr1. "sda</p>";
+        $first = 0;
         array_multisort($arr2, $arr1);
         if(count($arr1) != 0){
             
@@ -94,12 +95,13 @@ for ($x = 0; $x < count($data2); $x++) {
                 
                 if($admin== true || in_array($arr1[$q], $rights) == true){
 
-                    if($q == 0){
+                    if( $first == 0){
                         echo "<p> &nbsp;&nbsp;</p>";
                         echo "<div class='form-check form-check-inline'>";
                         echo "<input class='form-check-input' style='display:inline;height:15px;width:15px' type='checkbox' id='inlineCheckboxall' onclick='object_all()' checked value='ALL'>";
                         echo "<p class='form-check-label' style='display:inline;font-size: 15px' for='inlineCheckboxall'>ALL</p>";
                         echo "</div>";
+                        $first++;
                     }
                 echo "<div class='form-check form-check-inline'>";
                 echo "<input class='form-check-input' style='display:inline;height:15px;width:15px' type='checkbox' id='inlineCheckbox".$arr1[$q]."' name='nobj' onclick='object_search(this.value)' value='".$arr1[$q]."'>";
