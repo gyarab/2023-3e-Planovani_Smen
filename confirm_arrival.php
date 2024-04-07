@@ -49,7 +49,7 @@ if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
         //$sqlinsert = "UPDATE saved_shift_data SET att_from='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_from='$close' AND att_from IS NULL ";
         if ($status[1] == 0) {
             $status[0] = 0;
-            $sqlinsert = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan,'$currentTime',$id,'$text',1)";
+            $sqlinsert = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan,'$currentTime',$id,'$text',1)";
 
             if (!mysqli_query($conn, $sqlinsert)) {
                 $status[0] = 5;
@@ -85,7 +85,7 @@ if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
             if ($st_arr[$i] == $closest) {
                 if ($status[1] == 0) {
                     $status[0] = 0;
-                    $sqlinsert_arr = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_arr[$i],'$currentTime',$id,'$text',1)";
+                    $sqlinsert_arr = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr[$i],'$currentTime',$id,'$text',1)";
 
                     if (!mysqli_query($conn, $sqlinsert_arr)) {
                         $status[0] = 5;
@@ -129,7 +129,7 @@ if($have == 0 ){
         if ($status[1] == 0) {
             $status[0] = 0;
             //$currentTim =date('H:i:s',round(strtotime($currentTime) / (15 * 60)) * (15 * 60));
-            $sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
+            $sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
             //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_to='$close' AND att_from IS NOT NULL ";
             if (!mysqli_query($conn, $sqlinsert_td )) {
                 $status[0] = 5;
@@ -143,7 +143,7 @@ if($have == 0 ){
         $status[0] = 2;
         if ($status[1] == 0) {
             $status[0] = 0;
-            $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
+            $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
             //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id'AND att_from IS NOT NULL AND saved_to='$close'  ";
             if (!mysqli_query($conn, $sqlinsert_td )) {
                 $status[0] = 5;
@@ -155,7 +155,7 @@ if($have == 0 ){
         //echo json_encode($status);
     } else {
         $status[0] = 0;
-        $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
+        $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
         //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND att_from IS NOT NULL AND saved_to='$close' ";
         //echo json_encode($status);
         if (!mysqli_query($conn, $sqlinsert_td )) {
@@ -198,7 +198,7 @@ if($have == 0 ){
                         if ($status[1] == 0) {
                             $status[0] = 0;
                             //$currentTim =date('H:i:s',round(strtotime($currentTime) / (15 * 60)) * (15 * 60));
-                            $sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
+                            $sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                             //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_to='$close' AND att_from IS NOT NULL ";
                             if (!mysqli_query($conn, $sqlinsert_td )) {
                                 $status[0] = 5;
@@ -212,7 +212,7 @@ if($have == 0 ){
                         $status[0] = 2;
                         if ($status[1] == 0) {
                             $status[0] = 0;
-                            $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
+                            $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                             //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id'AND att_from IS NOT NULL AND saved_to='$close'  ";
                             if (!mysqli_query($conn, $sqlinsert_td )) {
                                 $status[0] = 5;
@@ -224,7 +224,7 @@ if($have == 0 ){
                         //echo json_encode($status);
                     } else {
                         $status[0] = 0;
-                        $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_time) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
+                        $sqlinsert_td  = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                         //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND att_from IS NOT NULL AND saved_to='$close' ";
                         //echo json_encode($status);
                         if (!mysqli_query($conn, $sqlinsert_td )) {

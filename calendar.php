@@ -2323,11 +2323,11 @@ background: #88ba1c;
           if (find == 1) {
 
 
-            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:100px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" title="Paste">P</button> </td>${dts}<tr>`;
+            liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:100px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="paste_row(this.id)" title="Paste">P</button> </td>${dts}<tr>`;
             <?php echo $dsa = ""; ?>
           } else {
             <?php echo $dsa = ""; ?>
-            liTag += `<tr style="min-height:100px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 15px;min-height:100px;border: solid black;margin-left:10px">${i} ${months2[currMonth]} <br> ${day} <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" title="Paste">P</button> </td>${dts}<tr>`;
+            liTag += `<tr style="min-height:100px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 15px;min-height:100px;border: solid black;margin-left:10px">${i} ${months2[currMonth]} <br> ${day} <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="paste_row(this.id)" title="Paste">P</button> </td>${dts}<tr>`;
 
 
             <?php echo $dsa = ""; ?>
@@ -2441,6 +2441,9 @@ background: #88ba1c;
 
 
                   function filter(){
+                    from_paste_arr = [];
+                    to_paste_arr = [];
+                    exist_arr = [];
                     /*alert("1");
                     alert(shi_search);
                     alert("2");
@@ -2896,10 +2899,40 @@ background: #88ba1c;
       if(paste_id < 10){
           paste_id = "0"+paste_id;
         }
+        if(from_paste_arr.length != 0){
       var sz =arridc.length;
-      for(var i = 1; i < from_paste_arr.length; i++){
+      
+      for(var i = 1; i < sz; i++){
+         
+            var col_id = i; 
+        if(col_id < 10){
+          //var row_ = i+1; 
+          col_id = "0" + "0" +col_id;
+        }else if(col_id < 100){
+          col_id = "0" +col_id;
+        }
+        alert(paste_id+"-"+col_id);
+        if(exist_arr[i-1] == 0){
+          if(document.getElementById('tf' + paste_id+"-"+col_id) != null){
+            var x_id = "x" + paste_id+"-"+col_id;
+              canceled(x_id);
+          }
 
+        }else{
+          if(document.getElementById('tf' + paste_id+"-"+col_id) == null){
+            var r_id = "b" + paste_id+"-"+col_id;
+              //canceled(x_id);
+              reply_click(r_id);
+              document.getElementById("tf"+paste_id+"-"+col_id).value = from_paste_arr[i-1];
+              document.getElementById("tt"+paste_id+"-"+col_id).value = to_paste_arr[i-1];
+          }else{
+            document.getElementById("tf"+paste_id+"-"+col_id).value = from_paste_arr[i-1];
+              document.getElementById("tt"+paste_id+"-"+col_id).value = to_paste_arr[i-1];
+          }
+        }
+        
       }
+    }
 
       }
     </script>

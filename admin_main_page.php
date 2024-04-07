@@ -183,10 +183,12 @@ $mysqli1->close();
             $sqltd = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' ORDER BY saved_from ";
             $sqltd3 = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user=$u ORDER BY saved_from ";
             $sqltm = "SELECT * FROM saved_shift_data WHERE saved_date='$tm' AND id_user='$u' ORDER BY saved_from ";
+            $sqlcl = "SELECT * FROM saved_shift_data, create_shift WHERE id_user='$u' AND saved_date >= DATE('$td') AND create_shift.id_shift = saved_shift_data.id_of_shift ORDER BY saved_from DESC ";
             $fetchy = mysqli_query($conn, $sqly);
             $fetchtd = mysqli_query($conn, $sqltd);
             $fetchtd3 = mysqli_query($conn, $sqltd3);
             $fetchtm = mysqli_query($conn, $sqltm);
+            $fetchcl = mysqli_query($conn, $sqlcl);
             $t1 = array();
             $t2 = array();
             $t2 = array();
@@ -587,6 +589,27 @@ $mysqli1->close();
                             <!--<label>
                                 <?php //echo date('Y-m-d', strtotime("1 days"));    ?>
                             </label>-->
+                        </div>
+                        <div class='col-12'>
+                            <p><strong>Closest shift:<a href="my_shifts.php" style="text-decoration:none"></strong> 
+                            <?php if (mysqli_num_rows($fetchcl) > 0) {
+                                $result_cl = $mysqli->query($sqlcl);
+                                while ($row_cl = $result_cl->fetch_assoc()) {
+                                    $shi_name2 = $row_cl['shift_name'];
+                                    $obj_name2 = $row_cl['object_name'];
+                                    $pl_from= $row_cl['saved_from'];
+                                    $pl_to = $row_cl['saved_to'];
+                                break;
+                                }
+                                ?> 
+                               
+                                <?php echo ($pl_from."-".$pl_to." | ".$obj_name2." - ".$shi_name2) ?></a></p>
+                            <?php 
+                               }else{
+                                ?>
+                                //</a></p>
+                                <?php
+                               } ?>
                         </div>
                     </div>
                 </div>

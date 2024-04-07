@@ -59,7 +59,7 @@ if (mysqli_num_rows($fetchy) > 0) {
                 if ($status[1] == 0) {
                     $status[0] = 0;
                     //$currentTim =date('H:i:s',round(strtotime($currentTime) / (15 * 60)) * (15 * 60));
-                    $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan  ";
+                    $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
                     //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_to='$close' AND att_from IS NOT NULL ";
                     if (!mysqli_query($conn, $sqlupdate)) {
                         $status[0] = 5;
@@ -73,7 +73,7 @@ if (mysqli_num_rows($fetchy) > 0) {
                 $status[0] = 2;
                 if ($status[1] == 0) {
                     $status[0] = 0;
-                    $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan  ";
+                    $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
                     //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id'AND att_from IS NOT NULL AND saved_to='$close'  ";
                     if (!mysqli_query($conn, $sqlupdate)) {
                         $status[0] = 5;
@@ -85,7 +85,7 @@ if (mysqli_num_rows($fetchy) > 0) {
                 //echo json_encode($status);
             } else {
                 $status[0] = 0;
-                $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan  ";
+                $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
                 //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND att_from IS NOT NULL AND saved_to='$close' ";
                 //echo json_encode($status);
                 if (!mysqli_query($conn, $sqlupdate)) {
@@ -119,7 +119,7 @@ if($checkfrom == 0){
             if ($status[1] == 0) {
                 $status[0] = 0;
                 //$currentTim =date('H:i:s',round(strtotime($currentTime) / (15 * 60)) * (15 * 60));
-                $sqlupdate_td = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan_td  ";
+                $sqlupdate_td = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE planned_id=$id_plan_td  ";
                 //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_to='$close' AND att_from IS NOT NULL ";
                 if (!mysqli_query($conn, $sqlupdate_td)) {
                     $status[0] = 5;
@@ -133,7 +133,7 @@ if($checkfrom == 0){
             $status[0] = 2;
             if ($status[1] == 0) {
                 $status[0] = 0;
-                $sqlupdate_td  = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan_td  ";
+                $sqlupdate_td  = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE planned_id=$id_plan_td  ";
                 //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id'AND att_from IS NOT NULL AND saved_to='$close'  ";
                 if (!mysqli_query($conn, $sqlupdate_td)) {
                     $status[0] = 5;
@@ -145,7 +145,7 @@ if($checkfrom == 0){
             //echo json_encode($status);
         } else {
             $status[0] = 0;
-            $sqlupdate_td = "UPDATE attendance SET log_to='$currentTime', com_to='$text' WHERE planned_id=$id_plan_td  ";
+            $sqlupdate_td = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE planned_id=$id_plan_td  ";
             //$sqlin = "UPDATE saved_shift_data SET att_to='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND att_from IS NOT NULL AND saved_to='$close' ";
             //echo json_encode($status);
             if (!mysqli_query($conn, $sqlupdate_td)) {
