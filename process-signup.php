@@ -41,35 +41,70 @@ if (empty($_POST["position"])) {
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 $mysqli = require __DIR__ . "/database.php";
 
-$sql = "INSERT INTO user2 (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-$stmt = $mysqli->stmt_init();
+/**Creating verification code */
+function generateRandomString($length = 6) {
 
-if ( ! $stmt->prepare($sql)) {
-    die("SQL error: " . $mysqli->error);
-}
-
-$stmt->bind_param("sssssiis",
-                  $_POST["firstname"],
-                  $_POST["middlename"],
-                  $_POST["lastname"],
-                  $_POST["email"],
-                  $password_hash,
-                  $_POST["countryCode"],
-                  $_POST["phone"],
-                  $_POST["position"]);
-                  
-if ($stmt->execute()) {
-
-    header("Location: signup-success.html");
-    exit;
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     
-} else {
-    
-    if ($mysqli->errno === 1062) {
-        die("email already taken");
-    } else {
-        die($mysqli->error . " " . $mysqli->errno);
+    $randomString = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
+
+    return $randomString;
 }
+
+$verification_code = generateRandomString();
+
+/**sending email */
+$to = $_POST["email"];
+
+$subject = "Verification Code";
+
+$message = "Here is your verification code: $verification_code";
+
+$headers = "From: michal.vakula@gmail.com" . "\r\n";
+$headers .= "Content-Type: text/plain; charset=UTF-8";
+
+if (mail($to, $subject, $message, $headers)) {
+    echo "Email sent successfully.";
+} else {
+    echo "Failed to send email.";
+}
+
+$sql1 = "INSERT INTO verification (firstname, middlename, lastname, email, password_hash, countryCode, phone, position, verificationCode)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+$stmt1 = $mysqli->stmt_init();
+
+if (!$stmt1->prepare($sql1)) {
+    die ("SQL error: " . $mysqli->error);
+}
+
+$stmt1->bind_param(
+    "ssssssssss",
+    $_POST["firstname"],
+    $_POST["middlename"],
+    $_POST["lastname"],
+    $_POST["email"],
+    $password_hash,
+    $_POST["countryCode"],
+    $_POST["phone"],
+    $_POST["position"],
+    $verification_code
+);
+
+if ($stmt1->execute()) {
+    header("Location: verification.php");
+    exit;
+} else {
+    /** Code that checks if is email unique*/
+    /**Needs to be reconstruct  */
+    if ($mysqli->errno === 1062) {
+        //die("email already taken");
+    } else {
+        //die($mysqli->error . " " . $mysqli->errno);
+    }
+}  
+?>

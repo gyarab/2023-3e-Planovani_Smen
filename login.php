@@ -12,9 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mysqli->real_escape_string($_POST["email"])
     );
 
+
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
+
 
     if ($user) {
 
