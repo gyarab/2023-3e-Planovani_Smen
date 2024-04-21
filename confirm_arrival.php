@@ -25,9 +25,9 @@ if (strlen($text) > 2) {
 }
 $have = 0;
 
-$sqly = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$y' AND saved_shift_data.id_user='$id' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance WHERE log_from IS NULL))";
+$sqly = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$y' AND saved_shift_data.id_user='$id' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance /*WHERE log_from IS NULL*/))";
 $fetchy = mysqli_query($conn, $sqly);
-$sqltd = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$id' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance WHERE log_from IS NULL))";
+$sqltd = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$id' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance /*WHERE log_from IS NULL*/))";
 $fetchtd = mysqli_query($conn, $sqltd);
 if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
     while ($row_y = mysqli_fetch_assoc($fetchy)) {
@@ -44,7 +44,7 @@ if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
             $have = 0;
         }
     }
-
+   
     if ($have == 1) {
         //$sqlinsert = "UPDATE saved_shift_data SET att_from='$currentTime' WHERE saved_date='$currentDate' AND id_user='$id' AND saved_from='$close' AND att_from IS NULL ";
         if ($status[1] == 0) {
@@ -58,6 +58,7 @@ if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
         } else {
             $status[0] = 1;
             echo json_encode($status);
+
         }
         //break;
     }
@@ -107,7 +108,9 @@ if (mysqli_num_rows($fetchy) > 0 && mysqli_num_rows($fetchy) == 1) {
 
 }
 if($have == 0 ){
+
     if (mysqli_num_rows($fetchtd) > 0 && mysqli_num_rows($fetchtd) == 1) {
+
         while ($row_td = mysqli_fetch_assoc($fetchtd)) {
             $id_plan_td = $row_td['id'];
             $st_td = $row_td['saved_from'];
@@ -115,13 +118,15 @@ if($have == 0 ){
             //echo json_encode($have);
             if (strtotime($st_td) >= strtotime($en_td)) {
                 $have = 1;
-            }else if(strtotime($en3) > strtotime(date('H:i:s'))){
+            }else if(strtotime($en_td) > strtotime(date('H:i:s'))){
                 /*if (strtotime(date('H:i:s')) < strtotime($en)) {
                     $have = 1;
                 } */  
                 $have = 1;
             }
         }
+        //echo json_encode($have);
+
         if ($have == 1) {
 
     if (strtotime($st_td) < strtotime($currentTime)) {
@@ -167,6 +172,8 @@ if($have == 0 ){
 }
 
     }else if (mysqli_num_rows($fetchtd) > 1) {
+        //echo json_encode($have);
+
         //echo json_encode($status);
         while ($row_td2 = mysqli_fetch_assoc($fetchtd)) {
             $id_plan_td2 = $row_td2['id'];

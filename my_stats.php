@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 /**main page of admin account */
 
@@ -205,14 +205,60 @@ $mysqli1->close();
                         <div class='col-12 col-md-2'>
                             <p>Date</p>
                         </div>
-                        <div class='col-12 col-md-4'>
-                            <p>Planned</p>
+                        <div class='col-12 col-md-3'>
+                            <p>Scheduled</p>
+                        </div>
+                        <div class='col-12 col-md-2'>
+                            <p>Scheduled rounded</p>
                         </div>
                         <div class='col-12 col-md-3'>
-                            <p>Log</p>
+                            <p>Logged</p>
+                        </div>
+                        <div class='col-12 col-md-2'>
+                            <p>Logged rounded</p>
+                        </div>
+                        <hr>
+                    </div>
+                    <div id="stat_table">
+                    </div>
+                    <hr style="height: 3px;">
+                    <div class="row">
+                        <div class='col-12 col-md-2'>
+                            <strong>
+                                <p>Total: </p>
+                            </strong>
                         </div>
                         <div class='col-12 col-md-3'>
-                            <p>Rounded</p>
+                        <div style="display:inline">
+                            <p id="st" style="display:inline">0</p>
+                            </div>
+                            <div style="display:inline">
+                            <p id="st_hm" style="display:inline">-</p>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-2'>
+                        <div style="display:inline">
+                            <p id="srt" style="display:inline">0</p>
+                            </div>
+                            <div style="display:inline">
+                            <p id="srt_hm" style="display:inline">-</p>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-3'>
+                        <div style="display:inline">
+                            <p id="lt" style="display:inline">0</p>
+                            </div>
+                            <div style="display:inline">
+                            <p id="lt_hm" style="display:inline">-</p>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-2'>
+                        <div style="display:inline">
+                            <p id="lrt" style="display:inline">0</p>
+                            </div>
+                            <div style="display:inline">
+                            <p id="lrt_hm" style="display:inline">-</p>
+                            </div>
                         </div>
                         <hr>
                     </div>
@@ -294,6 +340,10 @@ $mysqli1->close();
 
 
                     <script>
+                        var sum_sch = 0;
+                        var sum_log = 0;
+                        var sum_sch_r = 0;
+                        var sum_log_r = 0;
 
 
                         /*$(function() {
@@ -349,6 +399,49 @@ $mysqli1->close();
 
                             }
                         });
+                        $.ajax({
+                            url: "load_my_stats_table.php",
+                            method: "POST",
+                            //dataType: "json",
+                            //cache: false,
+                            //async: false,
+                            data: { year: year, id: usid, month: month },
+                            success: function (data) {
+                                $("#stat_table").html(data);
+                                //alert(data);
+                                //return_var = data;
+                                var counter = 0;
+                                for(;;){
+                                if(document.getElementById("s"+counter) != null){
+                                       //alert("jkhfasdsjkh");
+                                       sum_sch =sum_sch+ Number(document.getElementById("s"+counter).innerHTML);
+                                       sum_log =sum_log+ Number(document.getElementById("l"+counter).innerHTML);
+                                       sum_sch_r = sum_sch_r + Number(document.getElementById("sr"+counter).innerHTML);
+                                       sum_log_r = sum_log_r + Number(document.getElementById("lr"+counter).innerHTML);
+                                       //alert(sum_sch);
+                                }else{
+                                    break;
+                                }
+                                counter++;
+                            }
+                            document.getElementById("st").innerHTML = sum_sch;
+                            document.getElementById("lt").innerHTML = sum_log;
+                            document.getElementById("srt").innerHTML = sum_sch_r;
+                            document.getElementById("lrt").innerHTML = sum_log_r;
+                            document.getElementById("st_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch)+"h&nbsp;"+Math.trunc(sum_sch*3600%3600/60)+"min" ;
+                            document.getElementById("srt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch_r)+"h&nbsp;"+Math.trunc(sum_sch_r*3600%3600/60)+"min" ;
+                            document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log)+"h&nbsp;"+Math.trunc(sum_log*3600%3600/60)+"min" ;
+                            document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log_r)+"h&nbsp;"+Math.trunc(sum_log_r*3600%3600/60)+"min" ;
+
+                            /*alert(counter);
+                            alert(sum_sch);
+                            alert(sum_log);
+                            alert(sum_sch_r);
+                            alert(sum_log_r);*/
+
+
+                            }
+                        });
                         for (var g = 0; g < max_day; g++) {
                             yValues[g] = return_var[g] / 3600;
 
@@ -398,6 +491,65 @@ $mysqli1->close();
                             //input.className = "css-class-name"; // set the CSS class
                             div_can.appendChild(canva);
                             load_char();
+
+                            sum_sch = 0;
+                            sum_log = 0;
+                            sum_sch_r = 0;
+                            sum_log_r = 0;
+                            alert("is");
+                            $.ajax({
+                            url: "load_my_stats_table.php",
+                            method: "POST",
+                            //dataType: "json",
+                            //cache: false,
+                            //async: false,
+                            data: { year: inp1, id: usid, month: inp2 },
+                            success: function (data) {
+                                $("#stat_table").html(data);
+                                //alert(data);
+                                //return_var = data;
+                                var counter = 0;
+                                for(;;){
+                                if(document.getElementById("s"+counter) != null){
+                                       //alert("jkhfasdsjkh");
+                                       sum_sch =sum_sch+ Number(document.getElementById("s"+counter).innerHTML);
+                                       sum_log =sum_log+ Number(document.getElementById("l"+counter).innerHTML);
+                                       sum_sch_r = sum_sch_r + Number(document.getElementById("sr"+counter).innerHTML);
+                                       sum_log_r = sum_log_r + Number(document.getElementById("lr"+counter).innerHTML);
+                                       //alert(sum_sch);
+                                }else{
+                                    break;
+                                }
+                                counter++;
+                            }
+                            if(counter != 0 ){
+                            document.getElementById("st").innerHTML = sum_sch;
+                            document.getElementById("lt").innerHTML = sum_log;
+                            document.getElementById("srt").innerHTML = sum_sch_r;
+                            document.getElementById("lrt").innerHTML = sum_log_r;
+                            document.getElementById("st_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch)+"h&nbsp;"+Math.trunc(sum_sch*3600%3600/60)+"min" ;
+                            document.getElementById("srt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch_r)+"h&nbsp;"+Math.trunc(sum_sch_r*3600%3600/60)+"min" ;
+                            document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log)+"h&nbsp;"+Math.trunc(sum_log*3600%3600/60)+"min" ;
+                            document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log_r)+"h&nbsp;"+Math.trunc(sum_log_r*3600%3600/60)+"min" ;
+                            }else{
+                                document.getElementById("st").innerHTML = 0;
+                            document.getElementById("lt").innerHTML = 0;
+                            document.getElementById("srt").innerHTML = 0;
+                            document.getElementById("lrt").innerHTML = 0;
+                            document.getElementById("st_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("srt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            }
+                            /*alert(counter);
+                            alert(sum_sch);
+                            alert(sum_log);
+                            alert(sum_sch_r);
+                            alert(sum_log_r);*/
+
+
+                            }
+                        });
                         });
 
                         $('#month').change(function () {
@@ -455,6 +607,65 @@ $mysqli1->close();
                             //input.className = "css-class-name"; // set the CSS class
                             div_can.appendChild(canva);
                             load_char();
+
+                            sum_sch = 0;
+                            sum_log = 0;
+                            sum_sch_r = 0;
+                            sum_log_r = 0;
+                            alert("is");
+                            $.ajax({
+                            url: "load_my_stats_table.php",
+                            method: "POST",
+                            //dataType: "json",
+                            //cache: false,
+                            //async: false,
+                            data: { year: inp1, id: usid, month: inp2 },
+                            success: function (data) {
+                                $("#stat_table").html(data);
+                                //alert(data);
+                                //return_var = data;
+                                var counter = 0;
+                                for(;;){
+                                if(document.getElementById("s"+counter) != null){
+                                       //alert("jkhfasdsjkh");
+                                       sum_sch =sum_sch+ Number(document.getElementById("s"+counter).innerHTML);
+                                       sum_log =sum_log+ Number(document.getElementById("l"+counter).innerHTML);
+                                       sum_sch_r = sum_sch_r + Number(document.getElementById("sr"+counter).innerHTML);
+                                       sum_log_r = sum_log_r + Number(document.getElementById("lr"+counter).innerHTML);
+                                       //alert(sum_sch);
+                                }else{
+                                    break;
+                                }
+                                counter++;
+                            }
+                            if(counter != 0 ){
+                            document.getElementById("st").innerHTML = sum_sch;
+                            document.getElementById("lt").innerHTML = sum_log;
+                            document.getElementById("srt").innerHTML = sum_sch_r;
+                            document.getElementById("lrt").innerHTML = sum_log_r;
+                            document.getElementById("st_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch)+"h&nbsp;"+Math.trunc(sum_sch*3600%3600/60)+"min" ;
+                            document.getElementById("srt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_sch_r)+"h&nbsp;"+Math.trunc(sum_sch_r*3600%3600/60)+"min" ;
+                            document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log)+"h&nbsp;"+Math.trunc(sum_log*3600%3600/60)+"min" ;
+                            document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ Math.trunc(sum_log_r)+"h&nbsp;"+Math.trunc(sum_log_r*3600%3600/60)+"min" ;
+                            }else{
+                                document.getElementById("st").innerHTML = 0;
+                            document.getElementById("lt").innerHTML = 0;
+                            document.getElementById("srt").innerHTML = 0;
+                            document.getElementById("lrt").innerHTML = 0;
+                            document.getElementById("st_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("srt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;"+ 0+"h&nbsp;"+0+"min" ;
+                            }
+                            /*alert(counter);
+                            alert(sum_sch);
+                            alert(sum_log);
+                            alert(sum_sch_r);
+                            alert(sum_log_r);*/
+
+
+                            }
+                        });
 
                         });
                         /** source https://www.w3schools.com/jsref/prop_option_selected.asp*/

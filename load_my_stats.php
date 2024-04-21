@@ -12,6 +12,7 @@ if ($Month < 10) {
     $Month = "0" . $Month;
 }
 for ($i = 1; $i < 32; $i++) {
+    $time = 0;
     if ($i < 10) {
         $Day = "0" . $i;
     } else {

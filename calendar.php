@@ -78,6 +78,15 @@ if (isset($_SESSION["user2_id"])) {
       right: 0px;
       font-size: 3px;
     }
+    .in {
+      border-radius: 100%;
+      height: 23px;
+      width: 23px;
+      border: solid #000;
+      margin-top: 2px;
+      margin-left: 4px;
+      border-width: 2px;
+    }
 
 
 
@@ -175,7 +184,7 @@ background: #88ba1c;
     <script>
       var usid = <?php echo json_encode($userid); ?>;
     </script>
-    <div class="container">
+    <!--<div class="container">-->
 
       <nav>
 
@@ -259,7 +268,7 @@ background: #88ba1c;
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    </div>
+    <!--</div>-->
 
 
 
@@ -271,14 +280,14 @@ background: #88ba1c;
 
 
 
-    <div class="container">
+    <!--<div class="container">-->
 
       <input type="hidden" id="kpk" name="kpk" value="2024-01">
       <div>
         <input type="hidden" id="help" name="help">
         <input type="hidden" id="help2" name="help2">
         <input type="hidden" id="hideYM">
-        <form id="form1" name="form1" method="post">
+        <form id="form1" name="form1" method="post" style="margin-left:10px;margin-right:10px">
 
           <header>
             <br>
@@ -286,7 +295,7 @@ background: #88ba1c;
             <br>
             <br>
             <center>
-              <h1 class="current-date"></h1>
+              <h1 id="current_date" class="current-date"></h1>
             </center>
 
           </header>
@@ -399,6 +408,8 @@ background: #88ba1c;
               //alert(obj_search);
               filter();
             });
+
+
             /*function rum(inp,usid){
               $.ajax({
                 url: "cal_shi_load.php",
@@ -674,7 +685,15 @@ background: #88ba1c;
           <br>
           <br>
 
+        <div class="row">
+        <div class='col-12 col-md-2'>
+        <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
+        <div id="employee_table">
+        </div>
 
+        </div>
+        </div>
+        <div class='col-12 col-md-10'>
           <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
             <div class="calendar">
               <table>
@@ -691,9 +710,21 @@ background: #88ba1c;
           </div>
 
 
-          <div class="form-group">
+          </div>
+          </div>
 
-            <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
+
+          <div class="form-group">
+<br>
+<br>
+
+            <input type="button" name="save" class="btn btn-primary" style="float:right;font-size:20px" value="Save the shedule" id="butsave">
+            <input type="button" name="algorithm" class="btn btn-warning" style="float:left;font-size:20px" onclick="cell_selector()" value="Save the shedule" id="btnalgorithm">
+
+            <br>
+<br>
+            <br>
+<br>
           </div>
 
 
@@ -706,7 +737,7 @@ background: #88ba1c;
 
       </div>
 
-    </div>
+    <!--</div>-->
 
 
 
@@ -962,7 +993,7 @@ background: #88ba1c;
           var id_shift = new Array();
           var id_shift_delete = new Array();
           //var id_shift_delete = new Array();
-          for (var x = 1; x <= 100; x++) {
+          for (var x = 1; x <= arridc.length+10; x++) {
             for (var i = 1; i <= 31; i++) {
               /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
               //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
@@ -1033,6 +1064,390 @@ background: #88ba1c;
           });
         });
       });
+
+     var name_table = new Array();
+     var id_table = new Array();
+     var count_table = new Array();
+     var time_table = new Array();
+
+     //var today = new Date();
+     //alert(yyy+"-"+mm+"-"+dd);
+     //alert("jkhasd");
+     /*var de=new Date("April 18, 2024 16:00:00");
+alert(de.getTime());*/
+//alert($("#current_date").val());
+
+     //alert(yyyy+"-"+mm+"-"+dd);
+
+
+      function load_employee_table(){
+        //var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
+          var from = new Array();
+          var to = new Array();
+          //var date = new Array();
+          var nameid = new Array();
+          var name = new Array();
+
+          /*var area = new Array();
+          var id_shift = new Array();
+          var id_shift_delete = new Array();*/
+          //var id_shift_delete = new Array();
+          for (var x = 1; x <= arridc.length+10; x++) {
+            for (var i = 1; i <= 31; i++) {
+              /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
+              //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
+
+              if (i < 10) {
+                var q = "0" + i;
+              } else {
+                var q = i;
+              }
+              /*if (x < 100) {
+                var p = "0" + "0" + x;
+              } else if (x < 10) {
+                var p = "0" + x;
+              }else{
+                var p = x;
+              }*/
+              if (x < 10) {
+                var p = "0" + "0" + x;
+              } else if (x < 100) {
+                var p = "0" + x;
+              } else {
+                var p = x;
+              }
+              var kla = "tf";
+              var kla2 = "-";
+              let ml = kla + q + kla2 + p;
+              //alert(ml);
+              var myElem = document.getElementById(ml);
+              if (myElem != null) {
+                //alert(ml);
+                /*alert($("#tt" + q + "-" + p).val());*/
+                to.push($("#tt" + q + "-" + p).val());
+                from.push($("#tf" + q + "-" + p).val());
+                //id_shift.push($("#i00-" + p).val());
+                nameid.push($("#hn" + q + "-" + p).val());
+                name.push($("#bn" + q + "-" + p).val());
+
+                /*area.push($("#tx" + q + "-" + p).val());
+                var ids = $("#i00-" + p).val();
+                if (id_shift_delete.includes(ids)) {
+                } else {
+                  id_shift_delete.push(ids);
+                }*/
+
+
+                /*var ym = $("#current_load_date").val();
+                let h = ym + "-" + q;
+                date.push(h);*/
+                //alert(ym);
+              }
+
+            }
+          }
+
+
+          var fromTime = JSON.stringify(from);
+          var toTime = JSON.stringify(to);
+          //var idArr = JSON.stringify(id_shift);
+          //var dateArr = JSON.stringify(date);
+          //var deleteArr = JSON.stringify(id_shift_delete);
+          var nameidArr = JSON.stringify(nameid);
+          var nameArr = JSON.stringify(name);
+          //var areaArr = JSON.stringify(area);
+          //alert(fromTime);
+          //alert(toTime);
+          /*var year_month = $("#current_load_date").val();
+          $.ajax({
+            url: "insert-ajax.php",
+            type: "post",
+            data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr, area: areaArr },
+            success: function (data) {
+              alert(data); 
+            }
+          });*/
+
+          //alert(from);
+          $.ajax({
+              url: "load_employee_table2.php",
+              method: "POST",
+              data: { id: nameid, from: from, to: to, name: name},
+              success: function (data) {
+                //alert("success123546");
+                $("#employee_table").html(data);
+
+              }
+            });
+
+
+
+         
+      }
+      var yesterday_id = new Array();
+      var yesterday_from = new Array();
+      var yesterday_to = new Array();
+      var current_id = new Array();
+      var current_from = new Array();
+      var current_to = new Array();
+      var counter_al_id = new Array();
+      var counter_al_number = new Array();
+      function cell_selector(){
+        for (var z = 0; z <= arridc.length; z++) {
+              if (z < 10) {
+                var p = "0" + "0" + z;
+              } else if (z < 100) {
+                var p = "0" + z;
+              } else {
+                var p = z;
+              }
+
+             for (var i = 1; i <= 31; i++) {
+              if (i < 10) {
+                var q = "0" + i;
+              } else {
+                var q = i;
+              }
+              let counter_el = "tf" + q + "-" + p;
+              var conElem = document.getElementById(counter_el);
+                  if (conElem != null) {
+                    //var em_sel =  $("#hn" + q + "-" + z).val();
+                    //var id_sel =  $("#i00-" + z).val();
+                    if($("#hn" + q + "-" + p).val() != ""){
+                      var is_in_arr = 0; 
+                      if(counter_al_id.length != 0){
+                        for(var t = 0; t < counter_al_id.length;t++){
+                          if($("#hn" + q + "-" + p).val() == counter_al_id[t]){
+                            is_in_arr = 1;
+                            counter_al_number[t] = counter_al_number[t] + 1;
+                            break;
+                          }
+                        }
+                        if( is_in_arr == 0){
+                          counter_al_id.push($("#hn" + q + "-" + p).val());
+                        counter_al_number.push(1);
+                        }
+
+                      }else{
+                        counter_al_id.push($("#hn" + q + "-" + p).val());
+                        counter_al_number.push(1);
+
+                      }
+                    ////current_from.push($("#tf" + q + "-" + p).val());
+                    //current_to.push($("#tt" + q + "-" + p).val());
+                    }
+                  }
+
+
+             }
+        }
+        alert(counter_al_id);
+        alert(counter_al_number);
+          
+            for (var i = 1; i <= 31; i++) {
+              yesterday_id = [];
+              yesterday_from = [];
+              yesterday_to = [];
+              current_id = [];
+              current_from = [];
+              current_to = [];
+              
+              if(i != 1){
+                for (var z = 0; z <= arridc.length; z++) {
+                  if (z < 10) {
+                var k = "0" + "0" + z;
+              } else if (z < 100) {
+                var k = "0" + z;
+              } else {
+                var k = z;
+              }
+              if (i-1 < 10) {
+                var r = "0" + (i-1);
+              } else {
+                var r = (i-1);
+              }
+              let previous_el = "tf" + r + "-" + k;
+              var prevElem = document.getElementById(previous_el);
+                  if (prevElem != null) {
+                    //var em_sel =  $("#hn" + q + "-" + z).val();
+                    //var id_sel =  $("#i00-" + z).val();
+                    if($("#hn" + r + "-" + k).val() != ""){
+
+                    yesterday_id.push($("#hn" + r + "-" + k).val());
+                    yesterday_from.push($("#tf" + r + "-" + k).val());
+                    yesterday_to.push($("#tt" + r + "-" + k).val());
+                    }
+                  }
+
+                }
+                /*alert(i+ "----" + yesterday_id);
+                alert(yesterday_from);
+                alert(yesterday_to);*/
+              }
+              
+
+         
+
+
+
+
+              for (var x = 1; x <= arridc.length; x++) {
+                              current_id = [];
+              current_from = [];
+              current_to = [];
+                for (var a = 0; a <= arridc.length; a++) {
+                  if (a < 10) {
+                var b = "0" + "0" + a;
+              } else if (a < 100) {
+                var b = "0" + a;
+              } else {
+                var b = a;
+              }
+              if (i < 10) {
+                var c = "0" + (i);
+              } else {
+                var c = (i);
+              }
+              let current_el = "tf" + c + "-" + b;
+              var curElem = document.getElementById(current_el);
+                  if (curElem != null) {
+                    //var em_sel =  $("#hn" + q + "-" + z).val();
+                    //var id_sel =  $("#i00-" + z).val();
+                    if($("#hn" + c + "-" + b).val() != ""){
+
+                    current_id.push($("#hn" + c + "-" + b).val());
+                    current_from.push($("#tf" + c + "-" + b).val());
+                    current_to.push($("#tt" + c + "-" + b).val());
+                    }
+                  }
+
+                }
+                //alert(current_id);
+              if (i < 10) {
+                var q = "0" + i;
+              } else {
+                var q = i;
+              }
+
+              if (x < 10) {
+                var p = "0" + "0" + x;
+              } else if (x < 100) {
+                var p = "0" + x;
+              } else {
+                var p = x;
+              }
+
+              var kla = "tf";
+              var kla2 = "-";
+
+              let ml = kla + q + kla2 + p;
+               
+              var myElem = document.getElementById(ml);
+              if (myElem != null) {
+                
+                var em_sel =  $("#hn" + q + "-" + p).val();
+                if(em_sel == ""){
+                  //alert(currYear);
+
+                  var from_sel = $("#tf" + q + "-" + p).val();
+                  var to_sel = $("#tt" + q + "-" + p).val();
+                  var id_sel =  $("#i00-" + p).val();
+                  var month_sel = currMonth + 1;
+                  if(month_sel< 10){
+                    var date_sel = currYear+"-0"+month_sel+"-"+q;
+                  }else{
+                  var date_sel = currYear+"-"+month_sel+"-"+q;
+                  }
+                  var element_end = q + "-" + p;
+                 
+                  algorithm(from_sel, to_sel, id_sel, date_sel, element_end );
+                  //alert(date_sel);
+                  /*alert(from_sel);
+                  alert(to_sel);
+                  alert(id_sel);*/
+           
+                }
+              }
+
+            }
+          }
+          load_employee_table();
+
+      }
+
+
+      function algorithm(from, to, id, date, element){
+            //alert("lksadkjl");
+            //alert(yesterday_id.length + " -- "+ yesterday_id[0]);
+            var al_return;
+            var create_unmber = "";
+            let sub_name;
+          $.ajax({
+              url: "algorithm_pick.php",
+              method: "POST",
+              dataType: "json",
+              cache: false,
+              async: false,
+              data: { id: id, from: from, to: to, date: date, y_id: yesterday_id, y_from: yesterday_from,  y_to: yesterday_to 
+                ,c_id: current_id, c_from: current_from,  c_to: current_to, count_id: counter_al_id, count_number: counter_al_number},
+              success: function (data) {
+
+                //alert("success123546");
+                alert(data);
+                al_return= JSON.stringify(data);
+                //$("#employee_table").html(data);
+
+              }
+            });
+            al_return = al_return.substring(1,al_return.length-1);
+            //alert(al_return.substring(0,1));
+            if(al_return.substring(0,1) != 0){
+              //alert("jkjcasd");
+              for(var b = 0; b <al_return.length; b++){
+                 var number_input = al_return.substring(b,b+1);
+                 //alert(number_input);
+                 //alert(Number.isInteger(parseInt(number_input)));
+                if(Number.isInteger(parseInt(number_input)) == true){
+                  create_unmber = create_unmber + number_input;
+
+                  //alert("true");
+                }else{
+                  sub_name = al_return.substring(b+2);
+                  break;
+                }
+                
+
+              }
+              document.getElementById("hn" + element).value = create_unmber;
+              document.getElementById("bn" + element).value = sub_name;
+              var is_in_arr = 0;
+              if(counter_al_id.length != 0){
+                        for(var t = 0; t < counter_al_id.length;t++){
+                          if(create_unmber == counter_al_id[t]){
+                            is_in_arr = 1;
+                            counter_al_number[t] = counter_al_number[t] + 1;
+                            break;
+                          }
+                        }
+                        if( is_in_arr == 0){
+                          counter_al_id.push(create_unmber);
+                        counter_al_number.push(1);
+                        }
+
+                      }else{
+                        counter_al_id.push(create_unmber);
+                        counter_al_number.push(1);
+
+                      }
+                      /*alert(counter_al_id);
+                      alert(counter_al_number);*/
+
+              //alert(int_name);
+            }
+          
+
+
+      }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -1157,6 +1572,7 @@ background: #88ba1c;
 
         var final_arr = [];
         for (let i = 1; i <= lastDateofMonth; i++) {
+          
           if (i == 1) {
 
 
@@ -1489,6 +1905,17 @@ background: #88ba1c;
                 //alert(qpw[j]);
               }
             }
+            //alert("success");
+            /*$.ajax({
+              url: "load_employee_table.php",
+              method: "POST",
+              data: { id: idp, year: Yp, month: MPa, cha: ChA },
+              success: function (data) {
+                alert("success");
+                $("#employee_table").html(data);
+
+              }
+            });*/
             //alert(qpw);
             //alert(passedSavedata[0][0]);
             /*alert(hhha[0]);
@@ -1513,7 +1940,9 @@ background: #88ba1c;
             liTag += `${final_col_code}`;
             col_code = "<th id='00-000'>Date</th>"+col_code; 
 
-          } // creating li of all days of current month
+          }
+          
+           // creating li of all days of current month
           // adding active class to li if the current day, month, and year matched
           let find = 0;
           let isToday = i === date.getDate() && currMonth === new Date().getMonth()
@@ -1631,14 +2060,17 @@ background: #88ba1c;
           let em_hidden_selector_end = '"></div></div></div><div class="row"><div class="col-12">';
           let textarea_start = '<textarea class="form-control" id="tx';
           let textarea_body = '" style="height: 40px;font-size:12px;margin-top:3px;" title="Comment" rows="1">';
-          let textarea_end = '</textarea></div></div><div class="row"><div class="col-4">';
+          let textarea_end = '</textarea></div></div><div class="row"><div class="col-6">';
           let delete_start = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px" title="Delete" onClick="canceled(this.id)" id="x';
-          let delete_end = '"><i class="bi bi-trash"></i></button></div><div class="col-8">';
+          let delete_end = '"><i class="bi bi-trash"></i></button><input type="button" class="in" style="background-color: #aaaaaa;" value=""></div><div class="col-6">';
           let paste_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-left:2px;width: 25px;height: 25px;padding:0px;float:right" title="Paste" onClick="paste_cell(this.id)" id="pa';
           let paste_end = '">P</button>';
           let copy_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:right" title="Copy" onClick="copy_cell(this.id)" id="co';
           let copy_end = '">C</button></div></div></div></td>';
+          
           //dts = dts.concat(td_start, td_body, td_end, timepicker_first_start, timepicker_first_body, timepicker_first_end, timepicker_second_start, timepicker_second_body, timepicker_second_end, employee_selector_start, employee_selector_end, em_hidden_selector_start, em_hidden_selector_body, em_hidden_selector_end, textarea_start, textarea_end, delete_start, paste_start, paste_end, copy_start, copy_end);
+          
+          
           if (day == "Monday") {
             s = "background-color:#303030; color:white;";
             for (let q = 0; q < sz; q++) {
@@ -1666,8 +2098,9 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //alert(str3 + "ass"+ str1);
-                  
+
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
+
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1706,6 +2139,8 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                 str3 = str3.substring(1, str3.length-1);
+                str3 = load_comment(i,currMonth, currYear, arridc[q]);
+                //const str4 = new String(load_comment(i,currMonth, currYear, arridc[q]).toString());
 
                 let p = q + 1;
                 if (p < 10) {
@@ -1763,6 +2198,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1802,6 +2238,7 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1860,6 +2297,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1898,6 +2336,7 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -1957,6 +2396,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -1995,6 +2435,7 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2028,6 +2469,7 @@ background: #88ba1c;
               }
             }
           } else if (day == "Friday") {
+           
             s = "background-color:#303030; color:white;";
             for (let q = 0; q < sz; q++) {
 
@@ -2053,6 +2495,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -2089,8 +2532,9 @@ background: #88ba1c;
                 str1 = str1.substring(0, str1.length - 3);
                 let str2 = passedTime[9][q];
                 str2 = str2.substring(0, str2.length - 3);
-                let str3 = final_arr[q][i];
+                let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2150,6 +2594,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -2188,6 +2633,7 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2246,6 +2692,7 @@ background: #88ba1c;
                   str2 = str2.substring(10, 15);
                   let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                   let p = q + 1;
                   if (p < 10) {
                     p = "0" + "0" + p;
@@ -2285,6 +2732,7 @@ background: #88ba1c;
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
+                  str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2320,21 +2768,20 @@ background: #88ba1c;
             }
           }
           let nul = 0;
+          
           if (find == 1) {
 
 
             liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;min-height:100px;border: solid black">${i} ${months2[currMonth]} <br> ${day} - Holiday <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="paste_row(this.id)" title="Paste">P</button> </td>${dts}<tr>`;
-            <?php echo $dsa = ""; ?>
           } else {
-            <?php echo $dsa = ""; ?>
             liTag += `<tr style="min-height:100px"><td id="${i}-000" class="${isToday}" style="${s};font-size: 15px;min-height:100px;border: solid black;margin-left:10px">${i} ${months2[currMonth]} <br> ${day} <br> <button id="rc${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;margin-right:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="copy_row(this.id)" title="Copy">C</button><button id="rp${i}" type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:left" onclick="paste_row(this.id)" title="Paste">P</button> </td>${dts}<tr>`;
+         
 
-
-            <?php echo $dsa = ""; ?>
           }
-          <?php echo $dsa = ""; ?>
-          if (day == "Sunday" && i != 31) {
-            let tet = "<?php echo "$final_col_code"; ?>";
+          //alert(lastDateofMonth);
+
+          if (day == "Sunday" && i != lastDateofMonth) {
+            let tet = "<?php //echo "$final_col_code"; ?>";
             //liTag += `${tet}`;
             //let blank = "<th><th>" + `${col_code}`;
             liTag += `${col_code}`;
@@ -2343,12 +2790,13 @@ background: #88ba1c;
 
         }
         f_load = 1;
-        console.log("Hello");
-        console.log(passedArray);
+        /*console.log("Hello");
+        console.log(passedArray);*/
         <?php $dsa = ""; ?>
         currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
         daysTag.innerHTML = liTag;
-
+       
+        load_employee_table();
       }
 
 
@@ -2371,12 +2819,13 @@ background: #88ba1c;
           }
           //first = 1;
           renderCalendar(); // calling renderCalendar function
-
+          load_employee_table();
 
           //add_dat();
 
 
         });
+        //load_employee_table();
       });
     </script>
 
@@ -2571,6 +3020,8 @@ background: #88ba1c;
             }
             function call_cal (){
               renderCalendar();
+              load_employee_table();
+
 
             }
             function Empty(){
@@ -2581,6 +3032,37 @@ background: #88ba1c;
                 Tac = Tac + "<tr><td>" +i +"</td></tr>";
               }*/
                 daysTag.innerHTML = head;
+            }
+            function load_comment(day, month, year, id){
+              var return_com;
+              ///alert(day + " - " + month + " - " + year + " - " + id);
+              if(day < 10){
+                day = "0" + day;
+              }
+              month = month +1;
+              if(month < 10){
+                month = "0" + month;
+              }
+              var date_comment = year + "" + month + "" + day ;  
+              //alert(day + " - " + month + " - " + year+ " - " + id);
+
+              $.ajax({
+
+
+              url: "load_calendar_comment.php",
+              method: "POST",
+              dataType: "json",
+              cache: false,
+              async: false,
+              data: { id: id, date: date_comment},
+              success: function (data) {
+                                //arr = JSON.stringify(data);
+                return_com = data;
+              }
+              
+              });
+              return return_com;
+              //alert (return_com);
             }
 
 
@@ -2742,6 +3224,7 @@ background: #88ba1c;
                   final = bt + fa + bt2 + tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc + btn1 + fa + btn2 + fa + btn3 + namen + btn6 + fa + btn4 + val3 + btn5;
                   chp.innerHTML = "";
                   chp.innerHTML = final;
+                  load_employee_table();
                 }
               }
             }
@@ -2819,6 +3302,7 @@ background: #88ba1c;
 
         //final = bt + result123 + bt2 + tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc2 + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
         cha.innerHTML = final;
+        load_employee_table();
       }
       function canceled(clicked_id) {
         let result123 = clicked_id.substring(1, 7);
@@ -2828,6 +3312,7 @@ background: #88ba1c;
         let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
         can = mmm + result123 + nnn;
         cha.innerHTML = can;
+        load_employee_table();
       }
       var from_paste = "";
       var to_paste = "";

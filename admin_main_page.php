@@ -1,12 +1,14 @@
 <?php
 
-/**main page of admin account */
+/**tento soubor je hlavni html strana pro admin uzivatele */
 
-/**opening add picking data from database database */
+/**na zacatku kazdeho souboru, ktery slozi jako html strana je pripojeni do databaze, ktere kontroluje pres session
+ * , zda-li uzivatel v databazi existuje a zda-li ma opravni na nahlednuti do souboru
+*/
 $cons = "";
 session_start();
 
-if (isset ($_SESSION["user2_id"])) {
+if (isset($_SESSION["user2_id"])) {
 
     $mysqli = require __DIR__ . "/database.php";
 
@@ -50,13 +52,12 @@ $mysqli1->close();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
+<!-- source:- hodiny https://www.w3schools.com/js/tryit.asp?filename=tryjs_timing_clock -->
 <body onload="startTime()">
-    <?php if (isset ($user) && $userp == "admin"): ?>
+    <?php if (isset($user) && $userp == "admin"): ?>
 
-
-        <!--start of navbar -->
         <!--source -  https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
+        <!--zacatek navbaru -->
         <div class="container">
             <nav>
 
@@ -141,77 +142,45 @@ $mysqli1->close();
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous"></script>
 
-            <!--end of navbar -->
-            <!-- Printing of  informations  -->
-            <!--<div class="container">-->
-            <!-- <p>Users first name :
-                    </*?= //htmlspecialchars($user["firstname"]) ?>
-                </p>
-                <p>Users middle name :
-                    </*?= //htmlspecialchars($user["middlename"]) ?>
-                </p>
-                <p>Users last name :
-                    </*?= htmlspecialchars($user["lastname"]) ?>
-                </p>
-                <p>Users email :
-                    </*?= htmlspecialchars($user["email"]) ?>
-                </p>
-                <p>Users phone Code :
-                    </*?= htmlspecialchars($user["countryCode"]) ?>
-                </p>
-                <p>Users phone :
-                    </*?= htmlspecialchars($user["phone"]) ?>
-                </p>
-                <p>Users password_hash :
-                    </*?= htmlspecialchars($user["password_hash"]) ?>
-                </p>
-                <p>Users position :
-                    </*?= htmlspecialchars($user["position"]) ?>
-                </p>-->
-            <!--</div>-->
+            <!--konec navbar -->
+
 
             <br>
             <?php
-            $have = 0;
+            $have = 0;/** - promena, ktera udava zdali existuje smena do ktere se da pripojit (hodnota je 1) nebo ne (hodnota je 0) */
             $mysqli = require __DIR__ . "/database.php";
             $conn = new mysqli($host, $username, $password, $dbname);
-            $y = date('Y-m-d', strtotime("-1 days"));
-            $td = date('Y-m-d');
-            $tm = date('Y-m-d', strtotime("1 days"));
+            $y = date('Y-m-d', strtotime("-1 days"));/**-zjisteni vcerejsiho dne */
+            $td = date('Y-m-d');/**-zjisteni dnesniho dne */
+            $tm = date('Y-m-d', strtotime("1 days"));/**-zjisteni zitrejsiho dne */
             $u = $user['id'];
-            $sqly = "SELECT * FROM saved_shift_data WHERE saved_date='$y' AND id_user='$u' ORDER BY saved_from";
-            $sqltd = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' ORDER BY saved_from ";
-            $sqltd3 = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user=$u ORDER BY saved_from ";
-            $sqltm = "SELECT * FROM saved_shift_data WHERE saved_date='$tm' AND id_user='$u' ORDER BY saved_from ";
-            $sqlcl = "SELECT * FROM saved_shift_data, create_shift WHERE id_user='$u' AND saved_date >= DATE('$td') AND create_shift.id_shift = saved_shift_data.id_of_shift ORDER BY saved_from DESC ";
-            $fetchy = mysqli_query($conn, $sqly);
+            $sqly = "SELECT * FROM saved_shift_data WHERE saved_date='$y' AND id_user='$u' ORDER BY saved_from";/**-SQl dotaz - vybere vcerejsi smeny */
+            $sqltd = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' ORDER BY saved_from ";/**-SQl dotaz - vybere dnesni smeny */
+            $sqltm = "SELECT * FROM saved_shift_data WHERE saved_date='$tm' AND id_user='$u' ORDER BY saved_from "; /**-SQl dotaz - vybere zitrejsi smeny  */
+            $sqlcl = "SELECT * FROM saved_shift_data, create_shift WHERE id_user='$u' AND saved_date >= DATE('$td') AND create_shift.id_shift = saved_shift_data.id_of_shift ORDER BY saved_from DESC "; /**-SQL dotaz - co vyhledava nejblizsi nasledujici smenu */
+            /**-prikazy, ktere ziskavaji predchozi vysledky z SQL dotazu  */
+            $fetchy = mysqli_query($conn, $sqly); 
             $fetchtd = mysqli_query($conn, $sqltd);
-            $fetchtd3 = mysqli_query($conn, $sqltd3);
             $fetchtm = mysqli_query($conn, $sqltm);
             $fetchcl = mysqli_query($conn, $sqlcl);
-            $t1 = array();
-            $t2 = array();
-            $t2 = array();
-            $checkfrom = 0;
-            $cs = 0;
-            $yb = false;
+            $checkfrom = 0;/**promena, podle ktere se nacita tlacitko budto na prihlaseni do smeny (promena je 0) nebo na odhlaseni ze smeny (promena je 1) */
+            /** - SQL dotaz, ktery vyhledava vcerejsi smeny u kterych se uzivatel nezaregistroval a nebo se jeste neodlasil */
             $sqlfry = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$y' AND saved_shift_data.id_user='$u' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance)) OR (saved_shift_data.saved_date='$y' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
+            /** - SQL dotaz, ktery vyhledava dnesni smeny u kterych se uzivatel nezaregistroval a nebo se jeste neodlasil */
             $sqlfrtd = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance)) OR (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
 
+            /**-prikazy, ktere ziskavaji predchozi vysledky z SQL dotazu  */
             $fetchfryy = mysqli_query($conn, $sqlfry);
             $fetchfrtdtd = mysqli_query($conn, $sqlfrtd);
+
+            /** tato cast zjistuje zda-li existuji nejake vysledky z dotatzu pro vcerejsi den */
             if (mysqli_num_rows($fetchfryy) > 0) {
-                //$have = 1;
                 $sqlfrych = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$y' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
                 $fetchfryych = mysqli_query($conn, $sqlfrych);
-                ?>
-                <p>hjfgdhgfdg</p>
-                <?php
                 while ($row_y = mysqli_fetch_assoc($fetchfryy)) {
                     $st = $row_y['saved_from'];
-                    $en = $row_y['saved_to'];
-                    //$sqlfrych = "SELECT * FROM attendance WHERE ";
-
+                    $en = $row_y['saved_to'];     
+                    /**podminka zkontroluje zda-li je jeste moznost se prihlasit do smeny - soucasny cas v timestapu je mensi nez timestamp kdy smena konci */   
                     if (strtotime($st) >= strtotime($en)) {
                         if (strtotime(date('H:i:s')) < strtotime($en)) {
 
@@ -224,14 +193,10 @@ $mysqli1->close();
                         $id2 = $row_y['id'];
                         $st2 = $row_y2['saved_from'];
                         $en2 = $row_y2['saved_to'];
+                        /**podminka zkontroluje zda-li je jeste moznost se z smeny ohlasit - jeste neuplynulo 24 hodin od zacatku naplanovane smeny */ 
                         $att_log = "SELECT * FROM attendance WHERE planned_id=$id2";
-                        /*$fetch_log = mysqli_query($conn, $att_log);
-                        while ($row_log = mysqli_fetch_assoc($fetch_log)) {
-                            $log_from = $row_log['log_from'];
-                        }*/
-
                         if (strtotime($st2) >= strtotime($en2)) {
-                            if (strtotime(date('H:i:s')) < strtotime($st2) /*&& strtotime(date('H:i:s'))< strtotime($log)*/) {
+                            if (strtotime(date('H:i:s')) < strtotime($st2) ) {
 
                                 $have = 1;
                                 $checkfrom = 1;
@@ -241,133 +206,35 @@ $mysqli1->close();
                 }
 
             }
+               /** tato cast zjistuje zda-li existuji nejake vysledky z dotatzu pro vcerejsi den */
             if ($have != 1) {
                 if (mysqli_num_rows($fetchfrtdtd) > 0) {
                     $sqlfrtdch = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
                     $fetchfrtdch = mysqli_query($conn, $sqlfrtdch);
-                    ?>
-                    <p>lkasdk</p>
-                    <?php
                     while ($row_td = mysqli_fetch_assoc($fetchfrtdtd)) {
                         $st3 = $row_td['saved_from'];
                         $en3 = $row_td['saved_to'];
-                        //$sqlfrych = "SELECT * FROM attendance WHERE ";
-
+                        /**podminka kontroluje jestli smena neprechazi pres dva dny- kontroluje to tim, ze porovna timestampy
+                         * 
+                         */
                         if (strtotime($st3) >= strtotime($en3)) {
                             $have = 1;
-
-                        }else if(strtotime($en3) > strtotime(date('H:i:s'))){
+                         /**podminka zkontroluje zda-li je jeste moznost se prihlasit do smeny - soucasny cas v timestapu je mensi nez timestamp kdy  smena konci */
+                        } else if (strtotime($en3) > strtotime(date('H:i:s'))) {
                             $have = 1;
                         }
                     }
+                    /**podminka kontroluje kontroluji zda-li se uzivatel uz na smenu prihlasil */
                     if (mysqli_num_rows($fetchfrtdch) > 0) {
                         $have = 1;
                         $checkfrom = 1;
                     }
                 }
-
-
-
-
-                /****if (mysqli_num_rows($fetchtd) > 0) {
-                    //$have = 1;
-                    $sqlfr = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
-                    $fetchfr = mysqli_query($conn, $sqlfr);
-                    //$sqlfry = "SELECT * FROM saved_shift_data WHERE saved_date='$y' AND id_user='$u' AND att_from IS NOT NULL AND att_to IS NULL";
-                    //$fetchfry = mysqli_query($conn, $sqlfry);
-                    //$sqlch = "SELECT * FROM saved_shift_data WHERE saved_date='$td' AND id_user='$u' AND (att_from IS NULL OR att_to IS NULL)";
-                    $sqlch = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance)) OR (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-                    //$sqlch = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id NOT IN (SELECT planned_id FROM attendance)) OR (saved_shift_data.saved_date='$td' AND saved_shift_data.id_user='$u' AND saved_shift_data.id IN (SELECT planned_id FROM attendance) AND log_from IS NOT NULL AND log_to IS NULL)";
-
-                    $fetchch = mysqli_query($conn, $sqlch);
-
-                    if (mysqli_num_rows($fetchfr) > 0) {
-                        //while ($row_fr = mysqli_fetch_assoc($fetchfr)) {
-                            $r = 0;
-                            /*while ($row_r = mysqli_fetch_assoc($fetchfr)) {
-                               
-                                $t1[$r] = $row_r['saved_from'];
-                                $t2[$r] = $row_r['saved_to'];
-                                if (strtotime($t1[$r]) >= strtotime($t2[$r])){
-
-                                }else{
-                                    if(strtotime($t2[$r]) > strtotime(date('H:i:s'))){
-                                        //$checkfrom = 1;
-                                    }
-                                }
-
-                            }*/
-                /****$checkfrom = 1;
-                //}
-            }
-            if (mysqli_num_rows($fetchfry) > 0) {
-                 //$have = 1;
-                while ($row_y = mysqli_fetch_assoc($fetchfry)) {
-                    $st = $row_y['saved_from'];
-                    //$en = $row_y['saved_to'];
-                    if( strtotime(date('H:i:s'))<strtotime($st)){
-                        $have = 1;
-                    }
-                }
-            }
-             if(mysqli_num_rows($fetchfry) > 0){
-                //$checkfrom = 1;
-                $r = 0;
-                /*while ($row_r = mysqli_fetch_assoc($fetchfry)) {
-                $t1[$r] = $row_r['saved_from'];
-                if (strtotime($t1[$r]) >= strtotime(date('H:i:s'))) {
-                    $yb =true;
-                    $p = strtotime($t1[$r]);
-                    //$status[2] = true;
-
-                }*/
-                /***$r++;
- 
-            /*}*/
-                /****if($yb ==true){
-                    $checkfrom = 1;
-                }
-                
-            }
-
-                if (mysqli_num_rows($fetchch) > 0) {
-                    $r = 0;
-                    while ($row_r = mysqli_fetch_assoc($fetchch)) {
-                        $t1[$r] = $row_r['saved_from'];
-                        $t2[$r] = $row_r['saved_to'];
-                        $t3[$r] = $row_r['att_from'];
-
-                        if($row_r['att_from'] == null){
-                            if (strtotime($t1[$r]) >= strtotime($t2[$r])){
-                                if(strtotime($t2[$r])+86400 > strtotime(date('H:i:s'))){
-
-                                    $have = 1;
-                                }else{
-                                    $have = 0;
-                                }
-                            }else{
-                                if(strtotime($t2[$r]) > strtotime(date('H:i:s'))){
-
-                                    $have = 1;
-                                }else{
-                                    $have = 0;
-
-                                }
-                            }
-                        }else{
-
-                            $have = 1;
-                        }
-                        $r++;
-                    }
-                    
-                }else{
-                    $have = 0;
-                }
-            }*/
             }
             ?>
+            
             <div class="row">
+                <!-- zacatek prihlaseni na smenu -->
                 <div class='col-12 col-md-4'>
                     <div class="p-3 mb-2" style="background:  #4CAF50;color:#ffffff">Attendance records:</div>
                     <?php if ($have == 1) { ?>
@@ -392,29 +259,44 @@ $mysqli1->close();
 
 
                     <script>
+
+                        var position = <?php echo json_encode($userp); ?>;/**-ziskani pozice prihlaseneho uzivatele */
+                        var type = 0; /** promena, ktera slouzi k nacteni pro nacteni informacni tabule */
+
+                        /**nacitani informacni tabule */
+                        $.ajax({
+                            url: "load_board_edit.php",
+                            method: "POST",
+                            data: {
+                                position: position, type: type
+                            },
+                            success: function (data) {
+                                $("#all_board").html(data);
+                            }
+                        });
+
+
+
+
+
                         $(window).on("load", function () {
                             document.getElementById("txtfield").value = "";
-                            //alert("dsadsa");
                         });
                         var checks = <?php echo json_encode($checkfrom); ?>;
-                        let zxz = <?php echo json_encode($p); ?>;
-                        //alert(zxz);
                         if (checks == 1) {
                             document.getElementById("pause").style.display = "";
                             document.getElementById("confirm").style.display = "none";
                             document.getElementById("departure").style.display = "";
                         }
+                        /**Funkce na prihlaseni */
                         function Comfirm() {
-                            var fetch_id = <?php echo json_encode($userid); ?>;
-                            var field = document.getElementById("txtfield").value;
-                            //alert(field);
-                            var status;
-                            var status1;
-                            var status2;
-                            //$user;
-                            //alert(fetch_id);
-                            //var fetch_id = 0;
-                            //alert(field);
+                            var fetch_id = <?php echo json_encode($userid); ?>;/**promena s id uzivatele */
+                            var field = document.getElementById("txtfield").value;/**promena co ziskava text z textarea na komentare */
+                            var status;/**promena pro zpetna data */
+                            var status1;/**promena pro potvrzeni, ze data se ulozily do databaze uspesne */
+                            var status2;/**promena pro potvrzeni, ze komentar se do databaze ulozil upesne */
+
+                            /**ukladani do databaze */
                             $.ajax({
                                 url: "confirm_arrival.php",
                                 method: "POST",
@@ -422,18 +304,16 @@ $mysqli1->close();
                                 cache: false,
                                 async: false,
                                 data: { id: fetch_id, text: field },
-                                success: function (data, data2) {
-                                    //$("#w3review").html(data);
-                                    //alert(data);
+                                success: function (data) {
                                     status = JSON.stringify(data);
                                     status1 = status.substring(1, 2);
                                     status2 = status.substring(3, 4);
-                                    alert(status);
+                                    alert(status);/**--dodelat */
 
                                 }
 
                             });
-                            //alert(status);
+                            /**vraceni potvrzujici zpravy*/
                             if (status1 == 0) {
                                 alert("Your arrival is confirm");
                                 document.getElementById("pause").style.display = "";
@@ -446,18 +326,14 @@ $mysqli1->close();
                             }
 
                         }
+                        /**funkce na odhlaseni */
                         function Departure() {
 
-                            var fetch_id = <?php echo json_encode($userid); ?>;
-                            var field = document.getElementById("txtfield").value;
-                            //alert(field);
-                            var left;
-                            var left1;
-                            var left2;
-                            //$user;
-                            //alert(fetch_id);
-                            //var fetch_id = 0;
-                            //alert(field);
+                            var fetch_id = <?php echo json_encode($userid); ?>;/**promena s id uzivatele */
+                            var field = document.getElementById("txtfield").value;/**promena co ziskava text z textarea na komentare */
+                            var left;/**promena pro zpetna data */
+                            var left1;/**promena pro potvrzeni, ze data se ulozily do databaze uspesne */
+                            var left2;/**promena pro potvrzeni, ze komentar se do databaze ulozil upesne */
                             $.ajax({
                                 url: "confirm_departure.php",
                                 method: "POST",
@@ -466,12 +342,10 @@ $mysqli1->close();
                                 async: false,
                                 data: { id: fetch_id, text: field },
                                 success: function (data) {
-                                    //$("#w3review").html(data);
-                                    //alert(data);
                                     left = JSON.stringify(data);
                                     left1 = left.substring(1, 2);
                                     left2 = left.substring(3, 4);
-                                    alert(left);
+                                    alert(left);/**--dodelat */
 
                                 }
                             });
@@ -488,6 +362,8 @@ $mysqli1->close();
                         }
                     </script>
                 </div>
+                 <!-- konec prihlaseni na smenu -->
+                  <!-- zacatek zobrazeni smen uzivatele na dnesek, zitrek a vcerejsek -->
                 <div class='col-12 col-md-4'>
                     <div class="p-3 mb-2" style="background:  #4CAF50;color:#ffffff">Closest shifts:</div>
                     <div class="row g-2">
@@ -520,15 +396,13 @@ $mysqli1->close();
                             } else { ?>
                                 <div class="p-3 mb-2 bg-danger text-white">No planned shift</div>
                             <?php } ?>
-                            <!--<label>
-                                <?php //echo date('Y-m-d', strtotime("-1 days"));    ?>
-                            </label>-->
+
                         </div>
                         <div class='col-12 col-md-4'>
                             <p class="text-center" style="margin-bottom:auto">Today</p>
                             <?php if (mysqli_num_rows($fetchtd) > 0) {
                                 while ($rows_td = mysqli_fetch_assoc($fetchtd)) {
-                                    
+
                                     $id_td = $rows_td['id_of_shift'];
                                     $from_td = substr($rows_td['saved_from'], 0, -3);
                                     $to_td = substr($rows_td['saved_to'], 0, -3);
@@ -554,9 +428,7 @@ $mysqli1->close();
                             } else { ?>
                                 <div class="p-3 mb-2 bg-danger text-white">No planned shift</div>
                             <?php } ?>
-                            <!--<label>
-                                <?php //echo date("Y-m-d")    ?>
-                            </label>-->
+
                         </div>
                         <div class='col-12 col-md-4'>
                             <p class="text-center" style="margin-bottom:auto">Tomorrow</p>
@@ -586,67 +458,74 @@ $mysqli1->close();
                             } else { ?>
                                 <div class="p-3 mb-2 bg-danger text-white">No planned shift</div>
                             <?php } ?>
-                            <!--<label>
-                                <?php //echo date('Y-m-d', strtotime("1 days"));    ?>
-                            </label>-->
+
                         </div>
                         <div class='col-12'>
-                            <p><strong>Closest shift:<a href="my_shifts.php" style="text-decoration:none"></strong> 
-                            <?php if (mysqli_num_rows($fetchcl) > 0) {
-                                $result_cl = $mysqli->query($sqlcl);
-                                while ($row_cl = $result_cl->fetch_assoc()) {
-                                    $shi_name2 = $row_cl['shift_name'];
-                                    $obj_name2 = $row_cl['object_name'];
-                                    $pl_from= $row_cl['saved_from'];
-                                    $pl_to = $row_cl['saved_to'];
-                                break;
-                                }
-                                ?> 
-                               
-                                <?php echo ($pl_from."-".$pl_to." | ".$obj_name2." - ".$shi_name2) ?></a></p>
-                            <?php 
-                               }else{
-                                ?>
+                            <!-- zobrazeni nejblizsi smeny -->
+                            <p><strong>Closest shift:<a href="my_shifts.php" style="text-decoration:none"></strong>
+                                <?php if (mysqli_num_rows($fetchcl) > 0) {
+                                    $result_cl = $mysqli->query($sqlcl);
+                                    while ($row_cl = $result_cl->fetch_assoc()) {
+                                        $sdate = $row_cl['saved_date'];
+                                        $shi_name2 = $row_cl['shift_name'];
+                                        $obj_name2 = $row_cl['object_name'];
+                                        $pl_from = substr($row_cl['saved_from'],0,-3);
+                                        $pl_to = substr($row_cl['saved_to'],0,-3);
+                                        $month = substr($sdate, 5, -3);
+                                        $day = substr($sdate, 8);
+                                        break;
+                                    }
+                                    ?>
+
+                                    <?php echo ($day.".".$month. " | ". $pl_from ."-" . $pl_to . " | " . $obj_name2 . " - " . $shi_name2); ?></a>
+                                </p>
+                            <?php
+                                } else {
+                                    ?>
                                 //</a></p>
                                 <?php
-                               } ?>
+                                } ?>
                         </div>
                     </div>
                 </div>
+                <!-- konec zobrazeni smen uzivatele na dnesek, zitrek a vcerejsek -->
+                <!-- zobrazeni komentare ke smene -->
                 <div class='col-12 col-md-4'>
                     <div class="p-3 mb-2" style="background:  #4CAF50;color:#ffffff">Comments on the shift:</div>
-                    <?php if (mysqli_num_rows($fetchtd3) > 0) {
-                                      ?> 
-                                      <!--<p>1111</p>-->
-                                      <?php  
-                                //while ($rows_td4 = mysqli_fetch_assoc($fetchtd2)) {
-                                    $result_com = $mysqli->query($sqltd3);
-                                    while ($row_com = $result_com->fetch_assoc()) {
-                                        $com = $row_com['comments'];
-                                        if($com != ""){
-                                    ?> 
-                                    
-                                   
-                                   <!--<div style="width: 100%;">No planned shift</div>-->
-                                    <p> <?php echo $com; ?></p>
-                                    <hr>
-                                  
+                    <?php if (mysqli_num_rows($fetchtd) > 0) {
+                        $result_com = $mysqli->query($sqltd);
+                        while ($row_com = $result_com->fetch_assoc()) {
+                            $com = $row_com['comments'];
+                            if ($com != "") {
+                                $inside  = str_replace("\n","<br>",$com);
+                                $inside  = str_replace(" ","&nbsp;",$inside);
+                                ?>
+                                <p>
+                                    <?php echo $inside; ?>
+                                </p>
+                                <hr>
 
 
-                                <?php }  }?>
-                                
-<?php
-                            } else { ?>
-                            <?php } ?>
-                
+
+                            <?php }
+                        } ?>
+
+                        <?php
+                    } else { ?>
+                    <?php } ?>
+
                 </div>
             </div>
             <br>
+            <!-- informacni tabule-->
             <div class="row">
                 <div class='col-12 col-md-6'>
                     <div class="p-3 mb-2" style="background:  #4CAF50;color:#ffffff">Information board:</div>
+                    <div id="all_board">
+                        
+                    </div>
                 </div>
-
+                <!-- soucasne naplanovane smeny v systemu -->
                 <div class='col-12 col-md-6'>
                     <div class="p-3 mb-2" style="background:  #4CAF50;color:#ffffff">Current shifts:
                         <div style="float: right">
@@ -700,7 +579,6 @@ $mysqli1->close();
                                 data: { input: inp },
                                 success: function (data) {
                                     $("#current").html(data);
-                                    //alert("hjasdsdhjg");
                                 }
                             });
                         });
@@ -708,15 +586,14 @@ $mysqli1->close();
 
 
                         var input_obj =
-                            <?php echo json_encode($first); ?>;
-                        //alert("hjasdhjg");
+                            <?php echo json_encode($first); ?>;/** id hlavniho objektu */
+                            /** nacitani soucasnych smen */
                         $.ajax({
                             url: "load_current_shifts.php",
                             method: "POST",
                             data: { input: input_obj },
                             success: function (data) {
                                 $("#current").html(data);
-                                //alert("hjasdsdhjg");
                             }
                         });
                     </script>

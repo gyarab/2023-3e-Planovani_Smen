@@ -68,13 +68,13 @@ print "fi $firstnameis_invalid,";
 print "as $allis_invalid,";*/
 
 /**Creation of new user account to database */
-if ($allis_invalid == false) {
+/*--if ($allis_invalid == false) {
 
     /**Hashing password */
-    $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    /*---$password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $mysqli = require __DIR__ . "/database.php";
     /**Inserting data */
-    $sql = "INSERT INTO user2 (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
+   /*-- $sql = "INSERT INTO user2 (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $mysqli->stmt_init();
@@ -102,13 +102,13 @@ if ($allis_invalid == false) {
     } else {
         /** Code that checks if is email unique*/
         /**Needs to be reconstruct  */
-        if ($mysqli->errno === 1062) {
+        /*--if ($mysqli->errno === 1062) {
             //die("email already taken");
         } else {
             //die($mysqli->error . " " . $mysqli->errno);
         }
     }
-}
+}*/
 
 ?>
 <!DOCTYPE html>
@@ -618,6 +618,7 @@ if ($allis_invalid == false) {
 
             //alert(password);
             var status;
+            //alert(password);
             $.ajax({
                 url: "add_user.php",
                 method: "POST",
@@ -632,7 +633,7 @@ if ($allis_invalid == false) {
 
                     status = data;
                     status = status.split(",");
-                    //alert(status);
+                    alert(data);
                 }
                 //alert(status);
 

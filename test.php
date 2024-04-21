@@ -194,6 +194,22 @@
     </td>
     </tr>
   </table>
+  <p>
+    <?php
+    $datestring = '2020-01-01'; 
+  
+    // Converting string to date 
+    $date = strtotime($datestring); 
+       
+    // Last date of current month. 
+    $lastdate = strtotime(date("Y-m-d", $date-86400 )); 
+    
+    // Day of the last date  
+    $day = date("Y-m-d", $lastdate); 
+      
+    echo $day; 
+    ?>
+  </p>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>

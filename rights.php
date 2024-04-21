@@ -1471,6 +1471,7 @@ $mysqli1->close();
                                     //$("#object").html(data);
                                     //alert(data);
                                     alert("Saved successfully");
+                                    //alert();
                                 }
                             });
                             //alert("Saved successfully");
