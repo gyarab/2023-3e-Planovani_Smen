@@ -22,29 +22,25 @@ if (isset($_SESSION["user2_id"])) {
     <title>Home</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    
-    <h1>Home</h1>
-    
-    <?php if (isset($user)): ?>
-        
-        <p>Users first name : <?= htmlspecialchars($user["firstname"]) ?></p>
-        <p>Users middle name : <?= htmlspecialchars($user["middlename"]) ?></p>
-        <p>Users last name : <?= htmlspecialchars($user["lastname"]) ?></p>
-        <p>Users email : <?= htmlspecialchars($user["email"]) ?></p>
-        <p>Users phone Code : <?= htmlspecialchars($user["countryCode"]) ?></p>
-        <p>Users phone : <?= htmlspecialchars($user["phone"]) ?></p>
-        <p>Users password_hash : <?= htmlspecialchars($user["password_hash"]) ?></p>
-        <p>Users position : <?= htmlspecialchars($user["position"]) ?></p>
-        <p><a href="log/logout.php">Log out</a></p>
-        
-    <?php else: ?>
-        
-        <p><a href="log/login.php">Log in123</a> or <a href="log/signup.html">sign up</a></p>
-        
-    <?php endif; ?>
-    
+    <div class = "form">
+        <h1>Planovani Smen</h1>
+        <hr>
+        <h1>Welcome</h1>
+        <button onclick="navigateToPage1()">Log in</button>
+        <button onclick="navigateToPage2()">Sign up</button>        
+    </div>
+
+    <script>
+        function navigateToPage1() {
+            window.location.href = "login.php";
+        }
+        function navigateToPage2() {
+            window.location.href = "signup.html";
+        }
+    </script>
 </body>
 </html>
     
