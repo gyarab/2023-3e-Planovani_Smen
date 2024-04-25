@@ -60,12 +60,32 @@ $verification_code = generateRandomString();
 /**sending email */
 $to = $_POST["email"];
 
-$subject = "Verification Code";
+$subject = "PLAN & GO verification Code";
 
-$message = "Here is your verification code: $verification_code";
+//$message = "Here is your verification code: <a>$verification_code</a>";
+$message = '
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PLAN & GO verification Code</title>
+  <style>
+  
+  </style>
+</head>
+<body style="width:100%;height: 600px;backgroundColor: rgba(118,184,82,1)">
+
+<center>
+<h1 style="font-size:40px">You had been added to a PLAN & GO organization</h1>
+<p>Here is your verification code: <strong>'.$verification_code.'</strong></p>
+
+</center>
+
+</body>
+</html>
+';
 
 $headers = "From: michal.vakula@gmail.com" . "\r\n";
-$headers .= "Content-Type: text/plain; charset=UTF-8";
+$headers .= "Content-Type: text/html; charset=UTF-8";
 
 if (mail($to, $subject, $message, $headers)) {
     echo "Email sent successfully.";
