@@ -2,17 +2,17 @@
 
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
   $mysqli = require ("../database.php");
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
-  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
   $resultp = $mysqli->query($sqlp);
   while ($rrr = $resultp->fetch_assoc()) {
     $userp = $rrr['position'];

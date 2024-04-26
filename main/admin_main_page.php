@@ -8,17 +8,17 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
     $mysqli = require ("../database.php");
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -331,6 +331,7 @@ if (isset($_SESSION["user2_id"])) {
                         var type = 0; /** promena, ktera slouzi k nacteni pro nacteni informacni tabule */
 
                         /**nacitani informacni tabule */
+                       
                         $.ajax({
                             url: "../board/load_board_edit.php",
                             method: "POST",
@@ -673,7 +674,6 @@ if (isset($_SESSION["user2_id"])) {
                             <select class="form-select form-select-sm" name="option" id="option"
                                 style="background-color: #4CAF50;color:#ffffff; margin: auto">
                                 <?php
-                                //$mysqli2 = require __DIR__ . "/database.php";
                                 $mysqli2 = require ("../database.php");
                                 $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
                                 $result3 = $mysqli2->query($sql2);

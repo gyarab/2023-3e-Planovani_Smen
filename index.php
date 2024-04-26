@@ -3,12 +3,12 @@
 /**It haso use in program */
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
     
     $mysqli = require __DIR__ . "/database.php";
     
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
             
     $result = $mysqli->query($sql);
     
@@ -30,8 +30,7 @@ if (isset($_SESSION["user2_id"])) {
         <hr>
         <h1>Welcome</h1>
         <button onclick="navigateToPage1()">Log in</button>
-        <button onclick="navigateToPage2()">Sign up</button>   
-        <small><a href="log/verification.php">I want to vertify my account</a></small>     
+        <button onclick="navigateToPage2()">Vertify email</button>   
     </div>
 
     <script>
@@ -39,7 +38,7 @@ if (isset($_SESSION["user2_id"])) {
             window.location.href = "log/login.php";
         }
         function navigateToPage2() {
-            window.location.href = "log/signup.html";
+            window.location.href = "log/verification.php";
         }
     </script>
 </body>

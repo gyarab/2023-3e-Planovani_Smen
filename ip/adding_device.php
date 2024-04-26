@@ -8,18 +8,18 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
     $mysqli = require ("../database.php");
 
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -49,10 +49,12 @@ if (isset($_SESSION["user2_id"])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
 </head>
 <!-- source:- hodiny https://www.w3schools.com/js/tryit.asp?filename=tryjs_timing_clock -->
 
-<body onload="startTime()">
+<body id="body" onload="startTime()">
     <?php if (isset($user) && $userp == "admin"): ?>
 
         <!--source -  https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
@@ -264,13 +266,13 @@ if (isset($_SESSION["user2_id"])) {
 
                         });
                         if (return_status == 0) {
-                            alert("IP address was successfully added to the system");
+                            success_alert("IP address was successfully added to the system");
                             load_ips();
 
                         } else if (return_status == 1) {
-                            alert("IP adress do not meet corrent format");
+                            error_alert("IP adress do not meet correct format");
                         } else if (return_status == 2) {
-                            alert("IP adress already exists");
+                            error_alert("IP adress already exists");
 
                         }
 
@@ -291,13 +293,12 @@ if (isset($_SESSION["user2_id"])) {
                     function edit_ip(val) {
                         val = val.substring(1);
                         var des = document.getElementById("description" + val).value;
-                        alert(val);
                         $.ajax({
                             url: "../ip/edit_ips.php",
                             method: "POST",
                             data: { id: val, description: des },
                             success: function (data) {
-                                alert(data);
+                                success_alert("IP address was edited successfully");
 
                             }
                         })
@@ -309,11 +310,28 @@ if (isset($_SESSION["user2_id"])) {
                             method: "POST",
                             data: { id: val },
                             success: function (data) {
-                                alert(data);
+                                success_alert("IP address was deleted successfully");
                                 load_ips();
                             }
                         })
                     }
+
+                    function success_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "success"
+                    });
+
+                }
+                function error_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "error"
+                    });
+
+                }
                 </script>
 
 
@@ -340,6 +358,26 @@ if (isset($_SESSION["user2_id"])) {
 
         </div>
     <?php else: ?>
+        <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
     <?php endif; ?>
 </body>
 

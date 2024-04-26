@@ -3,17 +3,24 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
-  $mysqli = require("../database.php");
+  $mysqli = require ("../database.php");
 
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
+  $resultp = $mysqli->query($sqlp);
+  while ($rrr = $resultp->fetch_assoc()) {
+    $userp = $rrr['position'];
+    $userid = $rrr['id'];
+
+  }
 }
 
 
@@ -38,6 +45,8 @@ if (isset($_SESSION["user2_id"])) {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="css/tree.css">
   <link rel="stylesheet" href="css/success.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="../css/logout.css">
 
   <style>
     .cont {
@@ -121,90 +130,185 @@ if (isset($_SESSION["user2_id"])) {
   </style>
 </head>
 
-<body>
-  <script>
-    var id_shift;
-    var update;
+<body id="body">
+  <?php if (isset($user) && ($userp == "admin" || $userp == "manager")): ?>
+    <script>
+      var id_shift;
+      var update;
 
-  </script>
+    </script>
 
-  <nav>
+    <?php if ($userp == "admin") { ?>
+      <nav>
 
-    <div class="navbar container">
-      <i class='bx bx-menu'></i>
-      <div class="logo"><a href="../main/admin_main_page.php">Home :
-          <?= $cons ?>
-          <?= htmlspecialchars($user["firstname"]) ?>
-          <?= htmlspecialchars($user["middlename"]) ?>
-          <?= htmlspecialchars($user["lastname"]) ?>
-        </a></div>
-      <div class="nav-links">
-        <div class="sidebar-logo">
-          <span class="logo-name">Home page</span>
-          <i class='bx bx-x'></i>
-        </div>
-        <ul class="links">
-          <li>
-            <a href="#">EMPLOYEES</a>
-            <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-            <ul class="em-sub-menu sub-menu">
-              <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-              <li><a href="#">LIST</a></li>
-              <li><a href="#">CHANGE DATA</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">DATABASE</a>
-            <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-            <ul class="htmlCss-sub-menu sub-menu">
-              <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-              <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-              <li><a href="#">CURRENT SCHEDULE</a></li>
-              <li class="more">
-                <span><a href="#">More</a>
-                  <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                </span>
-                <ul class="more-sub-menu sub-menu">
-                  <li><a href="#"></a></li>
-                  <li><a href="#">Pre-loader</a></li>
-                  <li><a href="#">Glassmorphism</a></li>
+        <div class="navbar container">
+
+          <i class='bx bx-menu'></i>
+          <div class="logo"><a
+              style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+              href="../main/admin_main_page.php">Home :
+              <?= $cons ?>
+              <?= htmlspecialchars($user["firstname"]) ?>
+              <?= htmlspecialchars($user["middlename"]) ?>
+              <?= htmlspecialchars($user["lastname"]) ?>
+
+            </a></div>
+          <div class="nav-links">
+            <div class="sidebar-logo">
+              <span class="logo-name">Home page</span>
+              <i class='bx bx-x'></i>
+            </div>
+            <ul class="links">
+              <li>
+                <a href="#">EMPLOYEES</a>
+                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                  <div>
+                    <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                    <li><a href="../search/list_of_employees.php">LIST</a></li>
+                    <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                    <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                  </div>
+                </ul>
+
+              </li>
+              <li>
+                <a href="#">DATABASE</a>
+                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
+                  <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
+                  <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                  <li class="more">
+                    <span><a href="#">More</a>
+                      <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                    </span>
+                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                      <li><a href="#"></a></li>
+                      <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                      <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
+              <li>
+                <a href="#">OTHERS</a>
+                <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                  <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                  <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+                </ul>
+              </li>
+              <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+              <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
             </ul>
-          </li>
-          <li>
-            <a href="#">HISTORY</a>
-            <i class='bx bxs-chevron-down js-arrow arrow '></i>
-            <ul class="js-sub-menu sub-menu">
-              <li><a href="#">Dynamic Clock</a></li>
-              <li><a href="#">Form Validation</a></li>
-              <li><a href="#">Card Slider</a></li>
-              <li><a href="#">Complete Website</a></li>
-            </ul>
-          </li>
-          <li><a href="#">STATISTICS</a></li>
-          <li><a href="../log/logout.php">LOG OUT</a></li>
-        </ul>
-      </div>
-      <div class="search-box">
-        <i class='bx bx-search'></i>
-        <div class="input-box">
-          <input type="text" placeholder="Search...">
+          </div>
+
+          <div class="search-box">
+            <i class='bx bx-search'></i>
+            <div class="input-box">
+              <input type="text" placeholder="Search...">
+              <br>
+              <br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-12">
+                    <p>123456789</p>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
-      </div>
-    </div>
-  </nav>
-  <script src="../js/main_page.js"></script>
-  <br>
-  <br>
-  <br>
+      </nav>
+    <?php } else { ?>
+      <nav>
+
+        <div class="navbar container">
+
+          <i class='bx bx-menu'></i>
+          <div class="logo"><a
+              style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+              href="../main/manager_main_page.php">Home :
+              <?= $cons ?>
+              <?= htmlspecialchars($user["firstname"]) ?>
+              <?= htmlspecialchars($user["middlename"]) ?>
+              <?= htmlspecialchars($user["lastname"]) ?>
+
+            </a></div>
+          <div class="nav-links">
+            <div class="sidebar-logo">
+              <span class="logo-name">Home page</span>
+              <i class='bx bx-x'></i>
+            </div>
+            <ul class="links">
+              <li>
+                <a href="#">EMPLOYEES</a>
+                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                  <div>
+                    <li><a href="../search/list_of_employees.php">LIST</a></li>
+                    <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                  </div>
+                </ul>
+
+              </li>
+              <li>
+                <a href="#">CALENDAR</a>
+                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                  <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+
+                  <li class="more">
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">OTHERS</a>
+                <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                  <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                  <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                  <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                </ul>
+              </li>
+              <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+              <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+            </ul>
+          </div>
+
+          <div class="search-box">
+            <i class='bx bx-search'></i>
+            <div class="input-box">
+              <input type="text" placeholder="Search...">
+              <br>
+              <br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-12">
+                    <p>123456789</p>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
 
+        </div>
+      </nav>
+    <?php } ?>
+    <script src="../js/main_page.js"></script>
+    <br>
+    <br>
+    <br>
 
 
-
-
-  <?php if (isset($user)): ?>
 
     <div class="container">
 
@@ -230,11 +334,11 @@ if (isset($_SESSION["user2_id"])) {
               <Select id="select_em" style="display: inline">
                 <option id="opt_man-0" value="0">Pick a employee</option>
                 <?php
-                $mysqli = require("../database.php");
+                $mysqli = require ("../database.php");
 
 
                 $conn = new mysqli($host, $username, $password, $dbname);
-                $query7 = "SELECT * FROM user2 ORDER BY lastname, firstname ";
+                $query7 = "SELECT * FROM user ORDER BY lastname, firstname ";
                 $result7 = mysqli_query($conn, $query7);
                 if (mysqli_num_rows($result7) > 0) {
                   while ($row_em = mysqli_fetch_assoc($result7)) {
@@ -324,27 +428,27 @@ if (isset($_SESSION["user2_id"])) {
                 document.getElementById('search_bar_em').value = "";
                 document.getElementById("unselect").style.display = "none";
                 document.getElementById("div_in").style.display = "none";
-                 document.getElementById('frommonday').value ="";
-             document.getElementById('tomonday').value ="";
-            document.getElementById('fromtuesday').value ="";
-             document.getElementById('totuesday').value ="";
-            document.getElementById('fromwednesday').value ="";
-            document.getElementById('towednesday').value ="";
-             document.getElementById('fromthursday').value ="";
-             document.getElementById('tothursday').value ="";
-             document.getElementById('fromfriday').value ="";
-             document.getElementById('tofriday').value ="";
-             document.getElementById('fromsaturday').value ="";
-            document.getElementById('tosaturday').value ="";
-            document.getElementById('fromsunday').value ="";
-          document.getElementById('tosunday').value ="";
-          document.getElementById('monday').checked =false;
-          document.getElementById('tuesday').checked =false;
-          document.getElementById('wednesday').checked =false;
-          document.getElementById('thursday').checked =false;
-          document.getElementById('friday').checked =false;
-          document.getElementById('saturday').checked =false;
-          document.getElementById('sunday').checked =false;
+                document.getElementById('frommonday').value = "";
+                document.getElementById('tomonday').value = "";
+                document.getElementById('fromtuesday').value = "";
+                document.getElementById('totuesday').value = "";
+                document.getElementById('fromwednesday').value = "";
+                document.getElementById('towednesday').value = "";
+                document.getElementById('fromthursday').value = "";
+                document.getElementById('tothursday').value = "";
+                document.getElementById('fromfriday').value = "";
+                document.getElementById('tofriday').value = "";
+                document.getElementById('fromsaturday').value = "";
+                document.getElementById('tosaturday').value = "";
+                document.getElementById('fromsunday').value = "";
+                document.getElementById('tosunday').value = "";
+                document.getElementById('monday').checked = false;
+                document.getElementById('tuesday').checked = false;
+                document.getElementById('wednesday').checked = false;
+                document.getElementById('thursday').checked = false;
+                document.getElementById('friday').checked = false;
+                document.getElementById('saturday').checked = false;
+                document.getElementById('sunday').checked = false;
               }
             </script>
             <div id="div_in" style="display: none;">
@@ -486,27 +590,11 @@ if (isset($_SESSION["user2_id"])) {
 
         </div>
       </div>
- 
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-          crossorigin="anonymous"></script>
 
 
-
-
-
-
-
-
-
-
-        <?php
-        $names = $_GET['day'];
-        foreach ($names as $color) {
-          echo $color . "<br />";
-        }
-        ?>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 
 
@@ -517,311 +605,98 @@ if (isset($_SESSION["user2_id"])) {
 
 
 
-
-        <script>
-
-
-
-          var input = <?php echo json_encode($pickm); ?>;
-          var ChA = JSON.parse(input);
-          $.ajax({
-            url: "../shifts/load_object_in_shift.php",
-            method: "POST",
-            data: { input: ChA },
-            success: function (data) {
-              $("#res").html(data);
-            }
-          });
-
-
-          var ff;
-
-
-          var previous;
+      <?php
+      $names = $_GET['day'];
+      foreach ($names as $color) {
+        echo $color . "<br />";
+      }
+      ?>
 
 
 
-          $("#savemain").click(function () {
-            $(".check-icon").hide();
-            setTimeout(function () {
-              $(".check-icon").show();
-            }, 10);
-          });
 
 
-          var cq = 0;
-          var Cq = JSON.parse(cq);
 
 
-          function Edit_shift() {
-            let e = document.getElementById("sfield").value;
-
-            if (e != "") {
-
-              var mf = document.getElementById('sfrommonday').value;
-              var mt = document.getElementById('stomonday').value;
-              var tuf = document.getElementById('sfromtuesday').value;
-              var tut = document.getElementById('stotuesday').value;
-              var wf = document.getElementById('sfromwednesday').value;
-              var wt = document.getElementById('stowednesday').value;
-              var thf = document.getElementById('sfromthursday').value;
-              var tht = document.getElementById('stothursday').value;
-              var ff = document.getElementById('sfromfriday').value;
-              var ft = document.getElementById('stofriday').value;
-              var saf = document.getElementById('sfromsaturday').value;
-              var sat = document.getElementById('stosaturday').value;
-              var suf = document.getElementById('sfromsunday').value;
-              var sut = document.getElementById('stosunday').value;
-
-              var name = document.getElementById('sfield').value;
-              var start = currentDate;
-
-              var mo_d = document.getElementById("smonday");
-              var tu_d = document.getElementById("stuesday");
-              var we_d = document.getElementById("swednesday");
-              var th_d = document.getElementById("sthursday");
-              var fr_d = document.getElementById("sfriday");
-              var sa_d = document.getElementById("ssaturday");
-              var su_d = document.getElementById("ssunday");
-              if (previous3 != "0" && previous3 != null) {
-                var bb = "spa" + previous3;
-                var hh = "shi" + previous3;
-                var pj = document.getElementById(bb).value;
-                var jj = document.getElementById(hh).value;
-              } else {
-                var pj = transfer[24];
-                var jj = transfer[23]
-              }
-              var update = 1;
-              if (mo_d.checked == true) {
-                mon_day = 1;
-              } else {
-                mon_day = 0;
-              }
-              if (tu_d.checked == true) {
-                tue_day = 1;
-              } else {
-                tue_day = 0;
-              }
-              if (we_d.checked == true) {
-                wed_day = 1;
-              } else {
-                wed_day = 0;
-              }
-              if (th_d.checked == true) {
-                thu_day = 1;
-              } else {
-                thu_day = 0;
-              }
-              if (fr_d.checked == true) {
-                fri_day = 1;
-              } else {
-                fri_day = 0;
-              }
-              if (sa_d.checked == true) {
-                sat_day = 1;
-              } else {
-                sat_day = 0;
-              }
-              if (su_d.checked == true) {
-                sun_day = 1;
-              } else {
-                sun_day = 0;
-              }
 
 
-              var monf = JSON.stringify(mf);
-              var mont = JSON.stringify(mt);
-              var tuef = JSON.stringify(tuf);
-              var tuet = JSON.stringify(tut);
-              var wedf = JSON.stringify(wf);
-              var wedt = JSON.stringify(wt);
-              var thuf = JSON.stringify(thf);
-              var thut = JSON.stringify(tht);
-              var frif = JSON.stringify(ff);
-              var frit = JSON.stringify(ft);
-              var satf = JSON.stringify(saf);
-              var satt = JSON.stringify(sat);
-              var sunf = JSON.stringify(suf);
-              var sunt = JSON.stringify(sut);
-
-              var jobname = JSON.stringify(name);
-
-              var mond = JSON.parse(mon_day);
-              var tued = JSON.parse(tue_day);
-              var wedd = JSON.parse(wed_day);
-              var thud = JSON.parse(thu_day);
-              var frid = JSON.parse(fri_day);
-              var satd = JSON.parse(sat_day);
-              var sund = JSON.parse(sun_day);
-              $.ajax({
 
 
-                url: "../shifts/load_shift2.php",
-                method: "POST",
-                data: {
-                  mond: mond, monf: monf, mont: mont,
-                  tued: tued, tuef: tuef, tuet: tuet,
-                  wedd: wedd, wedf: wedf, wedt: wedt,
-                  thud: thud, thuf: thuf, thut: thut,
-                  frid: frid, frif: frif, frit: frit,
-                  satd: satd, satf: satf, satt: satt,
-                  sund: sund, sunf: sunf, sunt: sunt,
-                  jobname: e, color: shex, start: start,
-                  object_name: pj, object_id: jj, update: update,
-                  id_shift: id_shift
-                },
-                success: function (data) {
-                  modal.style.display = "none";
-                  alert("Shift was successfully edited");
-                }
-              });
-              $.ajax({
+      <script>
 
 
-                url: "../shifts/load_existing_shift.php",
-                method: "POST",
-                data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
-                success: function (data) {
-                  $("#shift_ex_load").html(data);
-                }
-              });
-              var popup = document.getElementById("label2s");
-              popup.style.visibility = "hidden";
-              popup.innerText = "";
-              var po = document.getElementById("hbrs");
-              po.style.display = "none";
 
-              var popu = document.getElementById("label1s");
-              popu.style.visibility = "hidden";
-              var pop = document.getElementById("hbr1s");
-              pop.style.display = "none";
-
-              var popups = document.getElementById("label3s");
-              popups.style.visibility = "hidden";
-              var p = document.getElementById("hbr3s");
-              p.style.display = "none";
-
-            } else {
-              var popup = document.getElementById("label2s");
-              popup.style.visibility = "visible";
-              popup.innerText = "Needs to be filled*";
-              var po = document.getElementById("hbrs");
-              po.style.display = "";
-
-              var popu = document.getElementById("label1s");
-              popu.style.visibility = "visible";
-              var pop = document.getElementById("hbr1s");
-              pop.style.display = "";
-
-            }
+        var input = <?php echo json_encode($pickm); ?>;
+        var ChA = JSON.parse(input);
+        $.ajax({
+          url: "../shifts/load_object_in_shift.php",
+          method: "POST",
+          data: { input: ChA },
+          success: function (data) {
+            $("#res").html(data);
           }
-
-          function loader() {
-            var return_data;
-            var return_data_arr = new Array();
-            $.ajax({
+        });
 
 
-              url: "../options/load_permanent_time_option.php",
-              method: "POST",
-              dataType: "json",
-              cache: false,
-              async: false,
-              data: {
+        var ff;
 
-                input: usid
-              },
-              success: function (data) {
-                return_data = JSON.stringify(data);
-              }
 
-            });
-           
-
-            return_data = return_data.substring(1,return_data.length-1);
-          alert(return_data);
-          if(return_data != "[]"){
-           return_data_arr =  return_data.split(",");
-           for(var e = 0; e < return_data_arr.length; e++){
-            return_data_arr[e] = return_data_arr[e].substring(1,return_data_arr[e].length-1);
-           }
-           if(return_data_arr[0] == 1 ){
-            document.getElementById("monday").checked = true;
-            document.getElementById("frommonday").value = return_data_arr[1].substring(0,5) ;
-            document.getElementById("tomonday").value = return_data_arr[2].substring(0,5) ;
-           }
-           if(return_data_arr[3] == 1 ){
-            document.getElementById("tuesday").checked = true;
-            document.getElementById("fromtuesday").value = return_data_arr[4].substring(0,5) ;
-            document.getElementById("totuesday").value = return_data_arr[5].substring(0,5) ;
-           }
-           if(return_data_arr[6] == 1 ){
-            document.getElementById("wednesday").checked = true;
-            document.getElementById("fromwednesday").value = return_data_arr[7].substring(0,5) ;
-            document.getElementById("towednesday").value = return_data_arr[8].substring(0,5) ;
-           }
-           if(return_data_arr[9] == 1 ){
-            document.getElementById("thursday").checked = true;
-            document.getElementById("fromthursday").value = return_data_arr[10].substring(0,5) ;
-            document.getElementById("tothursday").value = return_data_arr[11].substring(0,5) ;
-           }
-           if(return_data_arr[12] == 1 ){
-            document.getElementById("friday").checked = true;
-            document.getElementById("fromfriday").value = return_data_arr[13].substring(0,5) ;
-            document.getElementById("tofriday").value = return_data_arr[14].substring(0,5) ;
-           }
-           if(return_data_arr[15] == 1 ){
-            document.getElementById("saturday").checked = true;
-            document.getElementById("fromsaturday").value = return_data_arr[16].substring(0,5) ;
-            document.getElementById("tosaturday").value = return_data_arr[17].substring(0,5) ;
-           }
-           if(return_data_arr[18] == 1 ){
-            document.getElementById("sunday").checked = true;
-            document.getElementById("fromsunday").value = return_data_arr[19].substring(0,5) ;
-            document.getElementById("tosunday").value = return_data_arr[20].substring(0,5) ;
-           }
-           
-          }
-          }
-
-          
+        var previous;
 
 
 
+        $("#savemain").click(function () {
+          $(".check-icon").hide();
+          setTimeout(function () {
+            $(".check-icon").show();
+          }, 10);
+        });
 
 
-          function Save() {
+        var cq = 0;
+        var Cq = JSON.parse(cq);
 
 
+        function Edit_shift() {
+          let e = document.getElementById("sfield").value;
 
+          if (e != "") {
 
+            var mf = document.getElementById('sfrommonday').value;
+            var mt = document.getElementById('stomonday').value;
+            var tuf = document.getElementById('sfromtuesday').value;
+            var tut = document.getElementById('stotuesday').value;
+            var wf = document.getElementById('sfromwednesday').value;
+            var wt = document.getElementById('stowednesday').value;
+            var thf = document.getElementById('sfromthursday').value;
+            var tht = document.getElementById('stothursday').value;
+            var ff = document.getElementById('sfromfriday').value;
+            var ft = document.getElementById('stofriday').value;
+            var saf = document.getElementById('sfromsaturday').value;
+            var sat = document.getElementById('stosaturday').value;
+            var suf = document.getElementById('sfromsunday').value;
+            var sut = document.getElementById('stosunday').value;
 
-            var mf = document.getElementById('frommonday').value;
-            var mt = document.getElementById('tomonday').value;
-            var tuf = document.getElementById('fromtuesday').value;
-            var tut = document.getElementById('totuesday').value;
-            var wf = document.getElementById('fromwednesday').value;
-            var wt = document.getElementById('towednesday').value;
-            var thf = document.getElementById('fromthursday').value;
-            var tht = document.getElementById('tothursday').value;
-            var ff = document.getElementById('fromfriday').value;
-            var ft = document.getElementById('tofriday').value;
-            var saf = document.getElementById('fromsaturday').value;
-            var sat = document.getElementById('tosaturday').value;
-            var suf = document.getElementById('fromsunday').value;
-            var sut = document.getElementById('tosunday').value;
-
+            var name = document.getElementById('sfield').value;
             var start = currentDate;
 
-            var mo_d = document.getElementById("monday");
-            var tu_d = document.getElementById("tuesday");
-            var we_d = document.getElementById("wednesday");
-            var th_d = document.getElementById("thursday");
-            var fr_d = document.getElementById("friday");
-            var sa_d = document.getElementById("saturday");
-            var su_d = document.getElementById("sunday");
-            var update = 0;
+            var mo_d = document.getElementById("smonday");
+            var tu_d = document.getElementById("stuesday");
+            var we_d = document.getElementById("swednesday");
+            var th_d = document.getElementById("sthursday");
+            var fr_d = document.getElementById("sfriday");
+            var sa_d = document.getElementById("ssaturday");
+            var su_d = document.getElementById("ssunday");
+            if (previous3 != "0" && previous3 != null) {
+              var bb = "spa" + previous3;
+              var hh = "shi" + previous3;
+              var pj = document.getElementById(bb).value;
+              var jj = document.getElementById(hh).value;
+            } else {
+              var pj = transfer[24];
+              var jj = transfer[23]
+            }
+            var update = 1;
             if (mo_d.checked == true) {
               mon_day = 1;
             } else {
@@ -858,6 +733,7 @@ if (isset($_SESSION["user2_id"])) {
               sun_day = 0;
             }
 
+
             var monf = JSON.stringify(mf);
             var mont = JSON.stringify(mt);
             var tuef = JSON.stringify(tuf);
@@ -873,7 +749,7 @@ if (isset($_SESSION["user2_id"])) {
             var sunf = JSON.stringify(suf);
             var sunt = JSON.stringify(sut);
 
-
+            var jobname = JSON.stringify(name);
 
             var mond = JSON.parse(mon_day);
             var tued = JSON.parse(tue_day);
@@ -885,7 +761,7 @@ if (isset($_SESSION["user2_id"])) {
             $.ajax({
 
 
-              url: "../options/insert_permanent_time_option.php",
+              url: "../shifts/load_shift2.php",
               method: "POST",
               data: {
                 mond: mond, monf: monf, mont: mont,
@@ -895,97 +771,15 @@ if (isset($_SESSION["user2_id"])) {
                 frid: frid, frif: frif, frit: frit,
                 satd: satd, satf: satf, satt: satt,
                 sund: sund, sunf: sunf, sunt: sunt,
-                id: usid
+                jobname: e, color: shex, start: start,
+                object_name: pj, object_id: jj, update: update,
+                id_shift: id_shift
               },
               success: function (data) {
-                alert(data);
-              }
-
-            });
-
-          }
-        </script>
-
-
-
-
-        <br>
-        <
-
-        <script>
-          var input_obj =
-            <?php echo json_encode($pickm); ?>;
-          $.ajax({
-            url: "../objects/load_list_object.php",
-            method: "POST",
-            data: { input: input_obj },
-            success: function (data) {
-              $("#objects").html(data);
-
-            }
-          });
-          $.ajax({
-            url: "../shifts/load_list_shift.php",
-            method: "POST",
-            data: { input: input_obj },
-            success: function (data) {
-              $("#shi_load").html(data);
-            }
-          });
-
-          $('#option').change(function () {
-            obj_search = [];
-            shi_search = [];
-            var inp = $(this).val();
-            $.ajax({
-              url: "../objects/load_list_object.php",
-              method: "POST",
-              data: { input: inp },
-              success: function (data) {
-                $("#objects").html(data);
-
+                modal.style.display = "none";
+                success_alert("Shift was successfully edited");
               }
             });
-
-
-
-          });
-
-
-          function obj_click(clicked_val) {
-
-            if (obj_search.includes(clicked_val) == true) {
-              for (let i = 0; i < obj_search.length; i++) {
-                if (obj_search[i] === clicked_val) {
-                  obj_search.splice(i, 1);
-
-                }
-              }
-            } else {
-              obj_search.push(clicked_val);
-            }
-            $.ajax({
-
-
-              url: "../shifts/load_existing_shift.php",
-              method: "POST",
-              data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
-              success: function (data) {
-                $("#shift_ex_load").html(data);
-                alert("adsads");
-              }
-            });
-          }
-          function shift_search(clicked_val) {
-            if (shi_search.includes(clicked_val) == true) {
-              for (let i = 0; i < shi_search.length; i++) {
-                if (shi_search[i] === clicked_val) {
-                  shi_search.splice(i, 1);
-                }
-              }
-            } else {
-              shi_search.push(clicked_val);
-            }
             $.ajax({
 
 
@@ -996,218 +790,555 @@ if (isset($_SESSION["user2_id"])) {
                 $("#shift_ex_load").html(data);
               }
             });
-          }
-        </script>
-        <br>
-        <br>
-        <div id="shift_ex_load">
-        </div>
-        <br>
+            var popup = document.getElementById("label2s");
+            popup.style.visibility = "hidden";
+            popup.innerText = "";
+            var po = document.getElementById("hbrs");
+            po.style.display = "none";
 
-        <script>
-          var typ_btn = 1;
-          var inp0 =
+            var popu = document.getElementById("label1s");
+            popu.style.visibility = "hidden";
+            var pop = document.getElementById("hbr1s");
+            pop.style.display = "none";
+
+            var popups = document.getElementById("label3s");
+            popups.style.visibility = "hidden";
+            var p = document.getElementById("hbr3s");
+            p.style.display = "none";
+
+          } else {
+            var popup = document.getElementById("label2s");
+            popup.style.visibility = "visible";
+            popup.innerText = "Needs to be filled*";
+            var po = document.getElementById("hbrs");
+            po.style.display = "";
+
+            var popu = document.getElementById("label1s");
+            popu.style.visibility = "visible";
+            var pop = document.getElementById("hbr1s");
+            pop.style.display = "";
+
+          }
+        }
+
+        function loader() {
+          var return_data;
+          var return_data_arr = new Array();
+          $.ajax({
+
+
+            url: "../options/load_permanent_time_option.php",
+            method: "POST",
+            dataType: "json",
+            cache: false,
+            async: false,
+            data: {
+
+              input: usid
+            },
+            success: function (data) {
+              return_data = JSON.stringify(data);
+            }
+
+          });
+
+
+          return_data = return_data.substring(1, return_data.length - 1);
+          if (return_data != "[]") {
+            return_data_arr = return_data.split(",");
+            for (var e = 0; e < return_data_arr.length; e++) {
+              return_data_arr[e] = return_data_arr[e].substring(1, return_data_arr[e].length - 1);
+            }
+            if (return_data_arr[0] == 1) {
+              document.getElementById("monday").checked = true;
+              document.getElementById("frommonday").value = return_data_arr[1].substring(0, 5);
+              document.getElementById("tomonday").value = return_data_arr[2].substring(0, 5);
+            }
+            if (return_data_arr[3] == 1) {
+              document.getElementById("tuesday").checked = true;
+              document.getElementById("fromtuesday").value = return_data_arr[4].substring(0, 5);
+              document.getElementById("totuesday").value = return_data_arr[5].substring(0, 5);
+            }
+            if (return_data_arr[6] == 1) {
+              document.getElementById("wednesday").checked = true;
+              document.getElementById("fromwednesday").value = return_data_arr[7].substring(0, 5);
+              document.getElementById("towednesday").value = return_data_arr[8].substring(0, 5);
+            }
+            if (return_data_arr[9] == 1) {
+              document.getElementById("thursday").checked = true;
+              document.getElementById("fromthursday").value = return_data_arr[10].substring(0, 5);
+              document.getElementById("tothursday").value = return_data_arr[11].substring(0, 5);
+            }
+            if (return_data_arr[12] == 1) {
+              document.getElementById("friday").checked = true;
+              document.getElementById("fromfriday").value = return_data_arr[13].substring(0, 5);
+              document.getElementById("tofriday").value = return_data_arr[14].substring(0, 5);
+            }
+            if (return_data_arr[15] == 1) {
+              document.getElementById("saturday").checked = true;
+              document.getElementById("fromsaturday").value = return_data_arr[16].substring(0, 5);
+              document.getElementById("tosaturday").value = return_data_arr[17].substring(0, 5);
+            }
+            if (return_data_arr[18] == 1) {
+              document.getElementById("sunday").checked = true;
+              document.getElementById("fromsunday").value = return_data_arr[19].substring(0, 5);
+              document.getElementById("tosunday").value = return_data_arr[20].substring(0, 5);
+            }
+
+          }
+        }
+
+
+
+
+
+
+
+        function Save() {
+
+
+
+
+
+          var mf = document.getElementById('frommonday').value;
+          var mt = document.getElementById('tomonday').value;
+          var tuf = document.getElementById('fromtuesday').value;
+          var tut = document.getElementById('totuesday').value;
+          var wf = document.getElementById('fromwednesday').value;
+          var wt = document.getElementById('towednesday').value;
+          var thf = document.getElementById('fromthursday').value;
+          var tht = document.getElementById('tothursday').value;
+          var ff = document.getElementById('fromfriday').value;
+          var ft = document.getElementById('tofriday').value;
+          var saf = document.getElementById('fromsaturday').value;
+          var sat = document.getElementById('tosaturday').value;
+          var suf = document.getElementById('fromsunday').value;
+          var sut = document.getElementById('tosunday').value;
+
+          var start = currentDate;
+
+          var mo_d = document.getElementById("monday");
+          var tu_d = document.getElementById("tuesday");
+          var we_d = document.getElementById("wednesday");
+          var th_d = document.getElementById("thursday");
+          var fr_d = document.getElementById("friday");
+          var sa_d = document.getElementById("saturday");
+          var su_d = document.getElementById("sunday");
+          var update = 0;
+          if (mo_d.checked == true) {
+            mon_day = 1;
+          } else {
+            mon_day = 0;
+          }
+          if (tu_d.checked == true) {
+            tue_day = 1;
+          } else {
+            tue_day = 0;
+          }
+          if (we_d.checked == true) {
+            wed_day = 1;
+          } else {
+            wed_day = 0;
+          }
+          if (th_d.checked == true) {
+            thu_day = 1;
+          } else {
+            thu_day = 0;
+          }
+          if (fr_d.checked == true) {
+            fri_day = 1;
+          } else {
+            fri_day = 0;
+          }
+          if (sa_d.checked == true) {
+            sat_day = 1;
+          } else {
+            sat_day = 0;
+          }
+          if (su_d.checked == true) {
+            sun_day = 1;
+          } else {
+            sun_day = 0;
+          }
+
+          var monf = JSON.stringify(mf);
+          var mont = JSON.stringify(mt);
+          var tuef = JSON.stringify(tuf);
+          var tuet = JSON.stringify(tut);
+          var wedf = JSON.stringify(wf);
+          var wedt = JSON.stringify(wt);
+          var thuf = JSON.stringify(thf);
+          var thut = JSON.stringify(tht);
+          var frif = JSON.stringify(ff);
+          var frit = JSON.stringify(ft);
+          var satf = JSON.stringify(saf);
+          var satt = JSON.stringify(sat);
+          var sunf = JSON.stringify(suf);
+          var sunt = JSON.stringify(sut);
+
+
+
+          var mond = JSON.parse(mon_day);
+          var tued = JSON.parse(tue_day);
+          var wedd = JSON.parse(wed_day);
+          var thud = JSON.parse(thu_day);
+          var frid = JSON.parse(fri_day);
+          var satd = JSON.parse(sat_day);
+          var sund = JSON.parse(sun_day);
+          $.ajax({
+
+
+            url: "../options/insert_permanent_time_option.php",
+            method: "POST",
+            data: {
+              mond: mond, monf: monf, mont: mont,
+              tued: tued, tuef: tuef, tuet: tuet,
+              wedd: wedd, wedf: wedf, wedt: wedt,
+              thud: thud, thuf: thuf, thut: thut,
+              frid: frid, frif: frif, frit: frit,
+              satd: satd, satf: satf, satt: satt,
+              sund: sund, sunf: sunf, sunt: sunt,
+              id: usid
+            },
+            success: function (data) {
+              success_alert("Data were inserted successfully")
+            }
+
+          });
+
+        }
+      </script>
+
+
+
+
+      <br>
+      < <script>
+        var input_obj =
+        <?php echo json_encode($pickm); ?>;
+        $.ajax({
+        url: "../objects/load_list_object.php",
+        method: "POST",
+        data: { input: input_obj },
+        success: function (data) {
+        $("#objects").html(data);
+
+        }
+        });
+        $.ajax({
+        url: "../shifts/load_list_shift.php",
+        method: "POST",
+        data: { input: input_obj },
+        success: function (data) {
+        $("#shi_load").html(data);
+        }
+        });
+
+        $('#option').change(function () {
+        obj_search = [];
+        shi_search = [];
+        var inp = $(this).val();
+        $.ajax({
+        url: "../objects/load_list_object.php",
+        method: "POST",
+        data: { input: inp },
+        success: function (data) {
+        $("#objects").html(data);
+
+        }
+        });
+
+
+
+        });
+
+
+        function obj_click(clicked_val) {
+
+        if (obj_search.includes(clicked_val) == true) {
+        for (let i = 0; i < obj_search.length; i++) { 
+          if (obj_search[i]===clicked_val) { 
+            obj_search.splice(i, 1); 
+          } 
+        } 
+      } else { 
+        obj_search.push(clicked_val); 
+      } 
+      $.ajax({ url: "../shifts/load_existing_shift.php" , 
+        method: "POST" ,
+          data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search }, 
+          success: function (data) {
+          $("#shift_ex_load").html(data); 
+          
+        } }); 
+      } 
+
+
+      function shift_search(clicked_val) { 
+        if(shi_search.includes(clicked_val)==true) { 
+          for (let i=0; i < shi_search.length; i++) { 
+            if (shi_search[i]===clicked_val) { 
+              shi_search.splice(i, 1); 
+            } 
+          } 
+        } else { 
+          shi_search.push(clicked_val); 
+        } $.ajax({
+          url: "../shifts/load_existing_shift.php" , method: "POST" , 
+          data: { input: inp0, type: typ_btn, obj:
+          obj_search, shi: shi_search }, 
+          success: function (data) {
+             $("#shift_ex_load").html(data); 
+             } }); } 
+             
+             
+             </script>
+          <br>
+          <br>
+          <div id="shift_ex_load">
+          </div>
+          <br>
+
+          <script>
+            var typ_btn = 1;
+            var inp0 =
             <?php echo json_encode($first); ?>;
-          $.ajax({
-
-
-            url: "../shifts/load_existing_shift.php",
-            method: "POST",
-            data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
-            success: function (data) {
-              $("#shift_ex_load").html(data);
-            }
-          });
-
-
-          $('#option').change(function () {
-            var inp = $(this).val();
             $.ajax({
 
 
               url: "../shifts/load_existing_shift.php",
               method: "POST",
-              data: { input: inp, type: typ_btn, obj: obj_search, shi: shi_search },
+              data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
               success: function (data) {
                 $("#shift_ex_load").html(data);
               }
             });
-          })
-          var transfer = new Array();
-          function Open_edit(clicked_id) {
-            id_shift = clicked_id.substring(5);
+
+
+            $('#option').change(function () {
+              var inp = $(this).val();
+              $.ajax({
+
+
+                url: "../shifts/load_existing_shift.php",
+                method: "POST",
+                data: { input: inp, type: typ_btn, obj: obj_search, shi: shi_search },
+                success: function (data) {
+                  $("#shift_ex_load").html(data);
+                }
+              });
+            })
+            var transfer = new Array();
+            function Open_edit(clicked_id) {
+              id_shift = clicked_id.substring(5);
+              var modal = document.getElementById("myModal");
+              var span = document.getElementsByClassName("close")[0];
+              modal.style.display = "block";
+              var arr;
+
+              $.ajax({
+
+
+                url: "../shifts/edit_shift.php",
+                method: "POST",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: { input: id_shift },
+                success: function (data) {
+                  arr = JSON.stringify(data);
+                }
+              });
+              arr = arr.substring(1, arr.length - 1);
+              transfer = arr.split(",");
+              for (let i = 0; i < transfer.length; i++) {
+                var wap = transfer[i];
+                wap = wap.substring(1, wap.length - 1);
+                transfer[i] = wap;
+              }
+
+              var inpp = transfer[23];
+              var saas;
+              $.ajax({
+                url: "../objects/look_for_main_object.php",
+                method: "POST",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: { input: inpp },
+                success: function (data) {
+
+                  saas = JSON.stringify(data);
+                }
+              });
+              saas = saas.substring(1, saas.length - 2);
+              var mainb = saas.substring(0, 1);
+              var sideb = saas.substring(3);
+              sColor(map1.get(transfer[22]));
+              document.getElementById("select_obj").value = sideb;
+              edit_obj(sideb, transfer[23]);
+
+
+              document.getElementById("smonday").checked = false;
+              document.getElementById("stuesday").checked = false;
+              document.getElementById("swednesday").checked = false;
+              document.getElementById("sthursday").checked = false;
+              document.getElementById("sfriday").checked = false;
+              document.getElementById("ssaturday").checked = false;
+              document.getElementById("ssunday").checked = false;
+              document.getElementById("sfrommonday").value = "";
+              document.getElementById("stomonday").value = "";
+              document.getElementById("sfromtuesday").value = "";
+              document.getElementById("stotuesday").value = "";
+              document.getElementById("sfromwednesday").value = "";
+              document.getElementById("stowednesday").value = "";
+              document.getElementById("sfromthursday").value = "";
+              document.getElementById("stothursday").value = "";
+              document.getElementById("sfromfriday").value = "";
+              document.getElementById("stofriday").value = "";
+              document.getElementById("sfromsaturday").value = "";
+              document.getElementById("stosaturday").value = "";
+              document.getElementById("sfromsunday").value = "";
+              document.getElementById("stosunday").value = "";
+
+              if (transfer[0] == 1) {
+                document.getElementById("smonday").checked = true;
+                var mf = transfer[1];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfrommonday").value = mf;
+                var mf = transfer[2];
+                mf = mf.substring(0, 5);
+                document.getElementById("stomonday").value = mf;
+              }
+              if (transfer[3] == 1) {
+                document.getElementById("stuesday").checked = true;
+                var mf = transfer[4];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromtuesday").value = mf;
+                var mf = transfer[5];
+                mf = mf.substring(0, 5);
+                document.getElementById("stotuesday").value = mf;
+              }
+              if (transfer[6] == 1) {
+                document.getElementById("swednesday").checked = true;
+                var mf = transfer[7];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromwednesday").value = mf;
+                var mf = transfer[8];
+                mf = mf.substring(0, 5);
+                document.getElementById("stowednesday").value = mf;
+              }
+              if (transfer[9] == 1) {
+                document.getElementById("sthursday").checked = true;
+                var mf = transfer[10];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromthursday").value = mf;
+                var mf = transfer[11];
+                mf = mf.substring(0, 5);
+                document.getElementById("stothursday").value = mf;
+              }
+              if (transfer[12] == 1) {
+                document.getElementById("sfriday").checked = true;
+                var mf = transfer[13];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromfriday").value = mf;
+                var mf = transfer[14];
+                mf = mf.substring(0, 5);
+                document.getElementById("stofriday").value = mf;
+              }
+              if (transfer[15] == 1) {
+                document.getElementById("ssaturday").checked = true;
+                var mf = transfer[16];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromsaturday").value = mf;
+                var mf = transfer[17];
+                mf = mf.substring(0, 5);
+                document.getElementById("stosaturday").value = mf;
+              }
+              if (transfer[18] == 1) {
+                document.getElementById("ssunday").checked = true;
+                var mf = transfer[19];
+                mf = mf.substring(0, 5);
+                document.getElementById("sfromsunday").value = mf;
+                var mf = transfer[20];
+                mf = mf.substring(0, 5);
+                document.getElementById("stosunday").value = mf;
+              }
+
+              document.getElementById("sfield").value = transfer[21];
+            }
+
+
             var modal = document.getElementById("myModal");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("close")[0];
-            modal.style.display = "block";
-            var arr;
 
-            $.ajax({
+            // When the user clicks the button, open the modal 
 
 
-              url: "../shifts/edit_shift.php",
-              method: "POST",
-              dataType: "json",
-              cache: false,
-              async: false,
-              data: { input: id_shift },
-              success: function (data) {
-                arr = JSON.stringify(data);
-              }
-            });
-            arr = arr.substring(1, arr.length - 1);
-            transfer = arr.split(",");
-            for (let i = 0; i < transfer.length; i++) {
-              var wap = transfer[i];
-              wap = wap.substring(1, wap.length - 1);
-              transfer[i] = wap;
-            }
-
-            var inpp = transfer[23];
-            var saas;
-            $.ajax({
-              url: "../objects/look_for_main_object.php",
-              method: "POST",
-              dataType: "json",
-              cache: false,
-              async: false,
-              data: { input: inpp },
-              success: function (data) {
-
-                saas = JSON.stringify(data);
-              }
-            });
-            saas = saas.substring(1, saas.length - 2);
-            var mainb = saas.substring(0, 1);
-            var sideb = saas.substring(3);
-            sColor(map1.get(transfer[22]));
-            document.getElementById("select_obj").value = sideb;
-            edit_obj(sideb, transfer[23]);
-
-
-            document.getElementById("smonday").checked = false;
-            document.getElementById("stuesday").checked = false;
-            document.getElementById("swednesday").checked = false;
-            document.getElementById("sthursday").checked = false;
-            document.getElementById("sfriday").checked = false;
-            document.getElementById("ssaturday").checked = false;
-            document.getElementById("ssunday").checked = false;
-            document.getElementById("sfrommonday").value = "";
-            document.getElementById("stomonday").value = "";
-            document.getElementById("sfromtuesday").value = "";
-            document.getElementById("stotuesday").value = "";
-            document.getElementById("sfromwednesday").value = "";
-            document.getElementById("stowednesday").value = "";
-            document.getElementById("sfromthursday").value = "";
-            document.getElementById("stothursday").value = "";
-            document.getElementById("sfromfriday").value = "";
-            document.getElementById("stofriday").value = "";
-            document.getElementById("sfromsaturday").value = "";
-            document.getElementById("stosaturday").value = "";
-            document.getElementById("sfromsunday").value = "";
-            document.getElementById("stosunday").value = "";
-
-            if (transfer[0] == 1) {
-              document.getElementById("smonday").checked = true;
-              var mf = transfer[1];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfrommonday").value = mf;
-              var mf = transfer[2];
-              mf = mf.substring(0, 5);
-              document.getElementById("stomonday").value = mf;
-            }
-            if (transfer[3] == 1) {
-              document.getElementById("stuesday").checked = true;
-              var mf = transfer[4];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromtuesday").value = mf;
-              var mf = transfer[5];
-              mf = mf.substring(0, 5);
-              document.getElementById("stotuesday").value = mf;
-            }
-            if (transfer[6] == 1) {
-              document.getElementById("swednesday").checked = true;
-              var mf = transfer[7];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromwednesday").value = mf;
-              var mf = transfer[8];
-              mf = mf.substring(0, 5);
-              document.getElementById("stowednesday").value = mf;
-            }
-            if (transfer[9] == 1) {
-              document.getElementById("sthursday").checked = true;
-              var mf = transfer[10];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromthursday").value = mf;
-              var mf = transfer[11];
-              mf = mf.substring(0, 5);
-              document.getElementById("stothursday").value = mf;
-            }
-            if (transfer[12] == 1) {
-              document.getElementById("sfriday").checked = true;
-              var mf = transfer[13];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromfriday").value = mf;
-              var mf = transfer[14];
-              mf = mf.substring(0, 5);
-              document.getElementById("stofriday").value = mf;
-            }
-            if (transfer[15] == 1) {
-              document.getElementById("ssaturday").checked = true;
-              var mf = transfer[16];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromsaturday").value = mf;
-              var mf = transfer[17];
-              mf = mf.substring(0, 5);
-              document.getElementById("stosaturday").value = mf;
-            }
-            if (transfer[18] == 1) {
-              document.getElementById("ssunday").checked = true;
-              var mf = transfer[19];
-              mf = mf.substring(0, 5);
-              document.getElementById("sfromsunday").value = mf;
-              var mf = transfer[20];
-              mf = mf.substring(0, 5);
-              document.getElementById("stosunday").value = mf;
-            }
-
-            document.getElementById("sfield").value = transfer[21];
-          }
-
-
-          var modal = document.getElementById("myModal");
-
-          // Get the button that opens the modal
-          var btn = document.getElementById("myBtn");
-
-          // Get the <span> element that closes the modal
-          var span = document.getElementsByClassName("close")[0];
-
-          // When the user clicks the button, open the modal 
-
-
-          // When the user clicks on <span> (x), close the modal
-          span.onclick = function () {
-            modal.style.display = "none";
-
-          }
-
-          // When the user clicks anywhere outside of the modal, close it
-          window.onclick = function (event) {
-            if (event.target == modal) {
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
               modal.style.display = "none";
 
             }
-          }
 
-        </script>
-      </div>
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
 
+              }
+            }
+            function success_alert(message) {
+              Swal.fire({
+                title: message,
+                text: "",
+                icon: "success"
+              });
 
+            }
+            function error_alert(message) {
+              Swal.fire({
+                title: message,
+                text: "",
+                icon: "error"
+              });
 
+            }
+          </script>
     </div>
-    </div>
+
+
+
+  </div>
+  </div>
 
   <?php else: ?>
+  <script>
+    document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+  </script>
+  <div class="login-page">
+    <div class="form">
+      <h2>
+        You are current log out
+      </h2>
+      <br>
+      <br>
+      <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+      <br>
+      <br>
+      <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+      <br>
+      <br>
+      <br>
+
+    </div>
+  </div>
+
   <?php endif; ?>
 </body>
 <script>

@@ -96,7 +96,7 @@ $us = 0;
 $position = "";
 if (count($arr3) != 0) {
 
-    $sql_admin = "SELECT position FROM user2 WHERE id='$user'";
+    $sql_admin = "SELECT position FROM user WHERE id='$user'";
     $fetchadmin = mysqli_query($conn, $sql_admin);
     if (mysqli_num_rows($fetchadmin) > 0) {
         while ($rowadm = mysqli_fetch_assoc($fetchadmin)) {

@@ -35,7 +35,7 @@ $mysqli = require("../database.php");
 $conn = new mysqli($host, $username, $password, $dbname);
 
 /**SQL prikaz vyhleda uzivatele, kterym byla pridelana prava na praci na smene */
-$sql = "SELECT * FROM shift_assignment, user2 WHERE shift_id = $id_shift AND user2.id=shift_assignment.user_id";
+$sql = "SELECT * FROM shift_assignment, user WHERE shift_id = $id_shift AND user.id=shift_assignment.user_id";
 
 $fetch = mysqli_query($conn, $sql);
 while ($rows = mysqli_fetch_assoc($fetch)) {

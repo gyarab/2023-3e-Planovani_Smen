@@ -6,23 +6,23 @@
 /**tree source https://codepen.io/philippkuehn/pen/QbrOaN */
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
   $mysqli = require ("../database.php");
 
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
 
-  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
   $resultp = $mysqli->query($sqlp);
   while ($rrr = $resultp->fetch_assoc()) {
-      $userp = $rrr['position'];
-      $userid = $rrr['id'];
+    $userp = $rrr['position'];
+    $userid = $rrr['id'];
 
   }
 }
@@ -45,7 +45,8 @@ if (isset($_SESSION["user2_id"])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="../css/logout.css">
   <title>Creation of objects</title>
 </head>
 <style>
@@ -140,7 +141,7 @@ if (isset($_SESSION["user2_id"])) {
 </style>
 
 
-<body>
+<body id="body">
   <?php if (isset($user)): ?>
 
 
@@ -239,9 +240,9 @@ if (isset($_SESSION["user2_id"])) {
       <br>
       <br>
 
-      
-        <h1>List of objects</h1>
-      
+
+      <h1>List of objects</h1>
+
       <div class="cont">
         <div class="row">
           <div class='col-12 col-md-6'>
@@ -427,7 +428,7 @@ if (isset($_SESSION["user2_id"])) {
               data: { input: ChA },
               success: function (data) {
                 $("#res").html(data);
-                alert("New object is saved");
+                success_alert("New object is saved");
               }
             });
             var popup = document.getElementById("label1");
@@ -472,7 +473,7 @@ if (isset($_SESSION["user2_id"])) {
                 data: { input: ChA },
                 success: function (data) {
                   $("#res").html(data);
-                  alert("New sub-object is saved");
+                  success_alert("New sub-object is saved");
                 }
               });
             } else {
@@ -482,6 +483,22 @@ if (isset($_SESSION["user2_id"])) {
             }
 
           }
+        }
+        function success_alert(message) {
+          Swal.fire({
+            title: message,
+            text: "",
+            icon: "success"
+          });
+
+        }
+        function error_alert(message) {
+          Swal.fire({
+            title: message,
+            text: "",
+            icon: "error"
+          });
+
         }
 
 
@@ -507,7 +524,26 @@ if (isset($_SESSION["user2_id"])) {
       crossorigin="anonymous"></script>
 
   <?php else: ?>
-    <br> USER IS NOT SET <BR>
+    <script>
+      document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+    </script>
+    <div class="login-page">
+      <div class="form">
+        <h2>
+          You are current log out
+        </h2>
+        <br>
+        <br>
+        <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+        <br>
+        <br>
+        <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+        <br>
+        <br>
+        <br>
+
+      </div>
+    </div>
   <?php endif; ?>
 
 </body>

@@ -2,18 +2,18 @@
 
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
   $mysqli = require("../database.php");
 
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
-  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
   $resultp = $mysqli->query($sqlp);
   while ($rrr = $resultp->fetch_assoc()) {
     $userp = $rrr['position'];
@@ -35,6 +35,8 @@ if (isset($_SESSION["user2_id"])) {
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
   <style>
     table,
     th,
@@ -126,7 +128,7 @@ if (isset($_SESSION["user2_id"])) {
   </style>
 </head>
 
-<body>
+<body id="body">
   <?php if (isset($user) && ($userp == "admin" || $userp == "manager")): ?>
     <?php
     $today = date("Y-m-d");
@@ -623,8 +625,8 @@ if (isset($_SESSION["user2_id"])) {
 <br>
 
             <input type="button" name="save" class="btn btn-primary" style="float:right;font-size:20px" value="Save the shedule" id="butsave">
-            <input type="button" name="algorithm" class="btn btn-warning" style="float:left;font-size:20px" onclick="cell_selector()" value="Save the shedule" id="btnalgorithm">
-             <input type="button" value="123" onclick="tester()">
+            <input type="button" name="algorithm" class="btn btn-warning" style="float:left;font-size:20px" onclick="cell_selector()" value="Algorithm selection" id="btnalgorithm">
+             
             <br>
 <br>
             <br>
@@ -634,6 +636,7 @@ if (isset($_SESSION["user2_id"])) {
 
         </form>
         <script>
+          /** funkce co tesuje warning zpravy */
           function tester(){
             $.ajax({
               url: "../calendar/cal_check_position.php",
@@ -927,7 +930,8 @@ if (isset($_SESSION["user2_id"])) {
             type: "post",
             data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr, area: areaArr },
             success: function (data) {
-              alert(data); /* alerts the response from php.*/
+               /* alerts the response from php.*/
+              success_alert(data);
             }
           });
         });
@@ -1054,8 +1058,8 @@ if (isset($_SESSION["user2_id"])) {
 
              }
         }
-        alert(counter_al_id);
-        alert(counter_al_number);
+        // - pro backtrace alert(counter_al_id);
+        //- pro backtrace alert(counter_al_number);
           
             for (var i = 1; i <= 31; i++) {
               yesterday_id = [];
@@ -1181,7 +1185,7 @@ if (isset($_SESSION["user2_id"])) {
 
 
             }
-            alert(posible_combination);
+            //- pro backtrace alert(posible_combination);
 
           }
           load_employee_table();
@@ -1211,7 +1215,7 @@ if (isset($_SESSION["user2_id"])) {
               }
             });
             al_return = al_return.substring(1,al_return.length-1);
-            mark_cell_xnext.push(al_return.substring(0,1));
+            //mark_cell_xnext.push(al_return.substring(0,1));
             if(al_return.substring(3,4) != 0){
           
               for(var b = 3; b <al_return.length; b++){
@@ -1227,8 +1231,8 @@ if (isset($_SESSION["user2_id"])) {
                 
 
               }
-              posible_combination[count_solution_row][count_solution_column] = create_unmber;
-              count_solution_column++; 
+              //posible_combination[count_solution_row][count_solution_column] = create_unmber;
+              //count_solution_column++; 
               document.getElementById("hn" + element).value = create_unmber;
               document.getElementById("bn" + element).value = sub_name;
               var is_in_arr = 0;
@@ -1600,6 +1604,7 @@ if (isset($_SESSION["user2_id"])) {
 
             });
             var ffgh
+            /**AJAX pro warning eventy */
             $.ajax({
               type: "POST",
               url: "../calendar/cal_check_position.php",
@@ -1610,7 +1615,7 @@ if (isset($_SESSION["user2_id"])) {
                 id: idp, year: Yp, month: MPa, cha: ChA
               },
               success: function (data321) {
-                alert(JSON.stringify(data321));
+                //alert(JSON.stringify(data321));
 
               }
 
@@ -2912,13 +2917,10 @@ if (isset($_SESSION["user2_id"])) {
         }
 
       }
-      alert(exist_arr);
-      alert(from_paste_arr);
-      alert(to_paste_arr);
+
       }
       function paste_row(paste_id) {
         paste_id = paste_id.substring(2);
-      alert(paste_id);
       if(paste_id < 10){
           paste_id = "0"+paste_id;
         }
@@ -2933,7 +2935,6 @@ if (isset($_SESSION["user2_id"])) {
         }else if(col_id < 100){
           col_id = "0" +col_id;
         }
-        alert(paste_id+"-"+col_id);
         if(exist_arr[i-1] == 0){
           if(document.getElementById('tf' + paste_id+"-"+col_id) != null){
             var x_id = "x" + paste_id+"-"+col_id;
@@ -2956,11 +2957,48 @@ if (isset($_SESSION["user2_id"])) {
     }
 
       }
+
+      function success_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "success"
+                    });
+
+                }
+                function error_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "error"
+                    });
+
+                }
     </script>
 
 
 
   <?php else: ?>
+    <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
   <?php endif; ?>
 
 

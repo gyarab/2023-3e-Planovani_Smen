@@ -47,7 +47,7 @@ $email = $_POST["email"];
 if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
     array_push($status,3);
 }else{
-    $sql_check = "SELECT * FROM user2 WHERE email = '$email'";
+    $sql_check = "SELECT * FROM user WHERE email = '$email'";
     $fetch_check = mysqli_query($conn, $sql_check);
     $sql_check2 = "SELECT * FROM verification WHERE email = '$email'";
     $fetch_check2 = mysqli_query($conn, $sql_check2);

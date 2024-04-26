@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $mysqli = require("../database.php");
     $conn = new mysqli($host, $username, $password, $dbname);
-    $sql = sprintf("SELECT * FROM user2
+    $sql = sprintf("SELECT * FROM user
                     WHERE email = '%s'",
         $mysqli->real_escape_string($_POST["email"])
     );
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $id_key = $user['id'];
             $generate_new = generateRandomString();
             $new_hash = password_hash($generate_new, PASSWORD_DEFAULT);
-            $sql_insert = "UPDATE user2 SET password_hash = '$new_hash' WHERE id = $id_key";
+            $sql_insert = "UPDATE user SET password_hash = '$new_hash' WHERE id = $id_key";
             if (!mysqli_query($conn, $sql_insert)) {
 
             }

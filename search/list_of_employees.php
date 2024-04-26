@@ -7,25 +7,20 @@ $cons = "";
 $space = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
-    //$mysqli = require __DIR__ . "/database.php";
     $mysqli = require ("../database.php");
 
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-
-    /*$sqlp = "SELECT * FROM user2
-    WHERE position = {$_SESSION["user2_position"]}";*/
-    $sqlp = "SELECT position FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
 
-    //$userp = $resultp->fetch_assoc();
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
 
@@ -33,10 +28,6 @@ if (isset($_SESSION["user2_id"])) {
 
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
 
 ?>
 
@@ -52,6 +43,8 @@ $mysqli1->close();*/
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
     <style>
         /**CSS for popup*/
         /**Source - https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_popup */
@@ -165,7 +158,7 @@ $mysqli1->close();*/
     </style>
 </head>
 
-<body onload="startTime()">
+<body id="body" onload="startTime()">
 
     <?php if (isset($user) && $userp == "admin" || $userp == "manager" || $userp == "parttime_employee" || $userp == "fulltime_employee"): ?>
 
@@ -434,11 +427,10 @@ $mysqli1->close();*/
 
 
             <?php
-            //$mysqli2 = require __DIR__ . "/database.php";
             $mysqli2 = require ("../database.php");
 
             $conn = new mysqli($host, $username, $password, $dbname);
-            $sql2 = " SELECT * FROM user2 ORDER BY id ASC ";
+            $sql2 = " SELECT * FROM user ORDER BY id ASC ";
             $sql3 = " SELECT * FROM list_of_objects ORDER BY id_object ASC ";
             $sql4 = " SELECT * FROM create_shift ORDER BY id_shift ASC ";
             $query2 = "SELECT * FROM list_of_objects WHERE superior_object_name='' ";
@@ -485,26 +477,18 @@ $mysqli1->close();*/
                     </div>
                     <script>
                         var efdg = <?php echo json_encode($userp); ?>;
-                        //alert(efdg);
                         var obj_search = new Array();
                         var pos_search = new Array();
                         function pos_click(clicked_val) {
-                            /*if (this.checked) {
-                                alert(this.value);
-                            }*/
                             if (pos_search.includes(clicked_val) == true) {
                                 for (let i = 0; i < pos_search.length; i++) {
                                     if (pos_search[i] === clicked_val) {
                                         pos_search.splice(i, 1);
-                                        /*console.log("Removed element: " + spliced);
-                                        console.log("Remaining elements: " + arr);*/
                                     }
                                 }
                             } else {
                                 pos_search.push(clicked_val);
-                                //alert(pos_search);
                             }
-                            //var input = $(this).val();
                             var input = document.getElementById('live_search').value;
                             $.ajax({
                                 url: "../search/search_employee.php",
@@ -523,7 +507,6 @@ $mysqli1->close();*/
                     <h5 style="display:inline;"> &nbsp;&nbsp;Objects : &nbsp;&nbsp;</h5>
 
                     <Select id="select_obj" style="display: inline">
-                        <!--<option value="0">Pick a object</option>-->
                         <?php
                         $counter = 0;
                         if (mysqli_num_rows($result6) > 0) {
@@ -548,18 +531,14 @@ $mysqli1->close();*/
                     <script>
                         var obj_search = new Array();
                         function obj_click(clicked_val) {
-                            //alert("is");
                             if (obj_search.includes(clicked_val) == true) {
                                 for (let i = 0; i < obj_search.length; i++) {
                                     if (obj_search[i] === clicked_val) {
                                         obj_search.splice(i, 1);
-                                        /*console.log("Removed element: " + spliced);
-                                        console.log("Remaining elements: " + arr);*/
                                     }
                                 }
                             } else {
                                 obj_search.push(clicked_val);
-                                //alert(pos_search);
                             }
                             var input = document.getElementById('live_search').value;
                             $.ajax({
@@ -574,7 +553,6 @@ $mysqli1->close();*/
                         }
                         var shi_search = new Array();
                         function shift_search(clicked_val) {
-                            //alert("vgfh");
                             if (shi_search.includes(clicked_val) == true) {
                                 for (let i = 0; i < shi_search.length; i++) {
                                     if (shi_search[i] === clicked_val) {
@@ -584,7 +562,6 @@ $mysqli1->close();*/
                             } else {
                                 shi_search.push(clicked_val);
                             }
-                            //alert(shi_search);
                             var input = document.getElementById('live_search').value;
                             $.ajax({
                                 url: "../search/search_employee.php",
@@ -637,7 +614,6 @@ $mysqli1->close();*/
                                 method: "POST",
                                 data: { input: inp },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
                                     $("#shi_load").html(data);
                                 }
                             });
@@ -647,55 +623,13 @@ $mysqli1->close();*/
                     <div id="object" style="display:inline;">
 
                     </div>
-                    <?php
-                    /**Repeats print of rows */
-                    while ($rowsob = $result4->fetch_assoc()) {
-                        ?>
-                        <!--<div class="form-check form-check-inline">
-                            <input class="form-check-input" style="display:inline;" type="checkbox"
-                                id="inlineCheckbox<?php //echo $rowsob['id_object'];        ?>" value="option2">
-                            <label class="form-check-label" style="display:inline;"
-                                for="inlineCheckbox<?php // echo $rowsob['id_object'];        ?>">
-                                <?php // echo $rowsob['object_name'];        ?>
-                            </label>
-                        </div>-->
-
-
-                        <?php
-
-                    }
-                    ?>
                     <br>
                     <br>
                     <h5 style="display:inline;"> &nbsp;&nbsp;Shift : &nbsp;&nbsp;</h5>
                     <div id="shi_load" style="display:inline;">
-                        <?php
-                        /**Repeats print of rows */
-                        /*$arr_sh = array();
-                        while ($rowssh = $result5->fetch_assoc()) {
-                            if (in_array($rowssh['shift_name'], $arr_sh)) {
-                            } else {
-                                ?>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" style="display:inline;" type="checkbox"
-                                        id="sh<?php echo $rowssh['id_shift']; ?>" value="option2">
-                                    <label class="form-check-label" style="display:inline;" for="sh<?php echo $rowssh['id_shift']; ?>">
-                                        <?php echo $rowssh['shift_name']; ?>
-                                    </label>
-                                </div>
 
-
-                                <?php
-                                array_push($arr_sh, $rowssh['shift_name']);
-                            }
-
-                        }*/
-                        ?>
-
-                        <!--<div id="shi_load">-->
                     </div>
                 </form>
-                <!--<input type="button" onclick="Vacant()" value="Sear" >-->
                 <br>
                 <hr>
             </div>
@@ -703,13 +637,11 @@ $mysqli1->close();*/
             <div id="searchresult">
 
                 <script>
-                    //alert(input_obj);
                     $.ajax({
                         url: "../shifts/load_list_shift.php",
                         method: "POST",
                         data: { input: input_obj },
                         success: function (data) {
-                            //$("#searchresult").css("display", "inline");
                             $("#shi_load").html(data);
                         }
                     });
@@ -718,7 +650,6 @@ $mysqli1->close();*/
                     $(document).ready(function () {
 
                         $("#live_search").keyup(function () {
-                            //alert(obj_search);
 
                             var input = $(this).val();
 
@@ -729,7 +660,6 @@ $mysqli1->close();*/
                                 success: function (data) {
                                     $("#searchresult").css("display", "inline");
                                     $("#searchresult").html(data);
-                                    //alert(data);
                                 }
                             });
                         });
@@ -739,15 +669,14 @@ $mysqli1->close();*/
                     var em_arr = new Array();
                 </script>
                 <?php
-                /**Repeats print of rows */
                 while ($rows = $result3->fetch_assoc()) {
                     ?>
                     <div id="<?php echo $rows['id'] ?>div" class="cont">
 
                         <p>
-                            <?php echo $rows['firstname']; ?>
+                            <?php echo $rows['lastname']; ?>
                             <?php echo $rows['middlename']; ?>
-                            <?php echo $rows['lastname']; ?> -
+                            <?php echo $rows['firstname']; ?> -
                             <?php
                             if ($rows['position'] == "admin") {
                                 echo "Admin";
@@ -794,22 +723,7 @@ $mysqli1->close();*/
                                 <div id="lr<?php echo $rows['id'] ?>"></div>
 
                                 <script>man_arr.push(<?php echo $rows['id'] ?>);</script>
-                                <!--<script>
-                                    //man_arr.push(<?php //echo $rows['id']        ?>);
-                                                            /*man_load();
-                                                            function man_load(){
-                                                            $.ajax({
-                                                                url: "load_rights_manager.php",
-                                                                method: "POST",
-                                                                data: { input: <?php //echo $rows['id']        ?> },
-                                    success: function (data) {
-                                        //$("#searchresult").css("display", "inline");
-                                        $("#rlr<?php //echo $rows['id']        ?>").html(data);
-                                        //alert(data);
-                                    }
-                                                            });
-                                                            }* /
-                                </script>-->
+
                                 <?php
 
                             }
@@ -819,10 +733,8 @@ $mysqli1->close();*/
                             }
                             ?>
 
-                            <!--<font size="+1"><label>Assigned shifts :</label></font>
-                                <br>-->
+
                             <div id="sr<?php echo $rows['id'] ?>"></div>
-                            <!--</div>-->
                             <script>em_arr.push(<?php echo $rows['id'] ?>);</script>
 
 
@@ -837,38 +749,7 @@ $mysqli1->close();*/
                 }
                 ?>
                 <script>
-                    /*if (man_arr.length != 0) {
-                        //alert(man_arr);
-                        for (let i = 0; i < man_arr.length; i++) {
-                            var mm = man_arr[i];
-                            $.ajax({
-                                url: "load_rights_manager.php",
-                                method: "POST",
-                                data: { input: mm },
-                                success: function (data) {
-                                    $("#lr" + mm).html(data);
-                                }
-                            });
-                        }
-                    }*/
-                    /*if (em_arr.length != 0) {
-                        //alert(man_arr);
-                        for (let i = 0; i < em_arr.length; i++) {
-                          //alert(em_arr[i]);
-                            var pm = em_arr[i];
-                            //alert("hjgasd");
-                                $.ajax({
-                                    url: "load_assignment_employee.php",
-                                    method: "POST",
-                                    data: { input: pm },
-                                    success: function (data) {
-                                        //$("#searchresult").css("display", "inline");
-                                        $("#sr"+mm).html(data);
-                                        alert(data);
-                                    }
-                            });
-                        }
-                    }*/
+
                     var pm;
                     if (em_arr.length != 0) {
                         for (var i = 0; i < em_arr.length; i++) {
@@ -886,9 +767,7 @@ $mysqli1->close();*/
                             method: "POST",
                             data: { input: index },
                             success: function (data) {
-                                //$("#searchresult").css("display", "inline");
                                 $("#sr" + index).html(data);
-                                //alert(data);
                             }
                         });
                     }
@@ -904,13 +783,48 @@ $mysqli1->close();*/
                         });
 
                     }
+
+                    function success_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "success"
+                        });
+
+                    }
+                    function error_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "error"
+                        });
+
+                    }
                 </script>
             </div>
 
         </div>
     <?php else: ?>
+        <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
 
-        <p>You are log out. You can log in <a href="../log/login.php">HERE</a></p>
+            </div>
+        </div>
     <?php endif; ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!--Code for copy buttons -->

@@ -4,9 +4,9 @@ $is_invalid = false;/** var that checks if email and password is valid */
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     /**connection to database */
-    $mysqli = require("../database.php");
+    $mysqli = require ("../database.php");
     /**code that checks if email is in database */
-    $sql = sprintf("SELECT * FROM user2
+    $sql = sprintf("SELECT * FROM user
                     WHERE email = '%s'",
         $mysqli->real_escape_string($_POST["email"])
     );
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             session_regenerate_id();
             /** start of global sessions*/
-            $_SESSION["user2_id"] = $user["id"];
+            $_SESSION["user_id"] = $user["id"];
 
             /** popup logic*/
             $_SESSION["popup"] = 0;

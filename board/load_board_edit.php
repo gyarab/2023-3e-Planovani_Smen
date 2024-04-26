@@ -30,10 +30,10 @@ while ($rows = mysqli_fetch_assoc($fetch)) {
     $positions = $positions. ", Managers";
    }
    if($rows['employee_full'] == 1){
-    $positions = $positions. ", Part-time employees";
+    $positions = $positions. ", Full-time employees";
    }
    if($rows['employee_part'] == 1){
-    $positions = $positions. ", Full-time employees";
+    $positions = $positions. ", Part-time employees";
    }
    echo '<div class="row">';
    echo '<div>';

@@ -8,7 +8,7 @@ $old_password = $_POST['old_p'];
 $new_password = $_POST['new_p'];
 $again_password = $_POST['again_p'];
 $status = array();
-$sql_user = "SELECT password_hash FROM user2 WHERE id=$id";
+$sql_user = "SELECT password_hash FROM user WHERE id=$id";
 $fetch = mysqli_query($conn, $sql_user);
 while ($row = mysqli_fetch_assoc($fetch)) {
     $old_hash = $row['password_hash'];
@@ -42,7 +42,7 @@ if (password_verify($old_password, $old_hash)) {
 
 if (count($status) == 0) {
     $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
-    $sql = "UPDATE user2 SET password_hash = '$new_hash'  WHERE id=$id";
+    $sql = "UPDATE user SET password_hash = '$new_hash'  WHERE id=$id";
     if (!mysqli_query($conn, $sql)) {
 
     }

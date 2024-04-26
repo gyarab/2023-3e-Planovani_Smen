@@ -104,10 +104,10 @@ if (count($status) == 0) {
     if(strlen($_POST["password"]) != 0){
         $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-        $sql = "UPDATE user2 SET firstname = '$firstname'  ,middlename = '$middlename',lastname = '$lastname' ,email = '$email' ,password_hash = '$password_hash',countryCode = $countryCode ,phone =  $phone  ,position = '$position' WHERE id = $id";
+        $sql = "UPDATE user SET firstname = '$firstname'  ,middlename = '$middlename',lastname = '$lastname' ,email = '$email' ,password_hash = '$password_hash',countryCode = $countryCode ,phone =  $phone  ,position = '$position' WHERE id = $id";
     }else{
     
-    $sql = "UPDATE user2 SET firstname = '$firstname'  ,middlename = '$middlename',lastname = '$lastname' ,email = '$email',countryCode = $countryCode ,phone =  $phone  ,position = '$position' WHERE id = $id";
+    $sql = "UPDATE user SET firstname = '$firstname'  ,middlename = '$middlename',lastname = '$lastname' ,email = '$email',countryCode = $countryCode ,phone =  $phone  ,position = '$position' WHERE id = $id";
     }
     if (!mysqli_query($conn, $sql)) {
     }

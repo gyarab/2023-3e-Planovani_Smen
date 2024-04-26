@@ -3,16 +3,16 @@
 $cons = "";
 session_start();
 /** session a kontrola uzivatele */
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
     $mysqli = require ("../database.php");
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -32,6 +32,7 @@ if (isset($_SESSION["user2_id"])) {
     <meta charset="UTF-8">
     <title> Admin home page </title>
     <link rel="stylesheet" href="../css/main_page.css">
+    <link rel="stylesheet" href="../css/logout.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +40,8 @@ if (isset($_SESSION["user2_id"])) {
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
     <style>
         .in {
             border-radius: 100%;
@@ -96,8 +99,8 @@ if (isset($_SESSION["user2_id"])) {
     </style>
 </head>
 
-<body onload="startTime()">
-    <?php if (isset($user) && ($userp == "admin" && $userp == "manager")): ?>
+<body id="body" onload="startTime()">
+    <?php if (isset($user) && ($userp == "admin" || $userp == "manager")): ?>
         <div id="myModal" class="modal">
 
             <!-- Modal content pro editovani zprav -->
@@ -733,7 +736,7 @@ if (isset($_SESSION["user2_id"])) {
                             color: shex, man: man, part: part, full: full, text: te, caption: ca
                         },
                         success: function (data) {
-                            alert(data);
+                            success_alert("Board was successfully added");
                         }
                     });
                 }
@@ -762,7 +765,7 @@ if (isset($_SESSION["user2_id"])) {
                         method: "POST",
                         data: { input: board_id, color: ehex, man: man, part: part, full: full, text: te, caption: ca },
                         success: function (data) {
-                            alert("suc123");
+                            success_alert("Board was successfully updated");
                         }
                     });
                     modal.style.display = "none";
@@ -777,7 +780,7 @@ if (isset($_SESSION["user2_id"])) {
                         method: "POST",
                         data: { input: board_id },
                         success: function (data) {
-                            alert("suc");
+                            success_alert("Board was successfully deleted");
                         }
                     });
                     modal.style.display = "none";
@@ -819,7 +822,6 @@ if (isset($_SESSION["user2_id"])) {
                     const secondString = new String(con.toString());
                     document.getElementById("eareatext").value = secondString;
                     arr = arr.substring(1, arr.length - 1);
-                    alert(arr);
                     var color_get = arr.substring(1, 8);
                     var full_get = arr.substring(11, 12);
                     var part_get = arr.substring(15, 16);
@@ -853,6 +855,22 @@ if (isset($_SESSION["user2_id"])) {
                     modal.style.display = "block";
 
                 }
+                function success_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "success"
+                    });
+
+                }
+                function error_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "error"
+                    });
+
+                }
 
 
             </script>
@@ -860,6 +878,26 @@ if (isset($_SESSION["user2_id"])) {
 
         </div>
     <?php else: ?>
+        <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
     <?php endif; ?>
 </body>
 

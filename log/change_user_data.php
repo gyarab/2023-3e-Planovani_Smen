@@ -3,17 +3,17 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
     $mysqli = require ("../database.php");
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -38,7 +38,8 @@ if (isset($_SESSION["user2_id"])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    >
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
     <style>
         .forms {
             border-color: black;
@@ -46,7 +47,7 @@ if (isset($_SESSION["user2_id"])) {
     </style>
 </head>
 
-<body>
+<body id="body">
 <?php if (isset($user) && $userp == "admin"): ?>
 
     <nav>
@@ -161,7 +162,7 @@ if (isset($_SESSION["user2_id"])) {
                 $mysqli = require ("../database.php");
 
                 $conn = new mysqli($host, $username, $password, $dbname);
-                $query7 = "SELECT * FROM user2 ORDER BY lastname, firstname ";
+                $query7 = "SELECT * FROM user ORDER BY lastname, firstname ";
                 $result7 = mysqli_query($conn, $query7);
                 if (mysqli_num_rows($result7) > 0) {
                     while ($row_em = mysqli_fetch_assoc($result7)) {
@@ -334,7 +335,6 @@ if (isset($_SESSION["user2_id"])) {
 
                             status = data;
                             status = status.split(",");
-                            alert(data);
                         }
 
 
@@ -726,7 +726,6 @@ if (isset($_SESSION["user2_id"])) {
 
                 var status;
 
-                alert(usid);
                 $.ajax({
                     url: "../log/update_user.php",
                     method: "POST",
@@ -741,7 +740,6 @@ if (isset($_SESSION["user2_id"])) {
 
                         status = data;
                         status = status.split(",");
-                        alert(data);
                     }
 
 
@@ -758,7 +756,13 @@ if (isset($_SESSION["user2_id"])) {
 
                 if (stringArray.length == 0) {
 
-                    alert("success");
+                    success_alert("Account was successfully edited ");
+                    document.getElementById("firstnameh").style.visibility = "hidden";
+                    document.getElementById("lastnameh").style.visibility = "hiiden";
+                    document.getElementById("emailh").style.visibility = "hidden";
+                    document.getElementById("passwordh").style.visibility = "hidden";
+                    document.getElementById("password_confirmationh").style.visibility = "hidden";
+                    document.getElementById("phoneh").style.visibility = "hidden";
                 } else {
 
                     document.getElementById("firstnameh").style.visibility = "hidden";
@@ -796,6 +800,22 @@ if (isset($_SESSION["user2_id"])) {
 
                     }
                 }
+
+            }
+            function success_alert(message) {
+                Swal.fire({
+                    title: message,
+                    text: "",
+                    icon: "success"
+                });
+
+            }
+            function error_alert(message) {
+                Swal.fire({
+                    title: message,
+                    text: "",
+                    icon: "error"
+                });
 
             }
         </script>

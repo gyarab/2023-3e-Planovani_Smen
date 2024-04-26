@@ -2,18 +2,18 @@
 
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
-  $mysqli = require("../database.php");
+  $mysqli = require ("../database.php");
 
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
-  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
   $resultp = $mysqli->query($sqlp);
   while ($rrr = $resultp->fetch_assoc()) {
     $userp = $rrr['position'];
@@ -34,6 +34,8 @@ if (isset($_SESSION["user2_id"])) {
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="../css/logout.css">
   <style>
     table,
     th,
@@ -112,13 +114,11 @@ if (isset($_SESSION["user2_id"])) {
     p {
       font-size: 30px;
     }
-
-
   </style>
 </head>
 
-<body>
-  <?php if (isset($user)): ?>
+<body id="body">
+  <?php if (isset($user) && $userp == "parttime_employee" ): ?>
     <?php
     $today = date("Y-m-d");
 
@@ -133,11 +133,14 @@ if (isset($_SESSION["user2_id"])) {
         <div class="navbar container">
 
           <i class='bx bx-menu'></i>
-          <div class="logo"><a href="../main/admin_main_page.php" style="padding-left: 0px;">Home :
+          <div class="logo"><a
+              style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+              href="../main/employee_main_page.php">Home :
               <?= $cons ?>
               <?= htmlspecialchars($user["firstname"]) ?>
               <?= htmlspecialchars($user["middlename"]) ?>
               <?= htmlspecialchars($user["lastname"]) ?>
+
             </a></div>
           <div class="nav-links">
             <div class="sidebar-logo">
@@ -150,44 +153,37 @@ if (isset($_SESSION["user2_id"])) {
                 <i class='bx bxs-chevron-down js-emarrow arrow '></i>
                 <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
                   <div>
-                    <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                    <li><a href="../search/list_of_employees.php">LIST</a></li>
-                    <li><a href="#">CHANGE DATA</a></li>
-                    <li><a href="../rigths_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+
+                    <li><a href="../search/list_of_employees.php">LIST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+
+
                   </div>
                 </ul>
 
               </li>
               <li>
-                <a href="#">DATABASE</a>
+                <a href="#">CALENDAR</a>
                 <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
                 <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-                  <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                  <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                  <li><a href="../calendar/calendar_view.php">CURRENT SCHEDULE</a></li>
+                  <?php if ($userp == "parttime_employee") { ?>
+                    <li><a href="../options/time_options.php">TIME OPTIONS</a></li>
+                  <?php } else if ($userp == "fulltime_employee") { ?>
+                      <li><a href="../options/permanent_time_options_view.php">TIME OPTIONS</a></li>
+                  <?php } ?>
                   <li class="more">
-                    <span><a href="#">More</a>
-                      <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                    </span>
-                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
-                      <li><a href="#"></a></li>
-                      <li><a href="#">Pre-loader</a></li>
-                      <li><a href="#">Glassmorphism</a></li>
-                    </ul>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="#">HISTORY</a>
+                <a href="#">OTHERS</a>
                 <i class='bx bxs-chevron-down js-arrow arrow '></i>
                 <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="#">Dynamic Clock</a></li>
-                  <li><a href="#">Form Validation</a></li>
-                  <li><a href="#">Card Slider</a></li>
-                  <li><a href="#">Complete Website</a></li>
+                  <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                  <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
                 </ul>
               </li>
-              <li><a href="#">STATISTICS</a></li>
+              <li><a href="../statistics/my_stats.php">STATISTICS</a></li>
               <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
             </ul>
           </div>
@@ -196,6 +192,16 @@ if (isset($_SESSION["user2_id"])) {
             <i class='bx bx-search'></i>
             <div class="input-box">
               <input type="text" placeholder="Search...">
+              <br>
+              <br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-12">
+                    <p>123456789</p>
+
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -229,7 +235,7 @@ if (isset($_SESSION["user2_id"])) {
         <input type="hidden" id="help" name="help">
         <input type="hidden" id="help2" name="help2">
         <input type="hidden" id="hideYM">
-        <form id="form1" name="form1" method="post" >
+        <form id="form1" name="form1" method="post">
 
           <header>
             <br>
@@ -243,46 +249,50 @@ if (isset($_SESSION["user2_id"])) {
           </header>
           <br>
           <br>
-          <div style="float: left">
+          <div style="float: left;width:100%">
 
 
 
-          <div class="icons">
-            <span id="prev" class="material-symbols-rounded" style="float:left"><i
-                class="bi bi-arrow-left-circle h2"></i></span>
-            <h2 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h2>
-            <span id="next" class="material-symbols-rounded" style="float:right"><i
-                class="bi bi-arrow-right-circle h2"></i></span>
-            <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
-          </div>
-          <script>
-
-
-          </script>
-          <br>
-          <br>
-          <br>
-
-
-          <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
-            <div class="calendar">
-              <table>
-                <tr>
-                </tr>
-                <table class="days" style="border-collapse:collapse;">
-                  <div class="hoverTable">
-                    <tr>
-                    </tr>
-                  </div>
-                </table>
-              </table>
+            <div class="icons">
+              <span id="prev" class="material-symbols-rounded" style="float:left"><i
+                  class="bi bi-arrow-left-circle h2"></i></span>
+              <h2 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h2>
+              <span id="next" class="material-symbols-rounded" style="float:right"><i
+                  class="bi bi-arrow-right-circle h2"></i></span>
+              <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
             </div>
-          </div>
+            <script>
 
 
-          <div class="form-group">
+            </script>
+            <br>
+            <br>
+            <br>
 
-            <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
+
+            <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
+              <div class="calendar">
+                <table>
+                  <tr>
+                  </tr>
+                  <table class="days" style="border-collapse:collapse;">
+                    <div class="hoverTable">
+                      <tr>
+                      </tr>
+                    </div>
+                  </table>
+                </table>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <br>
+              <br>
+
+              <input type="button" name="save" class="btn btn-primary" style="font-size: 15px;float:right;"
+                value="Save to database" id="butsave">
+            </div>
           </div>
 
 
@@ -315,7 +325,7 @@ if (isset($_SESSION["user2_id"])) {
         </div>
         <p>Search for employee..</p>
         <div class="row">
-          <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+          <div class='col-12 col-md-12 p-2' style=' margin-bottom: 15px'>
             <input type="text" id="live_search" style="float: left; font-size: 16px" autocomplete="off"
               placeholder="Search...">
 
@@ -330,7 +340,7 @@ if (isset($_SESSION["user2_id"])) {
             <div id="searchresult_assign"></div>
 
           </div>
-          <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+          <div class='col-12 col-md-12 p-2' style=' margin-bottom: 15px'>
             <h2>All employees:</h2>
             <br>
             <div id="searchresult"></div>
@@ -499,15 +509,12 @@ if (isset($_SESSION["user2_id"])) {
                 },
                 success: function (data) {
                   text_return = JSON.stringify(data);
-                  alert(text_return);
                 }
 
               });
               text_return = text_return.substring(1, text_return.length - 1);
               result_arr = text_return.split(",");
-              alert(result_arr.length);
               for (var ff = 0; ff < result_arr.length; ff++) {
-                //alert(result_arr[ff] + "---"+ ff);
                 result_arr[ff] = result_arr[ff].substring(1, result_arr[ff].length - 1);
                 if (result_arr[ff] == "empty") {
                   from_result_arr[ff] = "";
@@ -518,7 +525,7 @@ if (isset($_SESSION["user2_id"])) {
                 }
 
               }
-              
+
 
 
               var col_code_obj = "<tr><th id='00-000' rowspan='1' style='width: 100px'>Date</th><th style='width: 100%'></th></tr>";
@@ -687,13 +694,28 @@ if (isset($_SESSION["user2_id"])) {
             type: "post",
             data: { from: fromTime, to: toTime, dateym: year_month, date: dateArr, id: usid },
             success: function (data) {
-              alert(data); /* alerts the response from php.*/
+              success_alert(data); /* alerts the response from php.*/
             }
           });
         });
 
 
+        function success_alert(message) {
+          Swal.fire({
+            title: message,
+            text: "",
+            icon: "success"
+          });
 
+        }
+        function error_alert(message) {
+          Swal.fire({
+            title: message,
+            text: "",
+            icon: "error"
+          });
+
+        }
 
       </script>
 
@@ -702,6 +724,26 @@ if (isset($_SESSION["user2_id"])) {
 
 
     <?php else: ?>
+      <script>
+        document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+      </script>
+      <div class="login-page">
+        <div class="form">
+          <h2>
+            You are current log out
+          </h2>
+          <br>
+          <br>
+          <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+          <br>
+          <br>
+          <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+          <br>
+          <br>
+          <br>
+
+        </div>
+      </div>
     <?php endif; ?>
 
 

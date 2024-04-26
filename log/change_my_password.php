@@ -8,19 +8,18 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
-    //$mysqli = require __DIR__ . "/database.php";
     $mysqli = require ("../database.php");
 
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -50,6 +49,8 @@ if (isset($_SESSION["user2_id"])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
     <style>
         .cont {
             margin-bottom: 25px;
@@ -64,13 +65,13 @@ if (isset($_SESSION["user2_id"])) {
 </head>
 <!-- source:- hodiny https://www.w3schools.com/js/tryit.asp?filename=tryjs_timing_clock -->
 
-<body onload="startTime()">
+<body  id="body" onload="startTime()">
     <?php if (isset($user)): ?>
 
         <!--source -  https://www.codingnepalweb.com/drop-down-navigation-bar-html-css/-->
         <!--zacatek navbaru -->
         <div class="container">
-        <?php if ($userp == "admin") { ?>
+            <?php if ($userp == "admin") { ?>
                 <nav>
 
                     <div class="navbar container">
@@ -377,7 +378,6 @@ if (isset($_SESSION["user2_id"])) {
                         let old_p = document.getElementById("old_p").value;
                         let new_p = document.getElementById("new_p").value;
                         let again_p = document.getElementById("again_p").value;
-                        alert("123456");
                         var status;
                         $.ajax({
                             url: "../log/change_pas_check.php",
@@ -401,12 +401,15 @@ if (isset($_SESSION["user2_id"])) {
                             }
                         }
 
-                        alert(stringArray);
                         if (stringArray.length == 0) {
 
                             document.getElementById("old_h").style.visibility = "hidden";
                             document.getElementById("new_h").style.visibility = "hiiden";
                             document.getElementById("again_h").style.visibility = "hidden";
+                            success_alert("Password was changed successfully");
+                            document.getElementById("old_p").value = "";
+                            document.getElementById("new_p").value = "";
+                            document.getElementById("again_p").value = "";
                         } else {
 
                             document.getElementById("old_h").style.visibility = "hidden";
@@ -431,6 +434,22 @@ if (isset($_SESSION["user2_id"])) {
                             }
                         }
                     }
+                    function success_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "success"
+                        });
+
+                    }
+                    function error_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "error"
+                        });
+
+                    }
 
                 </script>
                 <br>
@@ -447,6 +466,26 @@ if (isset($_SESSION["user2_id"])) {
 
         </div>
     <?php else: ?>
+        <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
     <?php endif; ?>
 </body>
 

@@ -2,18 +2,18 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
   $mysqli = require ("../database.php");
 
 
-  $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+  $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
-  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
   $resultp = $mysqli->query($sqlp);
   while ($rrr = $resultp->fetch_assoc()) {
     $userp = $rrr['position'];
@@ -45,6 +45,8 @@ if (isset($_SESSION["user2_id"])) {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="../css/tree.css">
   <link rel="stylesheet" href="../css/success.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
 
   <style>
     .cont {
@@ -128,7 +130,7 @@ if (isset($_SESSION["user2_id"])) {
   </style>
 </head>
 
-<body>
+<body id="body">
   <?php if (isset($user) && $userp == "admin"): ?>
     <script>
       var id_shift;
@@ -765,7 +767,7 @@ if (isset($_SESSION["user2_id"])) {
                           data: { input: id_shift },
                           success: function (data) {
                             modal.style.display = "none";
-                            alert("Shift was deleted successfully");
+                            success_alert("Shift was deleted successfully");
                           }
                         });
                       }
@@ -1069,7 +1071,7 @@ if (isset($_SESSION["user2_id"])) {
                   },
                   success: function (data) {
                     modal.style.display = "none";
-                    alert("Shift was successfully edited");
+                   success_alert("Shift was successfully edited");
                   }
                 });
                 $.ajax({
@@ -1239,7 +1241,7 @@ if (isset($_SESSION["user2_id"])) {
                       id_shift: id_shift
                     },
                     success: function (data) {
-                      alert("Schift saved succesfully");
+                      success_alert("Schift saved succesfully");
                     }
 
                   });
@@ -1408,7 +1410,6 @@ if (isset($_SESSION["user2_id"])) {
                 data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
                 success: function (data) {
                   $("#shift_ex_load").html(data);
-                  alert("adsads");
                 }
               });
             }
@@ -1634,7 +1635,22 @@ if (isset($_SESSION["user2_id"])) {
 
               }
             }
+            function success_alert(message) {
+                Swal.fire({
+                    title: message,
+                    text: "",
+                    icon: "success"
+                });
 
+            }
+            function error_alert(message) {
+                Swal.fire({
+                    title: message,
+                    text: "",
+                    icon: "error"
+                });
+
+            }
           </script>
         </div>
 
@@ -1644,6 +1660,26 @@ if (isset($_SESSION["user2_id"])) {
       </div>
 
     <?php else: ?>
+      <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
     <?php endif; ?>
 </body>
 <script>

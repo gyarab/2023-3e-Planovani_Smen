@@ -6,19 +6,17 @@
 $cons = "";
 session_start();
 
-if (isset($_SESSION["user2_id"])) {
+if (isset($_SESSION["user_id"])) {
 
-    //$mysqli = require __DIR__ . "/database.php";
-    //$mysqli = require( __DIR__ . '/database.php');
     $mysqli = require ('../database.php');
 
-    $sql = "SELECT * FROM user2
-            WHERE id = {$_SESSION["user2_id"]}";
+    $sql = "SELECT * FROM user
+            WHERE id = {$_SESSION["user_id"]}";
 
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
-    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $sqlp = "SELECT position, id FROM user WHERE id = {$_SESSION["user_id"]}";
     $resultp = $mysqli->query($sqlp);
     while ($rrr = $resultp->fetch_assoc()) {
         $userp = $rrr['position'];
@@ -27,12 +25,6 @@ if (isset($_SESSION["user2_id"])) {
     }
 }
 
-//$mysqli1 = require __DIR__ . "/database.php";
-$mysqli1 = require ('../database.php');
-//$mysqli1 = include( __DIR__ . '/database.php');
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();
 
 ?>
 
@@ -53,10 +45,12 @@ $mysqli1->close();
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/logout.css">
 </head>
 
-<body onload="startTime()">
-    <?php if (isset($user) && $userp == "admin"): ?>
+<body id="body" onload="startTime()">
+    <?php if (isset($user) && ($userp == "parttime_employee" || $userp == "fulltime_employee")): ?>
 
 
         <!--start of navbar -->
@@ -67,11 +61,14 @@ $mysqli1->close();
                 <div class="navbar container">
 
                     <i class='bx bx-menu'></i>
-                    <div class="logo"><a href="../main/admin_main_page.php">Home :
+                    <div class="logo"><a
+                            style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                            href="../main/employee_main_page.php">Home :
                             <?= $cons ?>
                             <?= htmlspecialchars($user["firstname"]) ?>
                             <?= htmlspecialchars($user["middlename"]) ?>
                             <?= htmlspecialchars($user["lastname"]) ?>
+
                         </a></div>
                     <div class="nav-links">
                         <div class="sidebar-logo">
@@ -84,44 +81,39 @@ $mysqli1->close();
                                 <i class='bx bxs-chevron-down js-emarrow arrow '></i>
                                 <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
                                     <div>
-                                        <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                                        <li><a href="../search/list_of_employees.php">LIST</a></li>
-                                        <li><a href="#">CHANGE DATA</a></li>
-                                        <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+
+                                        <li><a
+                                                href="../search/list_of_employees.php">LIST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                        </li>
+
+
                                     </div>
                                 </ul>
 
                             </li>
                             <li>
-                                <a href="#">DATABASE</a>
+                                <a href="#">CALENDAR</a>
                                 <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
                                 <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
-                                    <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-                                    <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                                    <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                                    <li><a href="../calendar/calendar_view.php">CURRENT SCHEDULE</a></li>
+                                    <?php if ($userp == "parttime_employee") { ?>
+                                        <li><a href="../options/time_options.php">TIME OPTIONS</a></li>
+                                    <?php } else if ($userp == "fulltime_employee") { ?>
+                                            <li><a href="../options/permanent_time_options_view.php">TIME OPTIONS</a></li>
+                                    <?php } ?>
                                     <li class="more">
-                                        <span><a href="#">More</a>
-                                            <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                                        </span>
-                                        <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
-                                            <li><a href="#"></a></li>
-                                            <li><a href="#">Pre-loader</a></li>
-                                            <li><a href="#">Glassmorphism</a></li>
-                                        </ul>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">HISTORY</a>
+                                <a href="#">OTHERS</a>
                                 <i class='bx bxs-chevron-down js-arrow arrow '></i>
                                 <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                                    <li><a href="#">Dynamic Clock</a></li>
-                                    <li><a href="#">Form Validation</a></li>
-                                    <li><a href="#">Card Slider</a></li>
-                                    <li><a href="#">Complete Website</a></li>
+                                    <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                    <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">STATISTICS</a></li>
+                            <li><a href="../statistics/my_stats.php">STATISTICS</a></li>
                             <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
                         </ul>
                     </div>
@@ -130,6 +122,16 @@ $mysqli1->close();
                         <i class='bx bx-search'></i>
                         <div class="input-box">
                             <input type="text" placeholder="Search...">
+                            <br>
+                            <br>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p>123456789</p>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -144,35 +146,6 @@ $mysqli1->close();
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous"></script>
-
-            <!--end of navbar -->
-            <!-- Printing of  informations  -->
-            <!--<div class="container">-->
-            <!-- <p>Users first name :
-                    </*?= //htmlspecialchars($user["firstname"]) ?>
-                </p>
-                <p>Users middle name :
-                    </*?= //htmlspecialchars($user["middlename"]) ?>
-                </p>
-                <p>Users last name :
-                    </*?= htmlspecialchars($user["lastname"]) ?>
-                </p>
-                <p>Users email :
-                    </*?= htmlspecialchars($user["email"]) ?>
-                </p>
-                <p>Users phone Code :
-                    </*?= htmlspecialchars($user["countryCode"]) ?>
-                </p>
-                <p>Users phone :
-                    </*?= htmlspecialchars($user["phone"]) ?>
-                </p>
-                <p>Users password_hash :
-                    </*?= htmlspecialchars($user["password_hash"]) ?>
-                </p>
-                <p>Users position :
-                    </*?= htmlspecialchars($user["position"]) ?>
-                </p>-->
-            <!--</div>-->
 
             <br>
             <div class="container">
@@ -315,8 +288,6 @@ $mysqli1->close();
                 <script>
                     var colors = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
 
-                    /* large line chart */
-                    /*** source https://codepen.io/anonymous_viewer/pen/NWrprmQ */
 
 
                     function daysInMonth(month, year) {
@@ -327,22 +298,17 @@ $mysqli1->close();
                     const d = new Date();
                     let year = d.getFullYear();
                     let month = d.getMonth();
-                    //alert(daysInMonth(month, year));
                     month = month + 1;
                     max_day = daysInMonth(month, year);
                     var xValues = new Array();
                     var yValues = new Array();
-                    //var xValues = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
-                    //var yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
                     for (var x = 0; x < max_day; x++) {
                         xValues[x] = x + 1;
                     }
 
                     function load_char() {
-                        //document.getElementById("chLine").innerHTML = "";
                         var chLine = document.getElementById("chLine");
                         var chartData = {
-                            //labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"],
                             labels: xValues,
                             datasets: [{
                                 data: yValues,
@@ -351,13 +317,6 @@ $mysqli1->close();
                                 borderWidth: 4,
                                 pointBackgroundColor: colors[0]
                             }
-                                //   {
-                                //     data: [639, 465, 493, 478, 589, 632, 674],
-                                //     backgroundColor: colors[3],
-                                //     borderColor: colors[1],
-                                //     borderWidth: 4,
-                                //     pointBackgroundColor: colors[1]
-                                //   }
                             ]
                         };
                         if (chLine) {
@@ -376,13 +335,11 @@ $mysqli1->close();
                                     legend: {
                                         display: false
                                     },
-                                    //responsive: true
                                 }
                             });
                         }
                     }
 
-                    /* large pie/donut chart */
 
                 </script>
 
@@ -394,10 +351,6 @@ $mysqli1->close();
                     var sum_sch_r = 0;
                     var sum_log_r = 0;
 
-
-                    /*$(function() {
-              $( "#year" ).datepicker({dateFormat: 'yy'});
-          });​*/
                     /** source https://stackoverflow.com/questions/8674618/adding-options-to-select-with-javascript */
 
 
@@ -405,8 +358,6 @@ $mysqli1->close();
 
                     /*** source https://www.geeksforgeeks.org/how-to-get-the-number-of-days-in-a-specified-month-using-javascript/ */
 
-                    //alert(month);
-                    //alert(daysInMonth(month, year));
                     function selectElement(id, valueToSelect) {
                         let element = document.getElementById(id);
                         element.value = valueToSelect;
@@ -430,8 +381,7 @@ $mysqli1->close();
                     var arr_return = new Array();
                     var usid = <?php echo json_encode($userid); ?>;
 
-                    //alert(inp1);
-                    //alert(inp2);
+
                     return_var = [];
                     $.ajax({
                         url: "../statistics/load_my_stats.php",
@@ -441,8 +391,6 @@ $mysqli1->close();
                         async: false,
                         data: { year: year, id: usid, month: month },
                         success: function (data) {
-                            //$("#object").html(data);
-                            alert(data);
                             return_var = data;
 
 
@@ -451,23 +399,16 @@ $mysqli1->close();
                     $.ajax({
                         url: "../statistics/load_my_stats_table.php",
                         method: "POST",
-                        //dataType: "json",
-                        //cache: false,
-                        //async: false,
                         data: { year: year, id: usid, month: month },
                         success: function (data) {
                             $("#stat_table").html(data);
-                            //alert(data);
-                            //return_var = data;
                             var counter = 0;
                             for (; ;) {
                                 if (document.getElementById("s" + counter) != null) {
-                                    //alert("jkhfasdsjkh");
                                     sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                     sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                     sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                     sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                    //alert(sum_sch);
                                 } else {
                                     break;
                                 }
@@ -482,11 +423,6 @@ $mysqli1->close();
                             document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + Math.trunc(sum_log) + "h&nbsp;" + Math.trunc(sum_log * 3600 % 3600 / 60) + "min";
                             document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + Math.trunc(sum_log_r) + "h&nbsp;" + Math.trunc(sum_log_r * 3600 % 3600 / 60) + "min";
 
-                            /*alert(counter);
-                            alert(sum_sch);
-                            alert(sum_log);
-                            alert(sum_sch_r);
-                            alert(sum_log_r);*/
 
 
                         }
@@ -511,9 +447,6 @@ $mysqli1->close();
                         yValues[g] = return_var[g] / 3600;
 
                     }
-                    //alert(return_var[6]);
-                    //arr_return = return_var.split(",");
-                    //alert(arr_return[0]);
                     load_char();
 
 
@@ -523,7 +456,6 @@ $mysqli1->close();
 
                     $('#year').change(function () {
                         inp1 = $(this).val();
-                        //alert(inp1);
                         xValues = [];
                         yValues = [];
                         return_var = [];
@@ -539,8 +471,6 @@ $mysqli1->close();
                             async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
-                                //$("#object").html(data);
-                                //alert(data);
                                 return_var = data;
                             }
                         });
@@ -553,7 +483,6 @@ $mysqli1->close();
 
                         var canva = document.createElement("canvas");
                         canva.id = "chLine";
-                        //input.className = "css-class-name"; // set the CSS class
                         div_can.appendChild(canva);
                         load_char();
 
@@ -561,27 +490,19 @@ $mysqli1->close();
                         sum_log = 0;
                         sum_sch_r = 0;
                         sum_log_r = 0;
-                        alert("is");
                         $.ajax({
                             url: "../statistics/load_my_stats_table.php",
                             method: "POST",
-                            //dataType: "json",
-                            //cache: false,
-                            //async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
                                 $("#stat_table").html(data);
-                                //alert(data);
-                                //return_var = data;
                                 var counter = 0;
                                 for (; ;) {
                                     if (document.getElementById("s" + counter) != null) {
-                                        //alert("jkhfasdsjkh");
                                         sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                         sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                         sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                         sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                        //alert(sum_sch);
                                     } else {
                                         break;
                                     }
@@ -606,11 +527,6 @@ $mysqli1->close();
                                     document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                     document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                 }
-                                /*alert(counter);
-                                alert(sum_sch);
-                                alert(sum_log);
-                                alert(sum_sch_r);
-                                alert(sum_log_r);*/
 
 
                             }
@@ -634,8 +550,6 @@ $mysqli1->close();
                             async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
-                                //$("#object").html(data);
-                                //alert(data);
                                 return_var = data;
 
 
@@ -655,21 +569,12 @@ $mysqli1->close();
                                 pointBackgroundColor: colors[0]
                             }]
                         };
-                        //alert("jkdsajh");
-                        //var context1 = document.querySelector('#chLine').getContext('2d');
-                        //new Chart(context1).Line(data1);
-                        //load_char();
-                        //alert(inp2);
-                        //document.getElementById("chLine").data.datasets[0].data = yValues;
-                        //document.getElementById("chLine").chart.data.labels = xValues;
-                        //document.getElementById("chLine").update();
-                        //document.getElementById("chLine").destroy();
+
                         var div_can = document.getElementById("div_can");
                         div_can.innerText = "";
 
                         var canva = document.createElement("canvas");
                         canva.id = "chLine";
-                        //input.className = "css-class-name"; // set the CSS class
                         div_can.appendChild(canva);
                         load_char();
 
@@ -677,27 +582,19 @@ $mysqli1->close();
                         sum_log = 0;
                         sum_sch_r = 0;
                         sum_log_r = 0;
-                        alert("is");
                         $.ajax({
                             url: "../statistics/load_my_stats_table.php",
                             method: "POST",
-                            //dataType: "json",
-                            //cache: false,
-                            //async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
                                 $("#stat_table").html(data);
-                                //alert(data);
-                                //return_var = data;
                                 var counter = 0;
                                 for (; ;) {
                                     if (document.getElementById("s" + counter) != null) {
-                                        //alert("jkhfasdsjkh");
                                         sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                         sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                         sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                         sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                        //alert(sum_sch);
                                     } else {
                                         break;
                                     }
@@ -722,11 +619,6 @@ $mysqli1->close();
                                     document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                     document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                 }
-                                /*alert(counter);
-                                alert(sum_sch);
-                                alert(sum_log);
-                                alert(sum_sch_r);
-                                alert(sum_log_r);*/
 
 
                             }

@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $phone = $row["phone"];
             $position = $row["position"];
 
-            $sql_insert = "INSERT INTO user2 (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
+            $sql_insert = "INSERT INTO user (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt_insert = $mysqli->prepare($sql_insert);

@@ -13,7 +13,7 @@ if (isset($_POST['input'])) {
 
   $arr = array();
   $arr = explode(" ", $input);
-  $query = "SELECT * FROM user2 WHERE firstname LIKE '$arr[0]%' AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
+  $query = "SELECT * FROM user WHERE firstname LIKE '$arr[0]%' AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
   if (count($arr) != 0) {
 
     for ($i = 0; $i < count($arr); $i++) {
@@ -56,18 +56,18 @@ if (isset($_POST['input'])) {
   $c = 0;
 
   if ($arr[0] == null) {
-    $quer[$c] = "SELECT * FROM user2";
+    $quer[$c] = "SELECT * FROM user";
     $c++;
   } else if ($arr[0] != " " && $arr[1] == null) {
     for ($i = 0; $i < 1; $i++) {
       for ($x = 0; $x < 1; $x++) {
         for ($z = 0; $z < 1; $z++) {
 
-          $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '$arr[$i]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE firstname LIKE '$arr[$i]%' ";
           $c++;
-          $quer[$c] = "SELECT * FROM user2 WHERE middlename LIKE '$arr[$x]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE middlename LIKE '$arr[$x]%' ";
           $c++;
-          $quer[$c] = "SELECT * FROM user2 WHERE lastname LIKE '$arr[$z]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE lastname LIKE '$arr[$z]%' ";
           $c++;
         }
       }
@@ -77,11 +77,11 @@ if (isset($_POST['input'])) {
       for ($x = 0; $x < 2; $x++) {
 
         if ($i != $x) {
-          $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '$arr[$i]%' AND middlename LIKE '$arr[$x]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE firstname LIKE '$arr[$i]%' AND middlename LIKE '$arr[$x]%' ";
           $c++;
-          $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '$arr[$i]%' AND lastname LIKE '$arr[$x]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE firstname LIKE '$arr[$i]%' AND lastname LIKE '$arr[$x]%' ";
           $c++;
-          $quer[$c] = "SELECT * FROM user2 WHERE middlename LIKE '$arr[$i]%' AND lastname LIKE '$arr[$x]%' ";
+          $quer[$c] = "SELECT * FROM user WHERE middlename LIKE '$arr[$i]%' AND lastname LIKE '$arr[$x]%' ";
           $c++;
         }
 
@@ -93,7 +93,7 @@ if (isset($_POST['input'])) {
         for ($z = 0; $z < 3; $z++) {
 
           if ($i != $x && $i != $z && $z != $x) {
-            $quer[$c] = "SELECT * FROM user2 WHERE firstname LIKE '{$arr[$i]}%' AND middlename LIKE '{$arr[$x]}%' AND lastname LIKE '{$arr[$z]}%' ";
+            $quer[$c] = "SELECT * FROM user WHERE firstname LIKE '{$arr[$i]}%' AND middlename LIKE '{$arr[$x]}%' AND lastname LIKE '{$arr[$z]}%' ";
             $c++;
           }
 

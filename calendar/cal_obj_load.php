@@ -15,7 +15,7 @@ $arr1 = array();
 $rights[] = array();
 $id = $_POST['id'];
 $position = "";
-$fetchid = mysqli_query($conn2, "SELECT position FROM user2 WHERE id='$id'");
+$fetchid = mysqli_query($conn2, "SELECT position FROM user WHERE id='$id'");
 while ($row_id = mysqli_fetch_assoc($fetchid)) {
     $position = $row_id['position'];
 }

@@ -7,7 +7,7 @@ $mysqli = require ("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
 
-$sql = " SELECT * FROM user2 WHERE id='$id' ";
+$sql = " SELECT * FROM user WHERE id='$id' ";
 $fetch = mysqli_query($conn, $sql);
 while ($rows = $fetch->fetch_assoc()) {
     $data[0] = $rows['id'];
