@@ -39,7 +39,7 @@ if (isset($_SESSION["user2_id"])) {
             window.location.href = "log/login.php";
         }
         function navigateToPage2() {
-            window.location.href = "log/signup.html";
+            window.location.href = "log/signup.php";
         }
     </script>
 </body>
