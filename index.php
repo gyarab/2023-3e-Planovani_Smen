@@ -30,7 +30,7 @@ if (isset($_SESSION["user_id"])) {
         <hr>
         <h1>Welcome</h1>
         <button onclick="navigateToPage1()">Log in</button>
-        <button onclick="navigateToPage2()">Vertify email</button>   
+        <button onclick="navigateToPage2()">Verify email</button>   
     </div>
 
     <script>
@@ -38,6 +38,9 @@ if (isset($_SESSION["user_id"])) {
             window.location.href = "log/login.php";
         }
         function navigateToPage2() {
+
+
+            
             window.location.href = "log/verification.php";
         }
     </script>
