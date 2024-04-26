@@ -1,5 +1,4 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $input = $_POST['input'];

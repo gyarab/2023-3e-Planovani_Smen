@@ -30,7 +30,6 @@
   $sql = "";
 
   
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
@@ -103,12 +102,11 @@ if(count($status) == 0){
     $countryCode = $_POST["countryCode"];
     $phone = $_POST["phone"];
     $position = $_POST["position"];
-
+    /**posilani overovaciho emailu */
     $verification_code = generateRandomString();
 
     $subject = "PLAN & GO verification Code";
 
-    //$message = "Here is your verification code: <a>$verification_code</a>";
     $message = '
     <!DOCTYPE html>
     <html>
@@ -144,13 +142,12 @@ if(count($status) == 0){
     $sql = "INSERT INTO verification (firstname, middlename, lastname, email, password_hash, countryCode, phone, position, verificationCode)
     VALUES ('$firstname','$middlename', '$lastname', '$email', '$password_hash',$countryCode, $phone ,'$position','$verification_code' )";
     if (!mysqli_query($conn, $sql)) {
-        //die('Error: ' . mysqli_error($conn));
-        //echo json_encode(mysqli_error($conn));
+
     }
 }
 
 
-
+/**generace nahodneho vertifikacniho kodu */
 function generateRandomString($length = 6) {
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -163,6 +160,7 @@ function generateRandomString($length = 6) {
 
     return $randomString;
 }
+
 echo json_encode($status);
 
 ?>

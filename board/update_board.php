@@ -1,14 +1,15 @@
 <?php
-$text = $_POST['text'];
-$caption = $_POST['caption'];
-$color = $_POST['color'];
-$man = $_POST['man'];
-$part = $_POST['part'];
-$full = $_POST['full'];
-$input = $_POST['input'];
+/**tento soubor aktualizuje zvolenou zpravu na nastence */
+
+$text = $_POST['text'];/**text zpravy */
+$caption = $_POST['caption'];/**nadpis zpravy */
+$color = $_POST['color'];/**barva zpravy */
+$man = $_POST['man'];/**hodnota pro manazera (0,1)*/
+$part = $_POST['part'];/**hodnota pro zamestnance na polovicni uvazek (0,1) */
+$full = $_POST['full'];/**hodnota pro zamestnance na plny uvazek(0,1)  */
+$input = $_POST['input'];/** id zpravy */
 
 
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);

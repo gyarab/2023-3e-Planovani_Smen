@@ -1,8 +1,6 @@
 <?php
-//$mysqli2 = require __DIR__ . "/database.php";
 $mysqli2 = require("../database.php");
 
-//require __DIR__ . '/load_object2.php';
 
 $conn2 = new mysqli($host, $username, $password, $dbname);
 $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
@@ -31,13 +29,6 @@ for ($x = 0; $x < count($data2); $x++) {
     if ($data3[$x] == null && $data1[$x] == $input) {
         static $dd = 1;
         $look = $data1[$x];
-        /*if ($input == $data1[$x]){
-            $find2[1] = $look;
-            $find2[0] = 0;
-            //echo json_encode($obj);
-            echo json_encode($find2);
-            //break;
-        }*/
 
         echo "<div class='form-check form-check-inline'>";
         echo "<input class='form-check-input' style='display:inline;' type='checkbox' id='inlineCheckbox".$data1[$x]."' onclick='obj_click(this.value)' value='".$data1[$x]."'>";
@@ -82,13 +73,7 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
             } else {
 
             }
-            /*if ($input == $dat1[$i]){
-                $find2[1] = $look;
-                $find2[0] = 1;
-                //echo json_encode($obj);
-                echo json_encode($find2);
-                //break;
-            }*/
+
             echo "<div class='form-check form-check-inline'>";
             echo "<input class='form-check-input' style='display:inline;' type='checkbox' id='inlineCheckbox".$dat1[$i]."' onclick='obj_click(this.value)' value='".$dat1[$i]."'>";
             echo "<label class='form-check-label' style='display:inline;' for='inlineCheckbox".$dat1[$i]."'>".$dat2[$i]."</label>";
@@ -111,7 +96,5 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
 
 
 }
-//$look = 0;
-//echo json_encode($find3);
-//echo $look;
+
 ?>

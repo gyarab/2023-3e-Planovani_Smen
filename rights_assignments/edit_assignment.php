@@ -1,6 +1,5 @@
 <?php
 
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $input = $_POST['input'];
@@ -107,10 +106,8 @@ for ($x = 0; $x < count($data2); $x++) {
             if (count($arr) > 0) {
                 echo "<h5>Asigned shifts for : <b>" . $data2[$x] . "</b></h5>";
                 echo "<br>";
-                //echo "<p style='display: inline'>";
                 echo "<div class='row'>";
-                //echo " <div class='col-12 col-md-6>";
-                //echo "<p style='display: inline'>";
+
                 $rrt = 0;
                 for (; ; ) {
                     if ($arr[$rrt][0] == "" || $arr[$rrt][0] == null) {
@@ -132,27 +129,18 @@ for ($x = 0; $x < count($data2); $x++) {
                                 $raz++;
                             }
                         }
-                        //sort($arr_help);
                         array_multisort($arr_help,$arr_help2);
                         for ($h = 0; $h < count($arr_help); $h++) {
-                            //if ($h + 1 == count($arr_help)) {
-                              //  echo "<li class='list-group-item'>" .$arr_help[$h]."</li>";
 
-                            //} else {
-                                //$key = array_search('green', $array);
                                 echo "<li class='list-group-item'>" .$arr_help[$h]."<button id='dl" .$arr_help2[$h]."' class='btn btn-danger' onclick='Delete_assi(this.id)' style='float: right'><i class='bi bi-trash'></i></button></li>";
 
-                                //echo $arr_help[$h] . ", ";
-                            //}
                         }
                         echo "</ul>";
-                        //echo "</p>";
                         echo"</div>";
                         $rrt++;
                     }
                 }
-                //echo "</p>";
-                //echo"</div>";
+
                 echo"</div>";
                 echo "<hr>";
             }

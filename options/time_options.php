@@ -4,7 +4,6 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-  //$mysqli = require __DIR__ . "/database.php";
   $mysqli = require("../database.php");
 
 
@@ -30,11 +29,6 @@ if (isset($_SESSION["user2_id"])) {
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!--<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">-->
-  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>-->
   <link rel="stylesheet" href="../css/main_page.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -46,33 +40,6 @@ if (isset($_SESSION["user2_id"])) {
     td {
       border: 1px solid black;
     }
-
-    /* td:nth-child(even) {
-  background-color: #D6EEEE;
-}*/
-    /*
-    .hoverTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .hoverTable td {
-      padding: 7px;
-      border: #4e95f4 1px solid;
-    }>
-
-    /* Define the default color for all the table rows */
-    /*.hoverTable tr {
-      background: #b8d1f3;
-    }*/
-
-    /* Define the hover highlight color for the table row */
-    /* tr:hover {
-      background-color: #e8e8e8;
-    }*/
-    /*.container {
-      position: relative;
-    }*/
 
     .topright {
       position: absolute;
@@ -146,30 +113,12 @@ if (isset($_SESSION["user2_id"])) {
       font-size: 30px;
     }
 
-    /* Scrollbar styles */
-    /*::-webkit-scrollbar {
-width: 12px;
-height: 12px;
-}
 
-::-webkit-scrollbar-track {
-border: 1px solid yellowgreen;
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-background: yellowgreen;  
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: #88ba1c;  
-}*/
   </style>
 </head>
 
 <body>
-  <?php if (isset($user) /*&& $userp == "admin"*/): ?>
+  <?php if (isset($user)): ?>
     <?php
     $today = date("Y-m-d");
 
@@ -295,44 +244,6 @@ background: #88ba1c;
           <br>
           <br>
           <div style="float: left">
-            <!--<p>Objects:&nbsp;&nbsp;</p>-->
-
-
-            <!--<select id="select_obj" class="form-select form-select-sm" name="option" id="option"
-              style="font-size:15px;display:inline">
-              <?php
-              /*$mysqli2 = require __DIR__ . "/database.php";
-              $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
-              $result3 = $mysqli2->query($sql2);
-              $mysqli2->close();
-              $counter = 0;
-              while ($rows_dat = mysqli_fetch_assoc($result3)) {
-                if (null == $rows_dat['superior_object_name']) {
-                  if ($counter == 0) {
-                    $first = $rows_dat['id_object'];
-                  }
-                  $counter++;
-                  ?>
-                  <option style="font-size:15px" value="<?php echo $rows_dat['id_object'] ?>">
-                    <?php //echo $rows_dat['object_name']; ?>
-                  </option>
-                  <?php
-               /* }
-              }*/
-              ?>
-            </select>-->
-          </div>
-
-          <!-- <div id="object" style="display:inline;"></div>
-          <br>
-          <br>
-          <p style="display:inline">Shift:&nbsp;&nbsp;</p>
-          <div id="shi_load" style="display:inline;"></div>
-          <br>
-          <input type="button" class="btn btn-primary" value="Filter" onclick="filter()" style="float:left;font-size: 16px;">
-          <br>
-          <br>
-          <br>-->
 
 
 
@@ -426,7 +337,6 @@ background: #88ba1c;
 
 
             <form>
-              <!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
               <div id="livesearch"></div>
             </form>
 
@@ -541,12 +451,8 @@ background: #88ba1c;
 
 
         renderCalendar();
-        //const renderCalendar = () => {
         function renderCalendar() {
-          /*for(var sd = 0; sd < arridc.length; sd++){
-            alert(arridc[sd]);
 
-          }*/
 
           let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
             lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
@@ -592,14 +498,12 @@ background: #88ba1c;
                   month: currMonthNull, year: currYear, id: usid
                 },
                 success: function (data) {
-                  //text_return = data;
                   text_return = JSON.stringify(data);
                   alert(text_return);
                 }
 
               });
               text_return = text_return.substring(1, text_return.length - 1);
-              //text_return = substring(1,text_return.length-1);
               result_arr = text_return.split(",");
               alert(result_arr.length);
               for (var ff = 0; ff < result_arr.length; ff++) {
@@ -612,67 +516,9 @@ background: #88ba1c;
                   from_result_arr[ff] = result_arr[ff].substring(0, 5);
                   to_result_arr[ff] = result_arr[ff].substring(10, 15);
                 }
-                //alert(to_result_arr[ff]);
 
               }
-              //alert(usid);
-              /***var arr_return = new Array;
-              $.ajax({
-                type: "POST",
-                url: "get_my_shifts.php",
-                dataType: "json",
-                cache: false,
-                async: false,
-                data: {
-                  month: currMonthNull, year : currYear, id : usid
-                },
-                success: function (data) {
-                  text_return = JSON.stringify(data);
-                  //alert(JSON.stringify(data));
-                }
-
-              });
-              var middle_arr = new Array();
-              var finished_arr = new Array();
-              text_return =text_return.substring(1,text_return.length-1);
-              if(text_return.substring(2,text_return.length-2) == ""){
-                is_empty = 1;
-
-              }
-              middle_arr = text_return.split("]");
-
-              total_lenght =middle_arr.length;
-              for (let jh = 0; jh < middle_arr.length; jh++) {
-                finished_arr = [];
-                if(jh == 0){
-                middle_arr[jh] = middle_arr[jh].substring(1);
-                }else{
-                  middle_arr[jh] = middle_arr[jh].substring(2);
-                }
-                result_arr[jh] = [];
-                //alert(middle_arr[jh]);
-                finished_arr = middle_arr[jh].split(",");
-                for (let j = 0; j < 12; j++) {
-                  //alert(second_arr[j]);
-                  var xs = finished_arr[j];
-                  //xs = xs.substring(1);
-                  //let xk = second_arr[j];
-                  //let xk = xs.length;
-                  /*alert(xs);
-                  alert(xk);*/
-              /**result_arr[jh][j] = xs;
-              //final_arr[jh][j] = final_arr[jh][j].substring(1);
-              //final_arr[jh][j] = 0;
-            }
-          }
-          //alert(result_arr[0][0]);
-          let ch = result_arr[0][0];*/
-              //ch = ch.substring(0,ch.length-1);
-              //alert(ch);
-              //alert(isNumber(ch));
-              //alert(result_arr[0][0]);
-              //alert(total_lenght);
-
+              
 
 
               var col_code_obj = "<tr><th id='00-000' rowspan='1' style='width: 100px'>Date</th><th style='width: 100%'></th></tr>";
@@ -683,7 +529,6 @@ background: #88ba1c;
 
 
               liTag += `${final_col_code_obj}`;
-              //alert(liTag);
 
 
             } // creating li of all days of current month
@@ -702,34 +547,9 @@ background: #88ba1c;
 
 
             /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
-            //var check =  result_arr[1][0];
             let plan = "";
             if (is_empty == 0) {
 
-              /*for(let e = 0; e <  total_lenght; e++){
-                  if(i == result_arr[e][0]){
-                       //alert("true" + i);
-                       var color = result_arr[e][7];
-                       var object = result_arr[e][3];
-                       var name = result_arr[e][2];
-                       var log_from = result_arr[e][8];
-                       var log_to = result_arr[e][9];
-                       var pla_from = result_arr[e][5];
-                       var pla_to = result_arr[e][6];
-                       var com = result_arr[e][4];
-                       var com_from = result_arr[e][10];
-                       var com_to = result_arr[e][11];
-                       color = color.substring(1, color.length-1);
-                       name = name.substring(1, name.length-1);
-                       object = object.substring(1, object.length-1);
-                       log_from = log_from.substring(1, log_from.length-4);
-                       log_to = log_to.substring(1, log_to.length-4);
-                       pla_from = pla_from.substring(1, pla_from.length-4);
-                       pla_to = pla_to.substring(1, pla_to.length-4);
-                       com = com.substring(1, com.length-1);
-                       plan = plan + '<div class="row" style="width:100%;height:100%"><div class="col-12" style="width:100%;height:100%; margin:auto"><div class="p-3 mb-2 text-white" style="background-color:'+color+';"><div class="row"><div class="col-16"><p style="font-size: 23px">'+object+' - '+name+'</p></div></div><div class="row"><div class="col-6"><p style="font-size: 15px">Planned from: '+pla_from+'</p><p style="font-size: 15px">Planned to:      '+pla_to+'</p><p style="font-size: 15px">Comment:      '+com+'</p></div><div class="col-6"><p style="font-size: 15px">Loged from: '+log_from+'</p><p style="font-size: 15px">Loged to: '+log_to+'</p><p style="font-size: 15px">Log-in comment: '+com_from+'</p><p style="font-size: 15px">Log-out comment: '+com_to+'</p></div></div></div></div></div>';
-                  }
-              }*/
             }
             if (i < 10) {
               var ii = "0" + i;
@@ -737,11 +557,6 @@ background: #88ba1c;
               var ii = i;
             }
             plan = '<div class="form-group"><input id="fr' + ii + '" class="form-control" style="text-align: center;margin-top:10px;margin-left:10px;height:50px;width:100px;font-size:15px" type="time" value="' + from_result_arr[i - 1] + '"><div class="form-group"><input id="to' + ii + '" class="form-control" style="text-align: center;margin-left:10px;height:50px;width:100px;font-size:15px" type="time" value="' + to_result_arr[i - 1] + '"></div></div><button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-bottom:10px;margin-left:10px;width: 25px;height: 25px;padding:0px;float:left" title="Copy" onClick="copy_cell(this.id)" id="co' + ii + '">c<button><button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-bottom:10px;margin-left:50px;width: 25px;height: 25px;padding:0px;float:left" title="Paste" onClick="paste_cell(this.id)" id="pa' + ii + '">P<button>';
-            //alert(check);
-            //check =check.substring(1,check.length-1);
-            /*if(check != ""){
-               alert(i+ "suc");
-            }*/
 
             let dts = "";
 
@@ -764,7 +579,6 @@ background: #88ba1c;
 
 
             if (i == 1) {
-              //alert("kjasd--");
               liTag += `<br>`;
             }
 
@@ -780,7 +594,6 @@ background: #88ba1c;
 
           currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
           daysTag.innerHTML = liTag;
-          //alert("kjashjg");
         }
 
 
@@ -800,11 +613,9 @@ background: #88ba1c;
             } else {
               date = new Date(); // pass the current date as date value
             }
-            //first = 1;
             renderCalendar(); // calling renderCalendar function
 
 
-            //add_dat();
 
 
           });
@@ -853,42 +664,23 @@ background: #88ba1c;
 
             var kla = "fr";
             let ml = kla + q;
-            //alert(ml);
             var myElem = document.getElementById(ml);
             if (myElem != null) {
 
               to.push($("#to" + q).val());
               from.push($("#fr" + q).val());
-              /*id_shift.push($("#i00-" + p).val());
-              nameid.push($("#hn" + q + "-" + p).val());
-              name.push($("#bn" + q + "-" + p).val());
-              area.push($("#tx" + q + "-" + p).val());
-              var ids = $("#i00-" + p).val();
-              if (id_shift_delete.includes(ids)) {
-              } else {
-                id_shift_delete.push(ids);
-              }*/
               var ym = $("#current_load_date").val();
               let h = ym + "-" + q;
               date.push(h);
-              /*alert(h);
-              alert($("#to" + q ).val());
-              alert($("#fr" + q ).val());*/
-              //alert(ym);
             }
 
 
           }
           var fromTime = JSON.stringify(from);
           var toTime = JSON.stringify(to);
-          //var idArr = JSON.stringify(id_shift);
+
           var dateArr = JSON.stringify(date);
-          /*var deleteArr = JSON.stringify(id_shift_delete);
-          var nameidArr = JSON.stringify(nameid);
-          var nameArr = JSON.stringify(name);
-          var areaArr = JSON.stringify(area);*/
-          //alert(fromTime);
-          //alert(toTime);
+
           var year_month = $("#current_load_date").val();
           $.ajax({
             url: "../options/insert_time_options.php",

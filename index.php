@@ -30,15 +30,16 @@ if (isset($_SESSION["user2_id"])) {
         <hr>
         <h1>Welcome</h1>
         <button onclick="navigateToPage1()">Log in</button>
-        <button onclick="navigateToPage2()">Sign up</button>        
+        <button onclick="navigateToPage2()">Sign up</button>   
+        <small><a href="log/verification.php">I want to vertify my account</a></small>     
     </div>
 
     <script>
         function navigateToPage1() {
-            window.location.href = "login.php";
+            window.location.href = "log/login.php";
         }
         function navigateToPage2() {
-            window.location.href = "signup.html";
+            window.location.href = "log/signup.html";
         }
     </script>
 </body>

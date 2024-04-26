@@ -1,12 +1,11 @@
 <?php
-//$mysqli_sav = require __DIR__ . "/database.php";
-$mysqli_sav = require("../database.php");
+$mysqli_sav = require ("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
 $input = $_POST['input'];
 $sql = " SELECT * FROM create_shift WHERE id_shift='$input'";
 $get = mysqli_query($conn, $sql);
-$saved_data[]= array();
+$saved_data[] = array();
 while ($row = $get->fetch_assoc()) {
     $saved_data[0] = $row['monday'];
     $saved_data[1] = $row['mon_from'];

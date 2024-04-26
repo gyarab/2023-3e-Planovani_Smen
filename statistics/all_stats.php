@@ -5,10 +5,9 @@ $cons = "";
 session_start();
 /**na zacatku kazdeho souboru, ktery slozi jako html strana je pripojeni do databaze, ktere kontroluje pres session
  * , zda-li uzivatel v databazi existuje a zda-li ma opravni na nahlednuti do souboru
-*/
+ */
 if (isset($_SESSION["user2_id"])) {
-    $mysqli = require("../database.php");
-    //$mysqli = require __DIR__ . "/database.php";
+    $mysqli = require ("../database.php");
 
     $sql = "SELECT * FROM user2
             WHERE id = {$_SESSION["user2_id"]}";
@@ -24,8 +23,7 @@ if (isset($_SESSION["user2_id"])) {
 
     }
 }
-$mysqli1 = require("../database.php");
-//$mysqli1 = require __DIR__ . "/database.php";
+$mysqli1 = require ("../database.php");
 $sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
 $result1 = $mysqli1->query($sql1);
 $mysqli1->close();
@@ -154,7 +152,7 @@ $mysqli1->close();
                     <option id="opt_man-0" value="0">Pick a employee</option>
                     <?php
                     /** nacteni vsech uzivatelu do select boxu */
-                    $mysqli = require __DIR__ . "/database.php";
+                    $mysqli = require ("../database.php");
 
                     $conn = new mysqli($host, $username, $password, $dbname);
                     $query7 = "SELECT * FROM user2 ORDER BY lastname, firstname ";
@@ -177,7 +175,8 @@ $mysqli1->close();
 
                     ?>
                 </Select>
-                <button id="unselect" style="display: none;margin-left: 15px" onclick="Unselect()" class="btn btn-danger">Unselect</button>
+                <button id="unselect" style="display: none;margin-left: 15px" onclick="Unselect()"
+                    class="btn btn-danger">Unselect</button>
                 <script>
                     /** vyhledavani uzivatelu pres searchbar */
                     $("#search_bar_em").keyup(function () {
@@ -197,10 +196,10 @@ $mysqli1->close();
                     });
                     /** vybrani uzivatele pres select */
                     $('#select_em').change(function () {
-                    var srch = $(this).val();
-                    if (srch != 0) {
+                        var srch = $(this).val();
+                        if (srch != 0) {
 
-                        var ph = document.getElementById("opt_em-" + srch).innerText;
+                            var ph = document.getElementById("opt_em-" + srch).innerText;
                             document.getElementById('search_bar_em').value = ph;
                             document.getElementById('assi_search').innerHTML = "";
                             const selec2 = document.querySelector('#select_em');
@@ -213,27 +212,27 @@ $mysqli1->close();
                             document.getElementById("table_stat").style.display = "";
                             usid = srch;
                             loader();
-                    }
+                        }
                     });
                     var global_id;
                     /**funkce na vybrani uzivatele pres searchbar */
                     function push(vvv) {
-                            var ph = document.getElementById("op_em" + vvv).innerText;
-                            document.getElementById('search_bar_em').value = ph;
-                            document.getElementById('assi_search').innerHTML = "";
-                            const selec2 = document.querySelector('#select_em');
-                            selec2.value = vvv;
-                            em_sel = vvv;
-                            document.getElementById('search_bar_em').readOnly = true;
-                            document.getElementById('select_em').disabled = true;
-                            document.getElementById("unselect").style.display = "";
-                            document.getElementById("chart").style.display = "";
-                            document.getElementById("table_stat").style.display = "";
-                            usid = vvv;
-                            loader();
-                            
+                        var ph = document.getElementById("op_em" + vvv).innerText;
+                        document.getElementById('search_bar_em').value = ph;
+                        document.getElementById('assi_search').innerHTML = "";
+                        const selec2 = document.querySelector('#select_em');
+                        selec2.value = vvv;
+                        em_sel = vvv;
+                        document.getElementById('search_bar_em').readOnly = true;
+                        document.getElementById('select_em').disabled = true;
+                        document.getElementById("unselect").style.display = "";
+                        document.getElementById("chart").style.display = "";
+                        document.getElementById("table_stat").style.display = "";
+                        usid = vvv;
+                        loader();
 
-                        }
+
+                    }
                 </script>
                 <!-- vybrani mesicee -->
                 <select id="month" name="month" style="margin-left:10px;float:right">
@@ -255,7 +254,7 @@ $mysqli1->close();
                 </select>
                 <div id="assi_search" style="width:550px">
 
-                      </div>
+                </div>
                 <br>
                 <br>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
@@ -330,6 +329,51 @@ $mysqli1->close();
                         </div>
                         <hr>
                     </div>
+                    <br>
+                    <br>
+                    <div class="row">
+
+                        <div class='col-12 col-md-6'>
+                            <h5>Log times</h5>
+                            <br>
+                            <div class="row">
+                                <div class='col-12 col-md-4'>
+                                    <h6>Date</h6>
+                                </div>
+                                <div class='col-12 col-md-4'>
+                                    <h6>From</h6>
+                                </div>
+                                <div class='col-12 col-md-4'>
+                                    <h6>To</h6>
+                                </div>
+                                <hr>
+                                <br>
+                            </div>
+                            <div id="log_table">
+
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-6'>
+                            <h5>Break times</h5>
+                            <br>
+                            <div class="row">
+                                <div class='col-12 col-md-4'>
+                                    <h6>Date</h6>
+                                </div>
+                                <div class='col-12 col-md-4'>
+                                    <h6>From</h6>
+                                </div>
+                                <div class='col-12 col-md-4'>
+                                    <h6>To</h6>
+                                </div>
+                                <hr>
+                                <br>
+                            </div>
+                            <div id="break_table">
+
+                            </div>
+                        </div>
+                    </div>
                     <!-- konec tabulky statistiky -->
                 </div>
 
@@ -357,12 +401,12 @@ $mysqli1->close();
                     }
                     function Unselect() {
                         document.getElementById('search_bar_em').readOnly = false;
-                            document.getElementById('select_em').disabled = false;
-                            document.getElementById('select_em').value = 0;
-                            document.getElementById('search_bar_em').value = "";
-                            document.getElementById("unselect").style.display = "none";
-                            document.getElementById("chart").style.display = "none";
-                            document.getElementById("table_stat").style.display = "none";
+                        document.getElementById('select_em').disabled = false;
+                        document.getElementById('select_em').value = 0;
+                        document.getElementById('search_bar_em').value = "";
+                        document.getElementById("unselect").style.display = "none";
+                        document.getElementById("chart").style.display = "none";
+                        document.getElementById("table_stat").style.display = "none";
                     }
                     function load_char() {
                         var chLine = document.getElementById("chLine");
@@ -484,6 +528,7 @@ $mysqli1->close();
                             document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + Math.trunc(sum_log_r) + "h&nbsp;" + Math.trunc(sum_log_r * 3600 % 3600 / 60) + "min";
                         }
                     });
+
                     for (var g = 0; g < max_day; g++) {
                         yValues[g] = return_var[g] / 3600;
 
@@ -497,7 +542,6 @@ $mysqli1->close();
 
                     $('#year').change(function () {
                         inp1 = $(this).val();
-                        //alert(inp1);
                         xValues = [];
                         yValues = [];
                         return_var = [];
@@ -513,8 +557,6 @@ $mysqli1->close();
                             async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
-                                //$("#object").html(data);
-                                //alert(data);
                                 return_var = data;
                             }
                         });
@@ -527,7 +569,6 @@ $mysqli1->close();
 
                         var canva = document.createElement("canvas");
                         canva.id = "chLine";
-                        //input.className = "css-class-name"; // set the CSS class
                         div_can.appendChild(canva);
                         load_char();
 
@@ -539,23 +580,16 @@ $mysqli1->close();
                         $.ajax({
                             url: "../statistics/load_my_stats_table.php",
                             method: "POST",
-                            //dataType: "json",
-                            //cache: false,
-                            //async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
                                 $("#stat_table").html(data);
-                                //alert(data);
-                                //return_var = data;
                                 var counter = 0;
                                 for (; ;) {
                                     if (document.getElementById("s" + counter) != null) {
-                                        //alert("jkhfasdsjkh");
                                         sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                         sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                         sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                         sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                        //alert(sum_sch);
                                     } else {
                                         break;
                                     }
@@ -580,18 +614,12 @@ $mysqli1->close();
                                     document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                     document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                 }
-                                /*alert(counter);
-                                alert(sum_sch);
-                                alert(sum_log);
-                                alert(sum_sch_r);
-                                alert(sum_log_r);*/
 
 
                             }
                         });
                     });
-                    function loader(){
-                        //inp2 = $(this).val();
+                    function loader() {
                         xValues = [];
                         yValues = [];
                         return_var = [];
@@ -607,8 +635,6 @@ $mysqli1->close();
                             async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
-                                //$("#object").html(data);
-                                //alert(data);
                                 return_var = data;
 
 
@@ -628,21 +654,11 @@ $mysqli1->close();
                                 pointBackgroundColor: colors[0]
                             }]
                         };
-                        //alert("jkdsajh");
-                        //var context1 = document.querySelector('#chLine').getContext('2d');
-                        //new Chart(context1).Line(data1);
-                        //load_char();
-                        //alert(inp2);
-                        //document.getElementById("chLine").data.datasets[0].data = yValues;
-                        //document.getElementById("chLine").chart.data.labels = xValues;
-                        //document.getElementById("chLine").update();
-                        //document.getElementById("chLine").destroy();
                         var div_can = document.getElementById("div_can");
                         div_can.innerText = "";
 
                         var canva = document.createElement("canvas");
                         canva.id = "chLine";
-                        //input.className = "css-class-name"; // set the CSS class
                         div_can.appendChild(canva);
                         load_char();
 
@@ -650,27 +666,19 @@ $mysqli1->close();
                         sum_log = 0;
                         sum_sch_r = 0;
                         sum_log_r = 0;
-                        alert("is");
                         $.ajax({
                             url: "../statistics/load_my_stats_table.php",
                             method: "POST",
-                            //dataType: "json",
-                            //cache: false,
-                            //async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
                                 $("#stat_table").html(data);
-                                //alert(data);
-                                //return_var = data;
                                 var counter = 0;
                                 for (; ;) {
                                     if (document.getElementById("s" + counter) != null) {
-                                        //alert("jkhfasdsjkh");
                                         sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                         sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                         sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                         sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                        //alert(sum_sch);
                                     } else {
                                         break;
                                     }
@@ -695,17 +703,32 @@ $mysqli1->close();
                                     document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                     document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                 }
-                                /*alert(counter);
-                                alert(sum_sch);
-                                alert(sum_log);
-                                alert(sum_sch_r);
-                                alert(sum_log_r);*/
+
 
 
                             }
-                    
-                });
-            }
+
+
+                        });
+                        document.getElementById("log_table").innerHTML = "";
+                        $.ajax({
+                            url: "../statistics/load_table_log.php",
+                            method: "POST",
+                            data: { year: year, id: usid, month: month },
+                            success: function (data) {
+                                $("#log_table").html(data);
+                            }
+                        });
+                        document.getElementById("break_table").innerHTML = "";
+                        $.ajax({
+                            url: "../statistics/load_table_break.php",
+                            method: "POST",
+                            data: { year: year, id: usid, month: month },
+                            success: function (data) {
+                                $("#break_table").html(data);
+                            }
+                        });
+                    }
 
 
 
@@ -726,8 +749,7 @@ $mysqli1->close();
                             async: false,
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
-                                //$("#object").html(data);
-                                //alert(data);
+
                                 return_var = data;
 
 
@@ -747,21 +769,12 @@ $mysqli1->close();
                                 pointBackgroundColor: colors[0]
                             }]
                         };
-                        //alert("jkdsajh");
-                        //var context1 = document.querySelector('#chLine').getContext('2d');
-                        //new Chart(context1).Line(data1);
-                        //load_char();
-                        //alert(inp2);
-                        //document.getElementById("chLine").data.datasets[0].data = yValues;
-                        //document.getElementById("chLine").chart.data.labels = xValues;
-                        //document.getElementById("chLine").update();
-                        //document.getElementById("chLine").destroy();
+
                         var div_can = document.getElementById("div_can");
                         div_can.innerText = "";
 
                         var canva = document.createElement("canvas");
                         canva.id = "chLine";
-                        //input.className = "css-class-name"; // set the CSS class
                         div_can.appendChild(canva);
                         load_char();
 
@@ -773,23 +786,18 @@ $mysqli1->close();
                         $.ajax({
                             url: "../statistics/load_my_stats_table.php",
                             method: "POST",
-                            //dataType: "json",
-                            //cache: false,
-                            //async: false,
+
                             data: { year: inp1, id: usid, month: inp2 },
                             success: function (data) {
                                 $("#stat_table").html(data);
-                                //alert(data);
-                                //return_var = data;
+
                                 var counter = 0;
                                 for (; ;) {
                                     if (document.getElementById("s" + counter) != null) {
-                                        //alert("jkhfasdsjkh");
                                         sum_sch = sum_sch + Number(document.getElementById("s" + counter).innerHTML);
                                         sum_log = sum_log + Number(document.getElementById("l" + counter).innerHTML);
                                         sum_sch_r = sum_sch_r + Number(document.getElementById("sr" + counter).innerHTML);
                                         sum_log_r = sum_log_r + Number(document.getElementById("lr" + counter).innerHTML);
-                                        //alert(sum_sch);
                                     } else {
                                         break;
                                     }
@@ -814,11 +822,7 @@ $mysqli1->close();
                                     document.getElementById("lt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                     document.getElementById("lrt_hm").innerHTML = "&nbsp;-&nbsp;&nbsp;" + 0 + "h&nbsp;" + 0 + "min";
                                 }
-                                /*alert(counter);
-                                alert(sum_sch);
-                                alert(sum_log);
-                                alert(sum_sch_r);
-                                alert(sum_log_r);*/
+
 
 
                             }

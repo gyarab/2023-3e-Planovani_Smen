@@ -4,8 +4,7 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-    //$mysqli = require __DIR__ . "/database.php";
-    $mysqli = require("../database.php");
+    $mysqli = require ("../database.php");
 
     $sql = "SELECT * FROM user2
             WHERE id = {$_SESSION["user2_id"]}";
@@ -13,14 +12,15 @@ if (isset($_SESSION["user2_id"])) {
     $result = $mysqli->query($sql);
 
     $user = $result->fetch_assoc();
+    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $resultp = $mysqli->query($sqlp);
+    while ($rrr = $resultp->fetch_assoc()) {
+        $userp = $rrr['position'];
+        $userid = $rrr['id'];
+
+    }
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$mysqli = require("../database.php");
-
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
 
 ?>
 
@@ -55,7 +55,6 @@ $mysqli1->close();*/
             width: 100%;
             padding: 10px;
             box-shadow: 5px 10px #888888;
-            /*margin-left: 10px;*/
         }
 
         .head {
@@ -135,7 +134,7 @@ $mysqli1->close();*/
 </head>
 
 <body onload="startTime()">
-    <?php if (isset($user)): ?>
+    <?php if (isset($user) && ($userp == "admin" || $userp == "manager")): ?>
 
 
         <div class="container">
@@ -231,8 +230,8 @@ $mysqli1->close();*/
                     </div>
                     <div class="container">
                         <div style="overflow:auto">
-                        <div id="mdiv"></div>
-    </div>
+                            <div id="mdiv"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -253,8 +252,7 @@ $mysqli1->close();*/
                             <Select id="select_man" class="size='1'" style="display: inline">
                                 <option id="opt_man-0" value="0">Pick a manager</option>
                                 <?php
-                                //$mysqli = require __DIR__ . "/database.php";
-                                $mysqli = require("../database.php");
+                                $mysqli = require ("../database.php");
 
 
                                 $conn = new mysqli($host, $username, $password, $dbname);
@@ -321,7 +319,6 @@ $mysqli1->close();*/
                             <br>
                             <p id="sel_obj" style="display:none">Select OBJECT :</p>
                             <Select id="select_obj" style="display: inline;visibility:hidden">
-                                <!--<option value="0">Pick a object</option>-->
                                 <?php
                                 $counter = 0;
                                 if (mysqli_num_rows($result2) > 0) {
@@ -356,7 +353,6 @@ $mysqli1->close();*/
                             <script>
                                 var click = 1;
                                 function rad(clicked) {
-                                    //alert(clicked);
                                     if (click != clicked) {
                                         click = clicked;
                                         if (clicked == 1) {
@@ -378,7 +374,6 @@ $mysqli1->close();*/
                                                 document.getElementById("spa1m").style.border = "";
                                             }
                                             var kka = "spa" + previous;
-                                            //alert(kka);
                                             let ffa = document.getElementById(kka);
                                             if (ffa.style.backgroundColor != 'rgb(5, 99, 98)') {
                                                 ffa.style.backgroundColor = 'rgb(76, 175, 80)';
@@ -390,7 +385,6 @@ $mysqli1->close();*/
 
 
                                         } else {
-                                            //alert(document.getElementById("spa" + previous).name);
                                             var h = document.getElementById("spa" + previous).name;
                                             h = h.substring(1);
                                             var m;
@@ -404,19 +398,13 @@ $mysqli1->close();*/
                                                     input: h
                                                 },
                                                 success: function (data) {
-                                                    //alert(data);
-                                                    /*document.getElementById("help2").value = data321;
- 
-                                                    a1sa = JSON.stringify(data321);*/
+
                                                     m = JSON.stringify(data);
                                                 }
                                             });
-                                            //alert(m);
                                             let sarr = new Array();
                                             m = m.substring(1, m.length - 1);
-                                            //alert(m);
                                             if (m.length != 0) {
-                                                //alert("true");
 
                                                 sarr = m.split(",");
                                                 for (let u = 0; u < sarr.length; u++) {
@@ -432,36 +420,12 @@ $mysqli1->close();*/
                                                             j[0].style.color = '#fff';
                                                             j[0].style.border = "solid #4CAF50";
                                                             j[0].style.border = "solid #202020";
-                                                            /*document.getElementById("spa" + t).style.border = "";
-                                                            if (document.getElementById("spa" + t).style.backgroundColor == 'rgb(5, 99, 98)') {
-                                                                document.getElementById("spa" + t).style.border = "solid rgb(5, 99, 98)";
-                                                            }*/
                                                         }
                                                         j[0].style.border = "solid #202020";
 
-                                                        //j[0].style.border = "solid #202020";
                                                     }
                                                 }
                                             }
-
-
-                                            /*var t = 1;
-                                            for (; ;) {
-                                                if (document.getElementById("spa" + t) == null) {
-                                                    break;
-                                                }
-                                                if (document.getElementById("spa" + t).matches('.tree li input::before')) {
-                                                    document.getElementById("spa" + t).style.backgroundColor = 'rgb(76, 175, 80)';
-                                                    document.getElementById("spa" + t).style.color = '#fff';
-                                                    document.getElementById("spa" + t).style.border = "solid #4CAF50";
-                                                }
-                                                t++;
-                                            }
-                                            if (document.getElementById("spa1m").matches('.tree li input:hover+ul li input ')) {
-                                                document.getElementById("spa1m").style.backgroundColor = 'rgb(76, 175, 80)';
-                                                document.getElementById("spa1m").style.color = '#fff';
-                                                document.getElementById("spa1m").style.border = "solid #4CAF50";
-                                            }*/
 
 
                                         }
@@ -481,15 +445,12 @@ $mysqli1->close();*/
                             <Select id="select_em" style="display: inline">
                                 <option id="opt_man-0" value="0">Pick a employee</option>
                                 <?php
-                                //$mysqli = require __DIR__ . "/database.php";
-                                $mysqli = require("../database.php");
+                                $mysqli = require ("../database.php");
 
 
                                 $conn = new mysqli($host, $username, $password, $dbname);
                                 $query7 = "SELECT * FROM user2 ORDER BY lastname, firstname ";
-                                //$query8 = "SELECT * FROM list_of_objects WHERE superior_object_name='' ";
                                 $result7 = mysqli_query($conn, $query7);
-                                //$result8 = mysqli_query($conn, $query8);
                                 if (mysqli_num_rows($result7) > 0) {
                                     while ($row_em = mysqli_fetch_assoc($result7)) {
                                         $id_em = $row_em['id'];
@@ -520,11 +481,9 @@ $mysqli1->close();*/
                                 </font>
                             </strong>
                             <br>
-                            <!--<br>-->
                             <p id="p_assi" style="display: none">
                                 <font size="+1">Assigned shifts:</font>
                             </p>
-                            <!--<br>-->
                             <div id="assignment" style="display: none">
 
                             </div>
@@ -543,12 +502,6 @@ $mysqli1->close();*/
                         </div>
                         <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
                             <p id="text_shi" style="visibility:hidden">Selected shifts :</p>
-                            <!--<select id='se_shi' style="visibility:hidden" class='form-select' size='12'
-                                aria-label='size 3 select example'>
-                                <option value=""></option><button>jb</button>
-                            </select>-->
-                            <!--<br>
-                            <br>-->
                             <div id='se_shi' style="height: 300px; overflow: auto;border: solid #aaaaaf;display:none">
                                 <ul id="ul_shi" class="list-group">
                                 </ul>
@@ -561,8 +514,7 @@ $mysqli1->close();*/
 
                     <select name="option_sh" id="option_sh">
                         <?php
-                        //$mysqli2 = require __DIR__ . "/database.php";
-                        $mysqli2 = require("../database.php");
+                        $mysqli2 = require ("../database.php");
 
                         $sqlsh = " SELECT * FROM list_of_objects ORDER BY object_name";
                         $resultsh = $mysqli2->query($sqlsh);
@@ -591,7 +543,6 @@ $mysqli1->close();*/
 
                     <script>
                         let type_btn = 2;
-                        //let sa = JSON.stringify(typsa);
                     </script>
                     <script>
 
@@ -610,7 +561,6 @@ $mysqli1->close();*/
 
                         $('#option_sh').change(function () {
                             var inp = $(this).val();
-                            //alert(sa);
                             $.ajax({
 
 
@@ -622,10 +572,6 @@ $mysqli1->close();*/
                                 }
                             });
                         });
-                        /*$('#se_em').change(function () {
-                            var inp = $(this).val();
-                            alert(inp);
-                        });*/
                         function push(vvv) {
                             var ph = document.getElementById("op_em" + vvv).innerText;
                             document.getElementById('search_bar_em').value = ph;
@@ -643,19 +589,15 @@ $mysqli1->close();*/
                             document.getElementById('sel_text_em').style.visibility = "visible";
                             document.getElementById('se_shi').style.display = "";
                             document.getElementById('text_shi').style.visibility = "visible";
-                            //document.getElementById('p_assi').style.display = "";
                             document.getElementById('assignment').style.display = "";
                             document.getElementById('clear_btn').style.display = "";
 
-                            //alert(vvv);
                             $.ajax({
                                 url: "../rights_assignments/load_assignment_employee.php",
                                 method: "POST",
                                 data: { input: em_sel },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
                                     $("#assignment").html(data);
-                                    //alert(data);
                                 }
                             });
 
@@ -672,7 +614,6 @@ $mysqli1->close();*/
                             document.getElementById('sel_text_em').style.visibility = "hidden";
                             document.getElementById('se_shi').style.display = "none";
                             document.getElementById('text_shi').style.visibility = "hidden";
-                            //document.getElementById('p_assi').style.display = "none";
                             document.getElementById('assignment').style.display = "none";
                             document.getElementById('clear_btn').style.display = "none";
                             em_sel = 0;
@@ -685,8 +626,6 @@ $mysqli1->close();*/
                                 method: "POST",
                                 data: { id: shiarr, name: shiname, id_user: em_sel },
                                 success: function (data) {
-                                    //$("#manager_search").css("display", "inline");
-                                    //$("#assi_search").html(data);
                                     alert("Shifts were assigned successfully");
                                 }
                             });
@@ -695,9 +634,7 @@ $mysqli1->close();*/
                                 method: "POST",
                                 data: { input: em_sel },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
                                     $("#assignment").html(data);
-                                    //alert(data);
                                 }
                             });
                         }
@@ -711,7 +648,6 @@ $mysqli1->close();*/
                                     method: "POST",
                                     data: { input: input },
                                     success: function (data) {
-                                        //$("#manager_search").css("display", "inline");
                                         $("#assi_search").html(data);
                                     }
                                 });
@@ -721,32 +657,20 @@ $mysqli1->close();*/
                         var shiname = new Array();
                         function Select_sh(click) {
                             if (em_sel != 0) {
-                                //alert(click);
                                 var z = click.substring(5);
-                                //var x = document.getElementById("se_shi");
                                 if (document.getElementById("li_shi-" + z) == null) {
                                     var xx = document.getElementById("ul_shi");
-                                    //var option = document.createElement("option");
                                     var optionx = document.createElement("li");
-                                    //var  = document.createElement("option");
                                     var g = document.getElementById("h_shi-" + z).innerHTML;
                                     var w = document.getElementById("h_obj-" + z).innerHTML;
-                                    //alert(g);
-                                    //option.innerHTML = "<div id='div_shi-"+click+"'><p>"+g+"<input class='btn btn-danger' type='button' value='X' style='paddling:0px;font: 1px Arial,width: 24px;height: 24px; float: right'>*/</p></div>";
-                                    //option.innerHTML = "<div id='div_shi-"+click+"'><p>"+g+"<button class='btn btn-danger' onclick='arra()' style='float: right'><i class='bi bi-trash'></i></button></p></div>";
-                                    // option.value = z;
                                     shiarr.push(z);
                                     shiname.push(g);
                                     optionx.innerHTML = "<div id='div_shi-" + z + "'><p>" + w + "" + g + "<button id='de_shi-" + z + "' class='btn btn-danger' onclick='Delete_shi(this.id)' style='float: right'><i class='bi bi-trash'></i></button></p></div>";
-                                    //option.disabled = true;
                                     optionx.setAttribute("id", "li_shi-" + z);
                                     optionx.classList.add("list-group-item");
-                                    //x.add(option);
-                                    //xx.add(optionx);
                                     xx.appendChild(optionx);
-                                    //alert(shiname);
+
                                 }
-                                //document.getElementById("div_shi-"+z).innerHTML = "<input type='button' value='Remove' style='float: right'>";
                             }
 
                         }
@@ -757,60 +681,48 @@ $mysqli1->close();*/
                                 if (shiarr[i] === z) {
                                     shiarr.splice(i, 1);
                                     shiname.splice(i, 1);
-                                    //console.log("Removed element: " + spliced);
-                                    //console.log("Remaining elements: " + arr);
                                 }
                             }
-                            //alert(shiname);
-                            //alert(z);
+
                         }
                         function Edit_assi() {
-                            //id_shift = clicked_id.substring(5);
                             var modal = document.getElementById("myModal");
                             var span = document.getElementsByClassName("close")[0];
                             modal.style.display = "block";
                             $.ajax({
-                                    url: "../rights_assignments/edit_assignment.php",
-                                    method: "POST",
-                                    data: { input: em_sel },
-                                    success: function (data) {
-                                        //$("#manager_search").css("display", "inline");
-                                        $("#mdiv").html(data);
-                                    }
-                                });
+                                url: "../rights_assignments/edit_assignment.php",
+                                method: "POST",
+                                data: { input: em_sel },
+                                success: function (data) {
+                                    $("#mdiv").html(data);
+                                }
+                            });
                         }
                         function Delete_assi(click) {
-                            var id_btn =click.substring(2);
+                            var id_btn = click.substring(2);
                             $.ajax({
-                                    url: "../rights_assignments/delete_assignment.php",
-                                    method: "POST",
-                                    data: { input: em_sel, id : id_btn },
-                                    success: function (data) {
-                                        //$("#manager_search").css("display", "inline");
-                                        //$("#mdiv").html(data);
-                                        //alert(data);
-                                    }
-                                });
+                                url: "../rights_assignments/delete_assignment.php",
+                                method: "POST",
+                                data: { input: em_sel, id: id_btn },
+                                success: function (data) {
+                                }
+                            });
                             $.ajax({
-                                    url: "../rights_assignments/edit_assignment.php",
-                                    method: "POST",
-                                    data: { input: em_sel },
-                                    success: function (data) {
-                                        //$("#manager_search").css("display", "inline");
-                                        $("#mdiv").html(data);
-                                    }
-                                });
-                                $.ajax({
+                                url: "../rights_assignments/edit_assignment.php",
+                                method: "POST",
+                                data: { input: em_sel },
+                                success: function (data) {
+                                    $("#mdiv").html(data);
+                                }
+                            });
+                            $.ajax({
                                 url: "../rights_assignments/load_assignment_employee.php",
                                 method: "POST",
                                 data: { input: em_sel },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
                                     $("#assignment").html(data);
-                                    //alert(data);
                                 }
                             });
-                            //alert(id_btn);
                         }
                         function Clear_btn() {
                             if (shiarr.length > 0) {
@@ -819,11 +731,9 @@ $mysqli1->close();*/
                                 }
                                 shiarr = [];
                                 shiname = [];
-                                //alert(shiarr);
                             }
 
                         }
-                        //document.getElementById("div_shi-"+z).innerHTML = "<input type='button' value='Remove' style='float: right'>";
 
                     </script>
 
@@ -835,22 +745,15 @@ $mysqli1->close();*/
                 function Open_edit(dkas) {
 
                 }
-                //$(document).ready(function(){
-                //var input_obj = getElementById('select_obj').value;
-                //var input_obj = getElementById('select_obj').value;
-                //alert("ff");
-                //var ChA = JSON.parse(input);
+
                 var input_obj =
                     <?php echo json_encode($pick); ?>;
-                //alert(input_obj);
                 $.ajax({
                     url: "../rights_assignments/load_object_in_rights.php",
                     method: "POST",
                     data: { input: input_obj },
                     success: function (data) {
-                        //$("#searchresult").css("display", "inline");
                         $("#object").html(data);
-                        //alert(data);
                     }
                 });
 
@@ -861,12 +764,6 @@ $mysqli1->close();*/
                 $("#search_bar").keyup(function () {
 
                     var input = $(this).val();
-                    //var qkk = "kldsa";
-                    //var btna = "lasds";
-                    //alert(input);
-                    //alert("hello");
-                    //if(input != ""){
-                    //alert(input);
                     if (input != null) {
 
                         $.ajax({
@@ -878,12 +775,10 @@ $mysqli1->close();*/
                                 $("#manager_search").html(data);
                             }
                         });
-                        /*}else{
-                          $("#searchresult").css("display", "none");
-                        }*/
+
                     }
                 });
-                //});
+
                 var man_sel;
                 function Unselect() {
                     document.getElementById('sel_text').style.visibility = "hidden";
@@ -928,7 +823,7 @@ $mysqli1->close();*/
 
                 let barr = new Array();
                 function Pick_manger(clicked_id) {
-                    let mm = /*clicked_id.substring(8)*/ clicked_id;
+                    let mm = clicked_id;
                     var ph = document.getElementById("op_man" + clicked_id).innerText;
                     document.getElementById('search_bar').value = ph;
                     document.getElementById('manager_search').innerHTML = "";
@@ -975,7 +870,7 @@ $mysqli1->close();*/
 
 
 
-                    //alert("kjsajk");
+
 
                     var b;
                     barr = [];
@@ -987,9 +882,7 @@ $mysqli1->close();*/
                         async: false,
                         data: { input: mm },
                         success: function (data) {
-                            //$("#searchresult").css("display", "inline");
-                            //$("#right").html(data);
-                            //alert(data);
+
                             b = JSON.stringify(data);
                         }
                     });
@@ -1004,18 +897,15 @@ $mysqli1->close();*/
                         }
 
                         for (let u = 0; u < barr.length; u++) {
-                            //if(document.getElementsByName("s" + barr[u]) == null){
-                            //alert("true");
                             var y = document.getElementsByName("s" + barr[u]);
                             if (y[0] != null) {
-                                //alert("true");
+
 
                                 y[0].style.backgroundColor = '#056362';
                                 y[0].style.color = '#fff';
                                 y[0].style.border = "solid #056362";
                             }
-                            //y[0].style.border = "solid #202020";
-                            //}
+
                         }
                     }
 
@@ -1025,38 +915,21 @@ $mysqli1->close();*/
                         method: "POST",
                         data: { input: mm },
                         success: function (data) {
-                            //$("#searchresult").css("display", "inline");
                             $("#right").html(data);
-                            //alert(data);
                         }
                     });
-                    //alert(ph);
                 }
                 function Mark() {
-                    //alert(barr.length);
-                    /*for (let u = 0; u < barr.length; u++) {
-                        alert(barr[u]);
-                    }*/
-                    //sleep(2000).then(() => {
-                    //if (barr.length != 0) {
+
                     for (let u = 0; u < barr.length; u++) {
-                        //alert(barr[u]);
-                    }
-                    for (let u = 0; u < barr.length; u++) {
-                        //if(document.getElementsByName("s" + barr[u]) == null){
-                        //alert("true");
                         var y = document.getElementsByName("s" + barr[u]);
                         if (y[0] != null) {
-                            //alert(y[0]);
 
                             y[0].style.backgroundColor = '#056362';
                             y[0].style.color = '#fff';
                             y[0].style.border = "solid #056362";
                         }
-                        //y[0].style.border = "solid #202020";
-                        //}
                     }
-                    //}
 
                 }
 
@@ -1067,29 +940,13 @@ $mysqli1->close();*/
                         method: "POST",
                         data: { input: inp },
                         success: function (data) {
-                            //$("#searchresult").css("display", "inline");
+
                             $("#object").html(data);
-                            //alert(data);
+
                             Mark();
                         }
                     });
 
-                    /*if (barr.length != 0) {
-                        for (let u = 0; u < barr.length; u++) {
-                            //if(document.getElementsByName("s" + barr[u]) == null){
-                            //alert("true");
-                            var y = document.getElementsByName("s" + barr[u]);
-                            if (y[0] != null) {
-                                alert("find");
-
-                                y[0].style.backgroundColor = '#056362';
-                                y[0].style.color = '#fff';
-                                y[0].style.border = "solid #056362";
-                            }
-                            //}
-                        }
-                    }*/
-                    //Mark();
                     previous = 0;
                 });
                 $('#select_man').change(function () {
@@ -1104,12 +961,18 @@ $mysqli1->close();*/
                         document.getElementById('search_bar').readOnly = true;
                         document.getElementById('select_man').disabled = true;
                         document.getElementById('text_inf').style.visibility = "visible";
-                        //document.getElementById('sel_text').style.visibility = "visible";
                         document.getElementById('add_l').style.visibility = "visible";
                         document.getElementById('Right').style.visibility = "visible";
                         document.getElementById('Edit').style.visibility = "visible";
                         document.getElementById('Unselect').style.visibility = "visible";
                         document.getElementById('p_right').style.visibility = "visible";
+                        document.getElementById('tree').style.display = "";
+                    document.getElementById('r1').style.display = "";
+                    document.getElementById('r2').style.display = "";
+                    document.getElementById('lr1').style.visibility = "";
+                    document.getElementById('lr2').style.visibility = "";
+                    document.getElementById('sel_obj').style.display = "";
+
                         previous = 0;
                         var t = 1;
                         for (; ;) {
@@ -1121,7 +984,6 @@ $mysqli1->close();*/
                                 document.getElementById("spa" + t).style.color = '';
                                 document.getElementById("spa" + t).style.border = "";
                             }
-                            //document.getElementById("spa" + t).style.border = "";
                             t++;
                         }
                         if (document.getElementById("spa1m").style.backgroundColor == 'rgb(76, 175, 80)' && document.getElementById("spa1m").style.backgroundColor != 'rgb(5, 99, 98)') {
@@ -1139,9 +1001,6 @@ $mysqli1->close();*/
                             async: false,
                             data: { input: man_sel },
                             success: function (data) {
-                                //$("#searchresult").css("display", "inline");
-                                //$("#right").html(data);
-                                //alert(data);
                                 b = JSON.stringify(data);
                             }
                         });
@@ -1156,18 +1015,13 @@ $mysqli1->close();*/
                             }
 
                             for (let u = 0; u < barr.length; u++) {
-                                //if(document.getElementsByName("s" + barr[u]) == null){
-                                //alert("true");
                                 var y = document.getElementsByName("s" + barr[u]);
                                 if (y[0] != null) {
-                                    //alert("true");
 
                                     y[0].style.backgroundColor = '#056362';
                                     y[0].style.color = '#fff';
                                     y[0].style.border = "solid #056362";
                                 }
-                                //y[0].style.border = "solid #202020";
-                                //}
                             }
                         }
 
@@ -1177,17 +1031,13 @@ $mysqli1->close();*/
                             method: "POST",
                             data: { input: man_sel },
                             success: function (data) {
-                                //$("#searchresult").css("display", "inline");
                                 $("#right").html(data);
-                                //alert(data);
                             }
                         });
 
                     } else {
-                        /*document.getElementById('search_bar').value = "";
-                        document.getElementById('sel_text').style.visibility = "hidden";*/
+
                     }
-                    //alert(ph);
                 });
 
                 var previous;
@@ -1253,21 +1103,11 @@ $mysqli1->close();*/
                             if (document.getElementById("spa1m").matches('.tree li input:hover+ul li input ')) {
                                 document.getElementById("spa1m").style.border = "solid #202020";
                             }
-                            //ffa.style.border = "solid #202020";
 
                         }
                         if (previous != "0" && previous != null) {
-                            /*var t = 1;
-                            for(;;){
-                                if(document.getElementById("spa"+t) == null){
-                                    break;
-                                }
-                                t++;
-                                //alert(t);
-                            }*/
                             if (click == 1) {
                                 var kka = "spa" + previous;
-                                //alert(kka);
                                 let ffa = document.getElementById(kka);
                                 if (ffa.style.backgroundColor != 'rgb(5, 99, 98)') {
                                     ffa.style.color = '';
@@ -1369,11 +1209,6 @@ $mysqli1->close();*/
                                 document.getElementById("spa" + t).style.backgroundColor = '';
                                 document.getElementById("spa" + t).style.color = '';
                                 document.getElementById("spa" + t).style.border = "";
-
-                                /*document.getElementById("spa" + t).style.border = "";
-                                if (document.getElementById("spa" + t).style.backgroundColor == 'rgb(5, 99, 98)') {
-                                    document.getElementById("spa" + t).style.border = "solid rgb(5, 99, 98)";
-                                }*/
                                 t++;
                             }
                             document.getElementById("spa1m").style.backgroundColor = '';
@@ -1467,7 +1302,6 @@ $mysqli1->close();*/
 
 
 
-                            //alert("went");
                             $.ajax({
                                 url: "../rights_assignments/add_man_right.php",
                                 method: "POST",
@@ -1476,14 +1310,9 @@ $mysqli1->close();*/
                                 async: false,
                                 data: { id_user: man_sel, id_object: id_ob, name_object: name_ob, branch: click, arr: sarr, type: type },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
-                                    //$("#object").html(data);
-                                    //alert(data);
                                     alert("Saved successfully");
-                                    //alert();
                                 }
                             });
-                            //alert("Saved successfully");
                             var b;
                             barr = [];
                             $.ajax({
@@ -1525,9 +1354,7 @@ $mysqli1->close();*/
                                 method: "POST",
                                 data: { input: man_sel },
                                 success: function (data) {
-                                    //$("#searchresult").css("display", "inline");
                                     $("#right").html(data);
-                                    //alert(data);
                                 }
                             });
                         }

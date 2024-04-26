@@ -1,15 +1,13 @@
 <?php
-//$mysqli2 = require __DIR__ . "/database.php";
-$mysqli2 = require("../database.php");
+$mysqli2 = require ("../database.php");
 
-//require __DIR__ . '/load_object2.php';
 
 $conn2 = new mysqli($host, $username, $password, $dbname);
 $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
 $data2 = array();
 $data3 = array();
 $numberval = array();
-$look1= array();
+$look1 = array();
 
 $input = $_POST['input'];
 if (mysqli_num_rows($fetch) > 0) {
@@ -31,12 +29,10 @@ for ($x = 0; $x < count($data2); $x++) {
     if ($data3[$x] == null) {
         static $dd = 1;
         $look = $data1[$x];
-        if ($input == $data1[$x]){
+        if ($input == $data1[$x]) {
             $find2[1] = $look;
             $find2[0] = 0;
-            //echo json_encode($obj);
             echo json_encode($find2);
-            //break;
         }
         $search = $data1[$x] . "";
         $numberval[$count] = $data1[$x] . "";
@@ -73,12 +69,10 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
             } else {
 
             }
-            if ($input == $dat1[$i]){
+            if ($input == $dat1[$i]) {
                 $find2[1] = $look;
                 $find2[0] = 1;
-                //echo json_encode($obj);
                 echo json_encode($find2);
-                //break;
             }
             $dd++;
             $row = 0;
@@ -98,7 +92,4 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
 
 
 }
-//$look = 0;
-//echo json_encode($find3);
-//echo $look;
 ?>

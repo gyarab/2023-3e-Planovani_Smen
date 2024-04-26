@@ -1,36 +1,40 @@
 <?php
-$id_arr = array();
-$name_arr = array();
-$position_arr = array();
-$from = $_POST['from'];
-$to = $_POST['to'];
-$date = $_POST['date'];
-$id_shift = $_POST['id'];
-$y_id = $_POST['y_id'];
-$y_from = $_POST['y_from'];
-$y_to = $_POST['y_to'];
-$c_id = $_POST['c_id'];
-$c_from = $_POST['c_from'];
-$c_to = $_POST['c_to'];
-$ees;
-$is_right = 0;
-$return_data = 0;
-$is_right_yesterday = 0;
+/**tento soubor vyhledava mozne kandidaty co se hodi na urcitou pozici vramci kalendare  */
+
+$id_arr = array();/**arr pro id kandidatu */
+$name_arr = array();/**arr pro jmena kandidatu */
+$position_arr = array();/**arr pro pozice kandidatu */
+$from = $_POST['from'];/**odkdy zacina hledana smena*/
+$to = $_POST['to'];/**kdy konci hledana smena*/
+$date = $_POST['date'];/**den hledane smeny*/
+$id_shift = $_POST['id'];/**id smeny*/
+$y_id = $_POST['y_id'];/** arr s id uzivatelu z kalendare z predchoziho dne */
+$y_from = $_POST['y_from'];/** arr s casy (odkdy) uzivatelu z kalendare z predchoziho dne */
+$y_to = $_POST['y_to'];/** arr s casy (dokdy) uzivatelu z kalendare z predchoziho dne */
+$c_id = $_POST['c_id'];/** arr s id  uzivatelu z kalendare z dnesniho dne */
+$c_from = $_POST['c_from'];/** arr s casy (odkdy) uzivatelu z kalendare z dnesniho dne */
+$c_to = $_POST['c_to'];/** arr s casy (dokdy) uzivatelu z kalendare z dnesniho dne */
+$nposition = $_POST['nposition']; /*hodnota pro backtrace*/
+
+$is_right = 0; /**promena pro vyrazovani dat */
+$return_data = 0; /**return data */
+/**typy - slouzi k testovani algoritmu */
 $typ = 0;
 $typ2 = 0;
-$multiple2 = 0;
-$add_posible_users2_constant = 0;
-$add_posible_users3_constant = 0;
 
-$posible_users1 = array();
-$posible_users2 = array();
-$posible_users3 = array();
-//$mysqli = require __DIR__ . "/database.php";
+$add_posible_users2_constant = 0;/**konstanty pro prvni vyrazeni */
+$add_posible_users3_constant = 0;/**konstanty pro druhe vyrazeni */
+
+$posible_users1 = array();/**arr pro prvni vyrazeni na id*/
+$posible_users2 = array();/**arr pro druhe vyrazeni na id*/
+$posible_users3 = array();/**arr pro druhe vyrazeni na id*/
+
+
 $mysqli = require("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
 
-
+/**SQL prikaz vyhleda uzivatele, kterym byla pridelana prava na praci na smene */
 $sql = "SELECT * FROM shift_assignment, user2 WHERE shift_id = $id_shift AND user2.id=shift_assignment.user_id";
 
 $fetch = mysqli_query($conn, $sql);
@@ -43,9 +47,10 @@ while ($rows = mysqli_fetch_assoc($fetch)) {
     array_push($name_arr, $name);
     array_push($position_arr, $rows['position']);
 
-    //$saved_data$rows['employee_full'];
 }
 if (count($id_arr) != 0) {
+
+    /**zjisteni vcerejsiho dne ze timestampu */
      /**source : https://techvblogs.com/blog/get-last-day-of-month-from-date-in-php */
     // Converting string to date 
     $date_stamp = strtotime($date); 
@@ -58,6 +63,7 @@ if (count($id_arr) != 0) {
       
     $sql_yesterday = "SELECT * FROM saved_shift_data WHERE saved_date = '$yesterday' ";
     
+    /**pridani dat do arrayi s uzivateli z kalendare z predchoziho dne  */
     $check_y = mysqli_query($conn, $sql_yesterday);
     if (mysqli_num_rows($check_y) != 0) {
         $fetch_y = mysqli_query($conn, $sql_yesterday);
@@ -67,6 +73,7 @@ if (count($id_arr) != 0) {
             array_push($y_id, $rows_y['id_user']);
         }
     }
+    /**pridani dat do arrayi s uzivateli z kalendare z dnesniho dne  */
     $sql_today = "SELECT * FROM saved_shift_data WHERE saved_date = '$date' ";
     $check_t = mysqli_query($conn, $sql_today);
     if (mysqli_num_rows($check_t) != 0) {
@@ -81,7 +88,7 @@ if (count($id_arr) != 0) {
 
 
 
-
+    /**zjisteni casovych moznosti brigadniku */
     $dayofweek = date('D', strtotime($date));
     for ($i = 0; $i < count($id_arr); $i++) {
         if ($position_arr[$i] == "parttime_employee") {
@@ -126,6 +133,7 @@ if (count($id_arr) != 0) {
             $ees = $typ . "//" . $id_arr[$i] . "---" . $date . "---" . $dayofweek . "-" . $is_right . "--" . $from_time . "--" . $to_time;
 
         } else {
+             /**zjisteni casovych moznosti permanentnich uzivatelu (manazer, admin a full-time employee) */
             if ($dayofweek == "Mon") {
                 $sql_permanent = "SELECT * FROM permanent_time_options WHERE id_user=$id_arr[$i] AND monday=1";
                 $check_permanent = mysqli_query($conn, $sql_permanent);
@@ -136,7 +144,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['mon_from'];
                         $to_permanent = $rows_permanent['mon_to'];
                     }
-                    //$ees = "l;kasd";
                 }
             } else if ($dayofweek == "Tue") {
                 $sql_permanent = "SELECT * FROM permanent_time_options WHERE id_user=$id_arr[$i] AND tuesday=1";
@@ -148,7 +155,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['tue_from'];
                         $to_permanent = $rows_permanent['tue_to'];
                     }
-                    //$ees = "l;kasd";
                 }
 
             } else if ($dayofweek == "Wed") {
@@ -161,7 +167,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['wed_from'];
                         $to_permanent = $rows_permanent['wed_to'];
                     }
-                    //$ees = "l;kasd";
                 }
 
             } else if ($dayofweek == "Thu") {
@@ -174,7 +179,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['thu_from'];
                         $to_permanent = $rows_permanent['thu_to'];
                     }
-                    //$ees = "l;kasd";
                 }
             } else if ($dayofweek == "Fri") {
                 $sql_permanent = "SELECT * FROM permanent_time_options WHERE id_user=$id_arr[$i] AND friday=1";
@@ -186,7 +190,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['fri_from'];
                         $to_permanent = $rows_permanent['fri_to'];
                     }
-                    //$ees = "l;kasd";
                 }
             } else if ($dayofweek == "Sat") {
                 $sql_permanent = "SELECT * FROM permanent_time_options WHERE id_user=$id_arr[$i] AND saturday=1";
@@ -198,7 +201,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['sat_from'];
                         $to_permanent = $rows_permanent['sat_to'];
                     }
-                    //$ees = "l;kasd";
                 }
             } else {
                 $sql_permanent = "SELECT * FROM permanent_time_options WHERE id_user=$id_arr[$i] AND sunday=1";
@@ -210,7 +212,6 @@ if (count($id_arr) != 0) {
                         $from_permanent = $rows_permanent['sun_from'];
                         $to_permanent = $rows_permanent['sun_to'];
                     }
-                    //$ees = "l;kasd";
                 }
             }
             $is_right = 0;
@@ -238,10 +239,10 @@ if (count($id_arr) != 0) {
                 }
 
             }
+            /**prvni vyrazeni na zaklade casovych moznosti */
             if ($is_right == 1) {
                 array_push($posible_users1, $id_arr[$i]);
             }
-            //$ees =$typ."//". $id_arr[$i]."---".$date."---". $dayofweek."-".$is_right ."--".$from_permanent."--".$to_permanent; 
 
 
         }
@@ -255,20 +256,15 @@ if (count($id_arr) != 0) {
                 $add_posible_users2_constant = 0;
                 if (in_array($posible_users1[$e], $y_id)) {
                     for ($w = 0; $w < count($y_id); $w++) {
-                        //$multiple2 = 1;
                         if ($posible_users1[$e] == $y_id[$w]) {
                             if (strtotime($y_from[$w]) >= strtotime($y_to[$w])) {
                                 if (strtotime($y_to[$w]) <= strtotime($from)) {
-                                    //$typ2 = 1;
-                                    //array_push($posible_users2, $posible_users1[$e]);
                                 } else {
                                     $add_posible_users2_constant = 1;
                                 }
-                                //break;
 
                             } else {
-                                //$typ2 = 2;
-                                //array_push($posible_users2, $posible_users1[$e]);
+                  
                             }
 
                         }
@@ -286,13 +282,10 @@ if (count($id_arr) != 0) {
         } else {
 
 
-
+            /**druhe vyrazeni na zaklade toho zda-li se vcerejsi smeny neprekryvaji s zvolenou smenou */
             for ($e = 0; $e < count($posible_users1); $e++) {
                 array_push($posible_users2, $posible_users1[$e]);
 
-                //echo json_encode($posible_users1[$e]);
-                //echo json_encode($posible_users[$e]);
-                //break;
             }
         }
     }
@@ -303,7 +296,6 @@ if (count($id_arr) != 0) {
                 $add_posible_users3_constant = 0;
                 if (in_array($posible_users2[$e], $c_id)) {
                     for ($w = 0; $w < count($c_id); $w++) {
-                        //$multiple2 = 1;
                         if ($posible_users2[$e] == $c_id[$w]) {
                             if (strtotime($c_from[$w]) >= strtotime($c_to[$w])) {
 
@@ -313,8 +305,7 @@ if (count($id_arr) != 0) {
                             } else {
 
                                 if (strtotime($c_to[$w]) <= strtotime($from)) {
-                                    //$typ2 = 1;
-                                    //array_push($posible_users2, $posible_users1[$e]);
+     
                                 } else {
                                     $add_posible_users3_constant = 1;
                                 }
@@ -333,7 +324,7 @@ if (count($id_arr) != 0) {
 
             }
         } else {
-
+            /**treti vyrazeni na zaklade toho zda-li se dnesni smeny neprekryvaji s zvolenou smenou */
             for ($e = 0; $e < count($posible_users2); $e++) {
                 array_push($posible_users3, $posible_users2[$e]);
             }
@@ -346,33 +337,29 @@ if (count($id_arr) != 0) {
 
 
 
-    /*if(){
-        //echo json_encode($saved_data);
-    }else{
-
-    }*/
-    //$return_data = $posible_users2[]
     $final_name;
+    /**vraceni vybraneho uzivatele */
     if (count($posible_users3) != 0) {
         for ($t = 0; $t < count($id_arr); $t++) {
-            if ($posible_users3[0] == $id_arr[$t]) {
+            if ($posible_users3[$nposition] == $id_arr[$t]) {
                 $final_name = $name_arr[$t];
                 break;
             }
         }
-
-        $return_data = $posible_users3[0] . "||" . $final_name;
+        $exist_next = 0;
+        if($posible_users3[$nposition+ 1] != null){
+            $exist_next = 1;
+        } 
+        $return_data = $exist_next  . "||" .$posible_users3[$nposition] . "||" . $final_name;
         echo json_encode($return_data);
 
     } else {
 
-        $return_data = "0" . "||" . "--vacant--";
+        $return_data = "0" . "||" ."0" . "||" . "--vacant--";
         echo json_encode($return_data);
     }
 } else {
-    //echo json_encode($ees);
-    //echo json_encode($ees);
-    $return_data = "0" . "||" . "--vacant--";
+    $return_data = "0" . "||" ."0" . "||" . "--vacant--";
     echo json_encode($return_data);
 
 }

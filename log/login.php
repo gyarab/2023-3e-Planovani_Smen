@@ -4,7 +4,6 @@ $is_invalid = false;/** var that checks if email and password is valid */
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     /**connection to database */
-    //$mysqli = require __DIR__ . "/database.php";
     $mysqli = require("../database.php");
     /**code that checks if email is in database */
     $sql = sprintf("SELECT * FROM user2
@@ -49,8 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 header("Location: ../main/employee_main_page.php");
                 exit;
             }
-            /*header("Location: index.php");
-            exit;*/
+
         }
     }
 
@@ -83,6 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <?php if ($is_invalid): ?>
                     <em style="color:red">Invalid login</em>
                 <?php endif; ?>
+                <br>
+                <small><a href="../log/forget_password.php">Forget your password ?</a></small>
             </form>
         </div>
     </div>

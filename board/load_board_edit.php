@@ -1,11 +1,14 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
+/**tento soubor nacita vsechny nastenky, na ktere ma  uzivatel pravo videt */
 $mysqli = require("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
 
-$position = $_POST['position'];
-$type = $_POST['type'];
+$position = $_POST['position']; /**pozice registrovaneho uzivatele */
+$type = $_POST['type'];/**typ nacteni 
+ 1 - s edit buttonem
+ 0 - bez edit buttonu
+*/
 
 
 if($position  == "admin"){
@@ -18,7 +21,6 @@ $sql = "SELECT * FROM  board WHERE manager=1 ";
 }else{
     $sql = "SELECT * FROM  board WHERE employee_part=1 ";
 }
-//$sqlsh = "SELECT * FROM create_shift WHERE object_id='$dat1[$i]' ";
 $fetch = mysqli_query($conn, $sql);
 while ($rows = mysqli_fetch_assoc($fetch)) {
     $positions = "Administrators";
@@ -47,9 +49,6 @@ while ($rows = mysqli_fetch_assoc($fetch)) {
    echo '<p><strong>For :  </strong>'.$positions.'</p>';
 
     echo '<button id="d'.$rows['id_board'].'" type="button" class="btn btn-primary" style="float:right" onclick="Edit(this.id)" >Edit</button>';
-    //echo '<button type="button" class="btn btn-danger" style="float:left">Delete</button>';
-   
-
    echo '<br>';
    echo '<br>';
    }

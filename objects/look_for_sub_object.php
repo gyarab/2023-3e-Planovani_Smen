@@ -1,8 +1,6 @@
 <?php
-//$mysqli2 = require __DIR__ . "/database.php";
 $mysqli2 = require("../database.php");
 
-//require __DIR__ . '/load_object2.php';
 
 $conn2 = new mysqli($host, $username, $password, $dbname);
 $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
@@ -30,14 +28,6 @@ $look = 0;
 for ($x = 0; $x < count($data2); $x++) {
     if ($data1[$x] == $input) {
         static $dd = 1;
-        //$look = $data1[$x];
-        /*if ($input == $data1[$x]){
-            $find2[1] = $look;
-            $find2[0] = 0;
-            //echo json_encode($obj);
-            echo json_encode($find2);
-            //break;
-        }*/
         
         $search = $data1[$x] . "";
         $numberval[$count] = $data1[$x] . "";
@@ -50,7 +40,7 @@ for ($x = 0; $x < count($data2); $x++) {
 
         for ($h = 0; $h < count($data2); $h++) {
             if ($search == $data4[$h]) {
-            sub_object($search, $data1, $data2, $data3, $data4, $find2, $look, $input/*, $look_arr*/);
+            sub_object($search, $data1, $data2, $data3, $data4, $find2, $look, $input);
                 $row++;
                 break;
             }
@@ -61,7 +51,7 @@ for ($x = 0; $x < count($data2); $x++) {
 
 }
 
-function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input/*, $look_arr*/)
+function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input)
 {
     static $dd = 1;
     static $ff = 0;
@@ -76,19 +66,8 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
             } else {
 
             }
-            /*if ($input == $dat1[$i]){
-                $find2[1] = $look;
-                $find2[0] = 1;
-                //echo json_encode($obj);
-                echo json_encode($find2);
-                //break;
-            }*/
-            //echo /*json_encode(*/$dat1[$i]/*)*/. ",";
-            //$p = $dat1[$i]."!";
-            
-            //echo /*json_encode*/($p);
+;
             array_push($look_arr,$dat1[$i]);
-            //$look_arr[] =  $dat1[$i];
             $dd++;
             $ff++;
             $row = 0;
@@ -96,20 +75,17 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-                    sub_object($sea, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input/*, $look_arr*/);
+                    sub_object($sea, $dat1, $dat2, $dat3, $dat4, $find2, $look, $input);
                         break;
                     }
                 }
             }
-            //return $dat1[$i];
 
 
         }
     }
 
-  //return $look_arr;
 }
 $looka = 0;
 echo json_encode($look_arr);
-//echo $look;
 ?>

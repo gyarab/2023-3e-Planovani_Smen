@@ -1,13 +1,11 @@
 <?php
-/** main login page */
-$is_invalid = false;/** var that checks if email and password is valid */
+
+$is_invalid = false;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    /**connection to database */
-    //$mysqli = require __DIR__ . "/database.php";
+
     $mysqli = require("../database.php");
     $conn = new mysqli($host, $username, $password, $dbname);
-    /**code that checks if email is in database */
     $sql = sprintf("SELECT * FROM user2
                     WHERE email = '%s'",
         $mysqli->real_escape_string($_POST["email"])
@@ -21,30 +19,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($user) {
 
-        /**vertification of password with password hash*/
-        //if (password_verify($_POST["password"], $user["password_hash"])) {
-
-            //session_start();
-
-            //session_regenerate_id();
-            /** start of global sessions*/
-            //$_SESSION["user2_id"] = $user["id"];
-
-            /** popup logic*/
-            //$_SESSION["popup"] = 0;
             $email = $_POST["email"];
             $id_key = $user['id'];
             $generate_new = generateRandomString();
             $new_hash = password_hash($generate_new, PASSWORD_DEFAULT);
             $sql_insert = "UPDATE user2 SET password_hash = '$new_hash' WHERE id = $id_key";
             if (!mysqli_query($conn, $sql_insert)) {
-                //die('Error: ' . mysqli_error($conn));
-                //echo json_encode(mysqli_error($conn));
+
             }
 
             $subject = "PLAN & GO new password";
 
-            //$message = "Here is your verification code: <a>$verification_code</a>";
             $message = '
             <!DOCTYPE html>
             <html>
@@ -76,26 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
             header("Location: ../index.php");
-            /*if ($user["position"] == "admin") {
-                //header("Location: admin_main_page.php");
-                header("Location: ../main/admin_main_page.php");
-                exit;
-            }
-            if ($user["position"] == "manager") {
-                header("Location: ../main/manager_main_page.php");
-                exit;
-            }
-            if ($user["position"] == "parttime_employee") {
-                header("Location: ../main/employee_main_page.php");
-                exit;
-            }
-            if ($user["position"] == "fulltime_employee") {
-                header("Location: ../main/employee_main_page.php");
-                exit;
-            }*/
-            /*header("Location: index.php");
-            exit;*/
-        //}
+
     }
 
     $is_invalid = true;
@@ -121,7 +87,7 @@ function generateRandomString($length = 10) {
 
 ?>
 <!DOCTYPE html>
-<!-- html code of login page -->
+<!-- html stranka -->
 <html>
 
 <head>

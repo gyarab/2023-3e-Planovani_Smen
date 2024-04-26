@@ -10,8 +10,7 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-    //$mysqli = require __DIR__ . "/database.php";
-    $mysqli = require("../database.php");
+    $mysqli = require ("../database.php");
 
 
     $sql = "SELECT * FROM user2
@@ -29,10 +28,6 @@ if (isset($_SESSION["user2_id"])) {
     }
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
 
 ?>
 
@@ -68,11 +63,14 @@ $mysqli1->close();*/
                 <div class="navbar container">
 
                     <i class='bx bx-menu'></i>
-                    <div class="logo"><a href="../main/admin_main_page.php">Home :
+                    <div class="logo"><a
+                            style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                            href="../main/admin_main_page.php">Home :
                             <?= $cons ?>
                             <?= htmlspecialchars($user["firstname"]) ?>
                             <?= htmlspecialchars($user["middlename"]) ?>
                             <?= htmlspecialchars($user["lastname"]) ?>
+
                         </a></div>
                     <div class="nav-links">
                         <div class="sidebar-logo">
@@ -87,7 +85,7 @@ $mysqli1->close();*/
                                     <div>
                                         <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
                                         <li><a href="../search/list_of_employees.php">LIST</a></li>
-                                        <li><a href="#">CHANGE DATA</a></li>
+                                        <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
                                         <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
                                     </div>
                                 </ul>
@@ -106,23 +104,22 @@ $mysqli1->close();*/
                                         </span>
                                         <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
                                             <li><a href="#"></a></li>
-                                            <li><a href="#">Pre-loader</a></li>
-                                            <li><a href="#">Glassmorphism</a></li>
+                                            <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                            <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">HISTORY</a>
+                                <a href="#">OTHERS</a>
                                 <i class='bx bxs-chevron-down js-arrow arrow '></i>
                                 <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                                    <li><a href="#">Dynamic Clock</a></li>
-                                    <li><a href="#">Form Validation</a></li>
-                                    <li><a href="#">Card Slider</a></li>
-                                    <li><a href="#">Complete Website</a></li>
+                                    <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                    <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                    <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#">STATISTICS</a></li>
+                            <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
                             <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
                         </ul>
                     </div>
@@ -131,6 +128,16 @@ $mysqli1->close();*/
                         <i class='bx bx-search'></i>
                         <div class="input-box">
                             <input type="text" placeholder="Search...">
+                            <br>
+                            <br>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p>123456789</p>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -219,9 +226,7 @@ $mysqli1->close();*/
 
                                 // Displayin IP address on screen
                                 document.getElementById("hip").value = data.ip;
-                                //$("#gfg").html(data.ip);
                             })
-                        //alert(ip_return);
                     });
                     function get_my_ip() {
                         var ip_arr = new Array();
@@ -250,26 +255,24 @@ $mysqli1->close();*/
                             async: false,
                             data: { ip1: ip1, ip2: ip2, ip3: ip3, ip4: ip4, description: description },
                             success: function (data) {
-                                //results = JSON.stringify(data);
                                 return_status = data;
-                                if(data ==0 ){
+                                if (data == 0) {
                                     load_ips();
 
                                 }
                             }
 
                         });
-                        if(return_status == 0){
+                        if (return_status == 0) {
                             alert("IP address was successfully added to the system");
                             load_ips();
 
-                        }else if (return_status == 1){
+                        } else if (return_status == 1) {
                             alert("IP adress do not meet corrent format");
-                        }else if(return_status == 2){
+                        } else if (return_status == 2) {
                             alert("IP adress already exists");
 
                         }
-                        //alert(return_status);
 
                     }
                     load_ips();
@@ -281,23 +284,21 @@ $mysqli1->close();*/
                             data: {},
                             success: function (data) {
                                 $("#ip_table").html(data);
-                                
+
                             }
                         })
                     }
                     function edit_ip(val) {
                         val = val.substring(1);
-                        var des =document.getElementById("description" + val).value;
-                        //val = 0;
+                        var des = document.getElementById("description" + val).value;
                         alert(val);
                         $.ajax({
                             url: "../ip/edit_ips.php",
                             method: "POST",
-                            data: {id: val, description: des},
+                            data: { id: val, description: des },
                             success: function (data) {
-                                //$("#ip_table").html(data);
                                 alert(data);
-                                
+
                             }
                         })
                     }
@@ -306,10 +307,10 @@ $mysqli1->close();*/
                         $.ajax({
                             url: "../ip/delete_ips.php",
                             method: "POST",
-                            data: {id: val},
+                            data: { id: val },
                             success: function (data) {
-                                alert(data);     
-                                load_ips();                        
+                                alert(data);
+                                load_ips();
                             }
                         })
                     }
@@ -326,7 +327,8 @@ $mysqli1->close();*/
             <div class="row">
                 <div class="col-12 col-md-12">
                     <button type="button" class="btn btn-primary" onclick="add_ip()" style="float:right">ADD IP</button>
-                    <button type="button" class="btn btn-warning" onclick="get_my_ip()"style="float:right;margin-right:10px ">GET DEVICE IP</button>
+                    <button type="button" class="btn btn-warning" onclick="get_my_ip()"
+                        style="float:right;margin-right:10px ">GET DEVICE IP</button>
                 </div>
             </div>
             <br>

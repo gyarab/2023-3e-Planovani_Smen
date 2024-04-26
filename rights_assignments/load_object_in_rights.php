@@ -1,5 +1,4 @@
 <?php 
-//$mysqli2 = require __DIR__ . "/database.php";
 $mysqli2 = require("../database.php");
 
 
@@ -10,10 +9,8 @@ $mysqli2->close();
 $data_name = array();
 
 
-//$mysqli2 = require __DIR__ . "/database.php";
 $mysqli2 = require("../database.php");
 
-//require __DIR__ . '/load_object2.php';
 
 $conn2 = new mysqli($host, $username, $password, $dbname);
 $fetch = mysqli_query($conn2, "SELECT * FROM list_of_objects");
@@ -52,15 +49,12 @@ for ($x = 0; $x < count($data2); $x++) {
         echo "<div class='overflow-auto'>";
         echo "<ul>";
         echo "<li>";
-        //echo " <button href='#'>".$data2[$x]."</button>";
         
         echo "<input id='shi" . $dd . "m' type='hidden' name='hid' value='" . $data1[$x] . "'>";
 
         echo "<input id='spa" . $dd . "m' type='button' style='position: relative;' onclick='Sel(this.id)' name='s".$data1[$x] ."' value='" . $data2[$x] . "'>";
-        //echo "<input id='hid".$dd."m' type='hidden' name='hid' value='".$data1[$x]."'>";
         $dd++;
-        //          echo "</li>";
-        //        echo "</ul>";
+
 
         $row = 0;
 
@@ -75,18 +69,11 @@ for ($x = 0; $x < count($data2); $x++) {
         echo "</li>";
         echo "</ul>";
         echo "<br>";
-        //echo "<hr style='height:5px'>";
         echo "<br>";
         echo "</div>";
         echo "</div>";
 
         /**This part calls the function in order to check if this object is superior to some other object*/
-        //require __DIR__ . '/load_object.php';
-        //include "/load_object.php";
-        //--sub_object($search, $data2, $data3, $count, $nm);
-
-
-      //break;
     }
 
 }
@@ -106,11 +93,9 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4)
             }
 
             echo "<li>";
-            //echo " <button>".$dat2[$i]."</button>";
             echo "<input id='shi" . $dd . "' type='hidden' name='hid' value='" . $dat1[$i] . "'>";
 
             echo "<input id='spa" . $dd . "' type='button' onclick='Sel(this.id)' name='s".$dat1[$i] ."' value='" . $dat2[$i] . "'>";
-            //  echo "<input id='hid".$dd."' type='hidden' name='hid' value='".$dat1[$i]."'>";
 
             $dd++;
             $row = 0;

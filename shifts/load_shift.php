@@ -6,8 +6,7 @@ if (isset($_POST['v'])) {
         $jobname_invalid = false;
     }
     if ($jobname_invalid == false) {
-        //$mysqli_sh2 = require __DIR__ . "/database.php";
-        $mysqli_sh2 = require("../database.php");
+        $mysqli_sh2 = require ("../database.php");
 
 
 
@@ -133,28 +132,17 @@ if (isset($_POST['v'])) {
             $sun_to = "";
         }
         $shi_name = $_POST['jobname'];
-        //$mon_to = $_POST['tomonday'];
-        //$mon_from = "";
-        //$mon_to = "";
-        /*$tue_from = $_POST['fromtuesday'];
-        $tue_to = $_POST['totuesday'];
-        $wed_from = $_POST['fromwednesday'];
-        $wed_to = $_POST['towednesday'];
-        $jobname = $_POST['jobname'];*/
-        //$start = "2023-10-11";
-        //$st = $_GET['sr'];
 
 
 
 
 
 
-        // $s = date("Y-d-m", strtotime($_POST['sr']));
+
         $s = $_POST['sr'];
         $pickc = $_POST['colorpicker'];
 
         $rep = 1;
-        //echo ($s + " fafsas");
         echo date($s);
 
         echo ("<br>");
@@ -201,7 +189,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 
 
 
-    }else{
+    } else {
         header("Location: create_shift.php");
         exit;
     }

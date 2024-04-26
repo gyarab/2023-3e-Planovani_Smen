@@ -4,8 +4,7 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-  //$mysqli = require __DIR__ . "/database.php";
-  $mysqli = require("../database.php");
+  $mysqli = require ("../database.php");
 
   $sql = "SELECT * FROM user2
             WHERE id = {$_SESSION["user2_id"]}";
@@ -29,11 +28,6 @@ if (isset($_SESSION["user2_id"])) {
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!--<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">-->
-  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>-->
   <link rel="stylesheet" href="../css/main_page.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -46,32 +40,7 @@ if (isset($_SESSION["user2_id"])) {
       border: 1px solid black;
     }
 
-    /* td:nth-child(even) {
-  background-color: #D6EEEE;
-}*/
-    /*
-    .hoverTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
 
-    .hoverTable td {
-      padding: 7px;
-      border: #4e95f4 1px solid;
-    }>
-
-    /* Define the default color for all the table rows */
-    /*.hoverTable tr {
-      background: #b8d1f3;
-    }*/
-
-    /* Define the hover highlight color for the table row */
-    /* tr:hover {
-      background-color: #e8e8e8;
-    }*/
-    /*.container {
-      position: relative;
-    }*/
 
     .topright {
       position: absolute;
@@ -144,31 +113,11 @@ if (isset($_SESSION["user2_id"])) {
     p {
       font-size: 30px;
     }
-
-    /* Scrollbar styles */
-    /*::-webkit-scrollbar {
-width: 12px;
-height: 12px;
-}
-
-::-webkit-scrollbar-track {
-border: 1px solid yellowgreen;
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-background: yellowgreen;  
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: #88ba1c;  
-}*/
   </style>
 </head>
 
 <body>
-  <?php if (isset($user) /*&& $userp == "admin"*/): ?>
+  <?php if (isset($user)): ?>
     <?php
     $today = date("Y-m-d");
 
@@ -178,80 +127,256 @@ background: #88ba1c;
     </script>
     <div class="container">
 
-      <nav>
+    <?php if ($userp == "admin") { ?>
+                <nav>
 
-        <div class="navbar container">
+                    <div class="navbar container">
 
-          <i class='bx bx-menu'></i>
-          <div class="logo"><a href="../mian/admin_main_page.php" style="padding-left: 0px;">Home :
-              <?= $cons ?>
-              <?= htmlspecialchars($user["firstname"]) ?>
-              <?= htmlspecialchars($user["middlename"]) ?>
-              <?= htmlspecialchars($user["lastname"]) ?>
-            </a></div>
-          <div class="nav-links">
-            <div class="sidebar-logo">
-              <span class="logo-name">Home page</span>
-              <i class='bx bx-x'></i>
-            </div>
-            <ul class="links">
-              <li>
-                <a href="#">EMPLOYEES</a>
-                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
-                  <div>
-                    <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                    <li><a href="../search/list_of_employees.php">LIST</a></li>
-                    <li><a href="#">CHANGE DATA</a></li>
-                    <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
-                  </div>
-                </ul>
+                        <i class='bx bx-menu'></i>
+                        <div class="logo"><a
+                                style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                href="../main/admin_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
 
-              </li>
-              <li>
-                <a href="#">DATABASE</a>
-                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-                  <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                  <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
-                  <li class="more">
-                    <span><a href="#">More</a>
-                      <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                    </span>
-                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
-                      <li><a href="#"></a></li>
-                      <li><a href="#">Pre-loader</a></li>
-                      <li><a href="#">Glassmorphism</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">HISTORY</a>
-                <i class='bx bxs-chevron-down js-arrow arrow '></i>
-                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="#">Dynamic Clock</a></li>
-                  <li><a href="#">Form Validation</a></li>
-                  <li><a href="#">Card Slider</a></li>
-                  <li><a href="#">Complete Website</a></li>
-                </ul>
-              </li>
-              <li><a href="#">STATISTICS</a></li>
-              <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
-            </ul>
-          </div>
+                            </a></div>
+                        <div class="nav-links">
+                            <div class="sidebar-logo">
+                                <span class="logo-name">Home page</span>
+                                <i class='bx bx-x'></i>
+                            </div>
+                            <ul class="links">
+                                <li>
+                                    <a href="#">EMPLOYEES</a>
+                                    <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                    <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                        <div>
+                                            <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                                            <li><a href="../search/list_of_employees.php">LIST</a></li>
+                                            <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                                            <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                                        </div>
+                                    </ul>
 
-          <div class="search-box">
-            <i class='bx bx-search'></i>
-            <div class="input-box">
-              <input type="text" placeholder="Search...">
-            </div>
-          </div>
+                                </li>
+                                <li>
+                                    <a href="#">DATABASE</a>
+                                    <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                    <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                        <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
+                                        <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
+                                        <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                                        <li class="more">
+                                            <span><a href="#">More</a>
+                                                <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                                            </span>
+                                            <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                                                <li><a href="#"></a></li>
+                                                <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                                <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">OTHERS</a>
+                                    <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                    <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                        <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                        <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+                                <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="search-box">
+                            <i class='bx bx-search'></i>
+                            <div class="input-box">
+                                <input type="text" placeholder="Search...">
+                                <br>
+                                <br>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p>123456789</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-        </div>
-      </nav>
+                    </div>
+                </nav>
+            <?php } else if ($userp == "manager") { ?>
+                    <nav>
+
+                        <div class="navbar container">
+
+                            <i class='bx bx-menu'></i>
+                            <div class="logo"><a
+                                    style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                    href="../main/manager_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
+
+                                </a></div>
+                            <div class="nav-links">
+                                <div class="sidebar-logo">
+                                    <span class="logo-name">Home page</span>
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <ul class="links">
+                                    <li>
+                                        <a href="#">EMPLOYEES</a>
+                                        <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                        <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                            <div>
+                                                <li><a href="../search/list_of_employees.php">LIST</a></li>
+                                                <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                                            </div>
+                                        </ul>
+
+                                    </li>
+                                    <li>
+                                        <a href="#">CALENDAR</a>
+                                        <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                        <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                                            <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+
+                                            <li class="more">
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">OTHERS</a>
+                                        <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                        <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                            <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                            <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+                                    <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="search-box">
+                                <i class='bx bx-search'></i>
+                                <div class="input-box">
+                                    <input type="text" placeholder="Search...">
+                                    <br>
+                                    <br>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>123456789</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </nav>
+            <?php } else { ?>
+                    <nav>
+
+                        <div class="navbar container">
+
+                            <i class='bx bx-menu'></i>
+                            <div class="logo"><a
+                                    style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                    href="../main/employee_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
+
+                                </a></div>
+                            <div class="nav-links">
+                                <div class="sidebar-logo">
+                                    <span class="logo-name">Home page</span>
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <ul class="links">
+                                    <li>
+                                        <a href="#">EMPLOYEES</a>
+                                        <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                        <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                            <div>
+
+                                                <li><a
+                                                        href="../search/list_of_employees.php">LIST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                                </li>
+
+
+                                            </div>
+                                        </ul>
+
+                                    </li>
+                                    <li>
+                                        <a href="#">CALENDAR</a>
+                                        <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                        <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../calendar/calendar_view.php">CURRENT SCHEDULE</a></li>
+                                        <?php if ($userp == "parttime_employee") { ?>
+                                                <li><a href="../options/time_options.php">TIME OPTIONS</a></li>
+                                        <?php } else if ($userp == "fulltime_employee") { ?>
+                                                    <li><a href="../options/permanent_time_options_view.php">TIME OPTIONS</a></li>
+                                        <?php } ?>
+                                            <li class="more">
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">OTHERS</a>
+                                        <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                        <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                            <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="../statistics/my_stats.php">STATISTICS</a></li>
+                                    <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="search-box">
+                                <i class='bx bx-search'></i>
+                                <div class="input-box">
+                                    <input type="text" placeholder="Search...">
+                                    <br>
+                                    <br>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>123456789</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </nav>
+                <?php
+                }
+                ?>
       <script src="../js/main_page.js"></script>
       <br>
       <br>
@@ -294,45 +419,8 @@ background: #88ba1c;
           <br>
           <br>
           <div style="float: left">
-            <!--<p>Objects:&nbsp;&nbsp;</p>-->
 
-
-            <!--<select id="select_obj" class="form-select form-select-sm" name="option" id="option"
-              style="font-size:15px;display:inline">
-              <?php
-              /*$mysqli2 = require __DIR__ . "/database.php";
-              $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
-              $result3 = $mysqli2->query($sql2);
-              $mysqli2->close();
-              $counter = 0;
-              while ($rows_dat = mysqli_fetch_assoc($result3)) {
-                if (null == $rows_dat['superior_object_name']) {
-                  if ($counter == 0) {
-                    $first = $rows_dat['id_object'];
-                  }
-                  $counter++;
-                  ?>
-                  <option style="font-size:15px" value="<?php echo $rows_dat['id_object'] ?>">
-                    <?php //echo $rows_dat['object_name']; ?>
-                  </option>
-                  <?php
-               /* }
-              }*/
-              ?>
-            </select>-->
-          </div>
-
-         <!-- <div id="object" style="display:inline;"></div>
-          <br>
-          <br>
-          <p style="display:inline">Shift:&nbsp;&nbsp;</p>
-          <div id="shi_load" style="display:inline;"></div>
-          <br>
-          <input type="button" class="btn btn-primary" value="Filter" onclick="filter()" style="float:left;font-size: 16px;">
-          <br>
-          <br>
-          <br>-->
-          <div class="icons">
+            <div class="icons">
               <span id="prev" class="material-symbols-rounded" style="float:left"><i
                   class="bi bi-arrow-left-circle h2"></i></span>
               <h2 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h2>
@@ -340,35 +428,35 @@ background: #88ba1c;
                   class="bi bi-arrow-right-circle h2"></i></span>
               <h2 style="display:inline;float:right">Next month&nbsp;&nbsp;</h2>
             </div>
-          <script>
+            <script>
 
 
-          </script>
-          <br>
-          <br>
-          <br>
+            </script>
+            <br>
+            <br>
+            <br>
 
 
-          <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
-            <div class="calendar">
-              <table>
-                <tr>
-                </tr>
-                <table class="days" style="border-collapse:collapse;">
-                  <div class="hoverTable">
-                    <tr>
-                    </tr>
-                  </div>
+            <div style="width: 100%;height: 1000px;overflow: auto; border: solid black">
+              <div class="calendar">
+                <table>
+                  <tr>
+                  </tr>
+                  <table class="days" style="border-collapse:collapse;">
+                    <div class="hoverTable">
+                      <tr>
+                      </tr>
+                    </div>
+                  </table>
                 </table>
-              </table>
+              </div>
             </div>
-          </div>
 
 
-          <div class="form-group">
+            <div class="form-group">
 
-            <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
-          </div>
+              <input type="button" name="save" class="btn btn-primary" value="Save to database" id="butsave">
+            </div>
 
 
         </form>
@@ -397,381 +485,352 @@ background: #88ba1c;
         </div>
         <p>Search for employee..</p>
         <div class="row">
-        <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
-        <input type="text" id="live_search" style="float: left; font-size: 16px" autocomplete="off" placeholder="Search...">
-        
-        <input type="button" onclick="Vacant()" style="float: right;font-size: 16px" value="Set shift to vacant">
-        <br>
-        <br>
-        <br>
-        <hr>
-        <br>
-        <h2>Assigned employees:</h2>
-        <br>
-        <div id="searchresult_assign"></div>
+          <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+            <input type="text" id="live_search" style="float: left; font-size: 16px" autocomplete="off"
+              placeholder="Search...">
 
+            <input type="button" onclick="Vacant()" style="float: right;font-size: 16px" value="Set shift to vacant">
+            <br>
+            <br>
+            <br>
+            <hr>
+            <br>
+            <h2>Assigned employees:</h2>
+            <br>
+            <div id="searchresult_assign"></div>
+
+          </div>
+          <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
+            <h2>All employees:</h2>
+            <br>
+            <div id="searchresult"></div>
+
+
+            <form>
+              <div id="livesearch"></div>
+            </form>
+
+          </div>
         </div>
-      <div class='col-12 col-md-6 p-2' style=' margin-bottom: 15px'>
-        <h2>All employees:</h2>
-        <br>
-        <div id="searchresult"></div>
-        
-      
-      <form>
-        <!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
-        <div id="livesearch"></div>
-      </form>
 
-      </div>
+
+
       </div>
 
 
 
-    </div>
+      <br>
+      <br>
+      <br>
 
 
 
-    <br>
-    <br>
-    <br>
+      <script>
 
-
-
-    <script>
-
-    </script>
+      </script>
 
 
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 
 
 
-    <script>
-      // Get the modal
-      var modal = document.getElementById("myModal");
+      <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
 
-      // Get the button that opens the modal
-      var btn = document.getElementById("myBtn");
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
 
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
 
-      // When the user clicks the button, open the modal 
-      /*btn.onclick = function() {
-        modal.style.display = "block";
-      }*/
+        // When the user clicks the button, open the modal 
 
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function () {
-        modal.style.display = "none";
-        document.getElementById("searchresult").innerHTML = "";
-        document.getElementById("searchresult_assign").innerHTML = "";
 
-      }
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-        if (event.target == modal) {
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
           modal.style.display = "none";
+          document.getElementById("searchresult").innerHTML = "";
+          document.getElementById("searchresult_assign").innerHTML = "";
 
         }
-      }
-    </script>
 
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
 
-
-
-
-    <script>
-
-    </script>
-
-
-
-    <script>
-      var passedID = "";
-      const daysTag = document.querySelector(".days"),
-        currentDate = document.querySelector(".current-date"),
-        prevNextIcon = document.querySelectorAll(".icons span");
-
-      let items = [
-        [0, 1],
-        [4, 8],
-        [6, 5],
-        [6, 6],
-        [8, 28],
-        [9, 28],
-        [10, 17],
-        [11, 24],
-        [11, 25],
-        [11, 26]
-      ];
-      // getting new date, current year and month
-      let date = new Date(),
-        currYear = date.getFullYear(),
-        currMonth = date.getMonth();
-      <?php
-
-      $currentr = 0;
-
-
-      ?>
-      // storing full name of all months in array
-      const months = ["January", "February", "March", "April", "May", "June", "July",
-        "August", "September", "October", "November", "December"];
-      const months2 = [".1", ".2", ".3", ".4", ".5", ".6", ".7",
-        ".8", ".9", ".10", ".11", ".12"];
-      const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      var first = 0;
-
-
-
-      renderCalendar();
-      //const renderCalendar = () => {
-       function renderCalendar(){
-        /*for(var sd = 0; sd < arridc.length; sd++){
-          alert(arridc[sd]);
-
-        }*/
-        
-        let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-          lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-          lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
-          lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-        let liTag = "";
-
-
-        const fr = new Date(currYear, currMonth, 0);
-        const f = new Date(currYear, currMonth, 0);
-        const kl = new Date(currYear, currMonth, 0);
-        const d = new Date();
-        const re = new Date();
-
-
-        let currMonthNull = "";
-        if (currMonth < 9) {
-          currMonthNull = "0" + (currMonth + 1);
-        } else {
-          currMonthNull = currMonth + 1;
+          }
         }
-        let tet = "<input type='hidden' id='current_load_date' name='current_load_date' value='" + currYear + "-" + (currMonthNull) + "'>";
-        liTag += `${tet}`;
+      </script>
 
-        var passedSavedata = [];
-       
-        var result_arr = [];
-        var total_lenght = 0;
-        var is_empty = 0;
-        for (let i = 1; i <= lastDateofMonth; i++) {
-           
-          if (i == 1) {
-            //alert(usid);
-            var arr_return = new Array;
-            $.ajax({
-              type: "POST",
-              url: "../shifts/get_my_shifts.php",
-              dataType: "json",
-              cache: false,
-              async: false,
-              data: {
-                month: currMonthNull, year : currYear, id : usid
-              },
-              success: function (data) {
-                text_return = JSON.stringify(data);
-                alert(JSON.stringify(data));
+
+
+
+
+      <script>
+
+      </script>
+
+
+
+      <script>
+        var passedID = "";
+        const daysTag = document.querySelector(".days"),
+          currentDate = document.querySelector(".current-date"),
+          prevNextIcon = document.querySelectorAll(".icons span");
+
+        let items = [
+          [0, 1],
+          [4, 8],
+          [6, 5],
+          [6, 6],
+          [8, 28],
+          [9, 28],
+          [10, 17],
+          [11, 24],
+          [11, 25],
+          [11, 26]
+        ];
+        // getting new date, current year and month
+        let date = new Date(),
+          currYear = date.getFullYear(),
+          currMonth = date.getMonth();
+        <?php
+
+        $currentr = 0;
+
+
+        ?>
+        // storing full name of all months in array
+        const months = ["January", "February", "March", "April", "May", "June", "July",
+          "August", "September", "October", "November", "December"];
+        const months2 = [".1", ".2", ".3", ".4", ".5", ".6", ".7",
+          ".8", ".9", ".10", ".11", ".12"];
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var first = 0;
+
+
+
+        renderCalendar();
+        function renderCalendar() {
+
+
+          let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
+            lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
+            lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
+            lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
+          let liTag = "";
+
+
+          const fr = new Date(currYear, currMonth, 0);
+          const f = new Date(currYear, currMonth, 0);
+          const kl = new Date(currYear, currMonth, 0);
+          const d = new Date();
+          const re = new Date();
+
+
+          let currMonthNull = "";
+          if (currMonth < 9) {
+            currMonthNull = "0" + (currMonth + 1);
+          } else {
+            currMonthNull = currMonth + 1;
+          }
+          let tet = "<input type='hidden' id='current_load_date' name='current_load_date' value='" + currYear + "-" + (currMonthNull) + "'>";
+          liTag += `${tet}`;
+
+          var passedSavedata = [];
+
+          var result_arr = [];
+          var total_lenght = 0;
+          var is_empty = 0;
+          for (let i = 1; i <= lastDateofMonth; i++) {
+
+            if (i == 1) {
+              var arr_return = new Array;
+              $.ajax({
+                type: "POST",
+                url: "../shifts/get_my_shifts.php",
+                dataType: "json",
+                cache: false,
+                async: false,
+                data: {
+                  month: currMonthNull, year: currYear, id: usid
+                },
+                success: function (data) {
+                  text_return = JSON.stringify(data);
+                  alert(JSON.stringify(data));
+                }
+
+              });
+              var middle_arr = new Array();
+              var finished_arr = new Array();
+              text_return = text_return.substring(1, text_return.length - 1);
+              if (text_return.substring(2, text_return.length - 2) == "") {
+                is_empty = 1;
+
               }
+              middle_arr = text_return.split("]");
 
-            });
-            var middle_arr = new Array();
-            var finished_arr = new Array();
-            text_return =text_return.substring(1,text_return.length-1);
-            if(text_return.substring(2,text_return.length-2) == ""){
-              is_empty = 1;
+              total_lenght = middle_arr.length;
+              for (let jh = 0; jh < middle_arr.length; jh++) {
+                finished_arr = [];
+                if (jh == 0) {
+                  middle_arr[jh] = middle_arr[jh].substring(1);
+                } else {
+                  middle_arr[jh] = middle_arr[jh].substring(2);
+                }
+                result_arr[jh] = [];
+                finished_arr = middle_arr[jh].split(",");
+                for (let j = 0; j < 12; j++) {
+                  var xs = finished_arr[j];
 
+                  result_arr[jh][j] = xs;
+
+                }
+              }
+              let ch = result_arr[0][0];
+
+
+
+
+              var col_code_obj = "<tr><th id='00-000' rowspan='1' style='width: 100px'>Date</th><th style='width: 100%'></th></tr>";
+
+              let final_col_code_obj = col_code_obj;
+
+              tet;
+
+
+              liTag += `${final_col_code_obj}`;
+
+
+            } // creating li of all days of current month
+            // adding active class to li if the current day, month, and year matched
+            let find = 0;
+            let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+              && currYear === new Date().getFullYear() ? "active" : "";
+            /**source - https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript */
+            fr.setDate(fr.getDate() + 1);
+            f.setDate(f.getDate() + 1)
+            let day = weekday[fr.getDay()];
+            const m = fr.getMonth();
+            var dayy = day;
+            let save_string;
+
+
+
+            /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
+            let plan = "";
+            if (is_empty == 0) {
+              for (let e = 0; e < total_lenght; e++) {
+                if (i == result_arr[e][0]) {
+                  //alert("true" + i);
+                  var color = result_arr[e][7];
+                  var object = result_arr[e][3];
+                  var name = result_arr[e][2];
+                  var log_from = result_arr[e][8];
+                  var log_to = result_arr[e][9];
+                  var pla_from = result_arr[e][5];
+                  var pla_to = result_arr[e][6];
+                  var com = result_arr[e][4];
+                  var com_from = result_arr[e][10];
+                  var com_to = result_arr[e][11];
+                  color = color.substring(1, color.length - 1);
+                  name = name.substring(1, name.length - 1);
+                  object = object.substring(1, object.length - 1);
+                  log_from = log_from.substring(1, log_from.length - 4);
+                  log_to = log_to.substring(1, log_to.length - 4);
+                  pla_from = pla_from.substring(1, pla_from.length - 4);
+                  pla_to = pla_to.substring(1, pla_to.length - 4);
+                  com = com.substring(1, com.length - 1);
+                  plan = plan + '<div class="row" style="width:100%;height:100%"><div class="col-12" style="width:100%;height:100%; margin:auto"><div class="p-3 mb-2 text-white" style="background-color:' + color + ';"><div class="row"><div class="col-16"><p style="font-size: 23px">' + object + ' - ' + name + '</p></div></div><div class="row"><div class="col-6"><p style="font-size: 15px">Planned from: ' + pla_from + '</p><p style="font-size: 15px">Planned to:      ' + pla_to + '</p><p style="font-size: 15px">Comment:      ' + com + '</p></div><div class="col-6"><p style="font-size: 15px">Loged from: ' + log_from + '</p><p style="font-size: 15px">Loged to: ' + log_to + '</p><p style="font-size: 15px">Log-in comment: ' + com_from + '</p><p style="font-size: 15px">Log-out comment: ' + com_to + '</p></div></div></div></div></div>';
+                }
+              }
             }
-            middle_arr = text_return.split("]");
-
-            total_lenght =middle_arr.length;
-            for (let jh = 0; jh < middle_arr.length; jh++) {
-              finished_arr = [];
-              if(jh == 0){
-              middle_arr[jh] = middle_arr[jh].substring(1);
-              }else{
-                middle_arr[jh] = middle_arr[jh].substring(2);
-              }
-              result_arr[jh] = [];
-              //alert(middle_arr[jh]);
-              finished_arr = middle_arr[jh].split(",");
-              for (let j = 0; j < 12; j++) {
-                //alert(second_arr[j]);
-                var xs = finished_arr[j];
-                //xs = xs.substring(1);
-                //let xk = second_arr[j];
-                //let xk = xs.length;
-                /*alert(xs);
-                alert(xk);*/
-                result_arr[jh][j] = xs;
-                //final_arr[jh][j] = final_arr[jh][j].substring(1);
-                //final_arr[jh][j] = 0;
-              }
-            }
-            //alert(result_arr[0][0]);
-            let ch = result_arr[0][0];
-            //ch = ch.substring(0,ch.length-1);
-            //alert(ch);
-           //alert(isNumber(ch));
-          //alert(result_arr[0][0]);
-          //alert(total_lenght);
-            
 
 
-            var col_code_obj = "<tr><th id='00-000' rowspan='1' style='width: 100px'>Date</th><th style='width: 100%'></th></tr>";
-
-             let final_col_code_obj =  col_code_obj;
-           
-             tet;
-           
-
-            liTag += `${final_col_code_obj}`;
-            //alert(liTag);
+            let dts = "";
 
 
-          } // creating li of all days of current month
-          // adding active class to li if the current day, month, and year matched
-          let find = 0;
-          let isToday = i === date.getDate() && currMonth === new Date().getMonth()
-            && currYear === new Date().getFullYear() ? "active" : "";
-          /**source - https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript */
-          fr.setDate(fr.getDate() + 1);
-          f.setDate(f.getDate() + 1)
-          let day = weekday[fr.getDay()];
-          const m = fr.getMonth();
-          var dayy = day;
-          let save_string;
-          
-
-
-          /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
-           //var check =  result_arr[1][0];
-           let plan = "";
-           if(is_empty == 0){
-             for(let e = 0; e <  total_lenght; e++){
-                 if(i == result_arr[e][0]){
-                      //alert("true" + i);
-                      var color = result_arr[e][7];
-                      var object = result_arr[e][3];
-                      var name = result_arr[e][2];
-                      var log_from = result_arr[e][8];
-                      var log_to = result_arr[e][9];
-                      var pla_from = result_arr[e][5];
-                      var pla_to = result_arr[e][6];
-                      var com = result_arr[e][4];
-                      var com_from = result_arr[e][10];
-                      var com_to = result_arr[e][11];
-                      color = color.substring(1, color.length-1);
-                      name = name.substring(1, name.length-1);
-                      object = object.substring(1, object.length-1);
-                      log_from = log_from.substring(1, log_from.length-4);
-                      log_to = log_to.substring(1, log_to.length-4);
-                      pla_from = pla_from.substring(1, pla_from.length-4);
-                      pla_to = pla_to.substring(1, pla_to.length-4);
-                      com = com.substring(1, com.length-1);
-                      plan = plan + '<div class="row" style="width:100%;height:100%"><div class="col-12" style="width:100%;height:100%; margin:auto"><div class="p-3 mb-2 text-white" style="background-color:'+color+';"><div class="row"><div class="col-16"><p style="font-size: 23px">'+object+' - '+name+'</p></div></div><div class="row"><div class="col-6"><p style="font-size: 15px">Planned from: '+pla_from+'</p><p style="font-size: 15px">Planned to:      '+pla_to+'</p><p style="font-size: 15px">Comment:      '+com+'</p></div><div class="col-6"><p style="font-size: 15px">Loged from: '+log_from+'</p><p style="font-size: 15px">Loged to: '+log_to+'</p><p style="font-size: 15px">Log-in comment: '+com_from+'</p><p style="font-size: 15px">Log-out comment: '+com_to+'</p></div></div></div></div></div>';
-                 }
-             }
-           }
-           //alert(check);
-           //check =check.substring(1,check.length-1);
-           /*if(check != ""){
-              alert(i+ "suc");
-           }*/
-
-          let dts = "";
-         
-          
             if (day == "Monday") {
-            s = "background-color:#303030; color:white;";
-            }else if (day == "Tuesday") {
-                s = "background-color:#585858; color:white;";
-        }else if (day == "Wednesday") {
-            s = "background-color:#303030; color:white;";
-        }else if (day == "Thursday") {
-            s = "background-color:#585858; color:white;";
-        }else if (day == "Friday") {
-            s = "background-color:#303030; color:white;";
-        }else if (day == "Saturday") {
-            s = "background-color:#585858; color:white;";
-        }else if (day == "Sunday") {
-            s = "background-color:#303030; color:white;";
-        }
+              s = "background-color:#303030; color:white;";
+            } else if (day == "Tuesday") {
+              s = "background-color:#585858; color:white;";
+            } else if (day == "Wednesday") {
+              s = "background-color:#303030; color:white;";
+            } else if (day == "Thursday") {
+              s = "background-color:#585858; color:white;";
+            } else if (day == "Friday") {
+              s = "background-color:#303030; color:white;";
+            } else if (day == "Saturday") {
+              s = "background-color:#585858; color:white;";
+            } else if (day == "Sunday") {
+              s = "background-color:#303030; color:white;";
+            }
 
 
-            if(i == 1){
-                //alert("kjasd--");
-                liTag += `<br>`;
+            if (i == 1) {
+              liTag += `<br>`;
             }
 
             liTag += `<tr><td id="${i}-000" class="${isToday}" style="${s};font-size: 12px;height:100px;border: solid black">${i} ${months2[currMonth]} <br> ${day} </td>${dts}<td style='width: 100%'>${plan}</td><tr>`;
 
 
 
-          if (day == "Sunday" && i != 31) {
+            if (day == "Sunday" && i != 31) {
+
+            }
 
           }
 
+          currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+          daysTag.innerHTML = liTag;
         }
 
-        currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-        daysTag.innerHTML = liTag;
-        //alert("kjashjg");
-      }
+
+
+
+        <?php $dsa = ""; ?>
+        prevNextIcon.forEach(icon => { // getting prev and next icons
+          icon.addEventListener("click", () => { // adding click event on both icons
+            // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
+            currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+            if (currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
+              // creating a new date of current year & month and pass it as date value
+              date = new Date(currYear, currMonth, new Date().getDate());
+              currYear = date.getFullYear(); // updating current year with new date year
+              currMonth = date.getMonth(); // updating current month with new date month
+            } else {
+              date = new Date(); // pass the current date as date value
+            }
+            renderCalendar(); // calling renderCalendar function
 
 
 
 
-      <?php $dsa = ""; ?>
-      prevNextIcon.forEach(icon => { // getting prev and next icons
-        icon.addEventListener("click", () => { // adding click event on both icons
-          // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
-          currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-
-          if (currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
-            // creating a new date of current year & month and pass it as date value
-            date = new Date(currYear, currMonth, new Date().getDate());
-            currYear = date.getFullYear(); // updating current year with new date year
-            currMonth = date.getMonth(); // updating current month with new date month
-          } else {
-            date = new Date(); // pass the current date as date value
-          }
-          //first = 1;
-          renderCalendar(); // calling renderCalendar function
-
-
-          //add_dat();
-
-
+          });
         });
-      });
 
 
-      function isNumber(value) {
-  return typeof value === 'number';
-}
+        function isNumber(value) {
+          return typeof value === 'number';
+        }
 
-    </script>
-
-
-    
+      </script>
 
 
-  <?php else: ?>
-  <?php endif; ?>
+
+
+
+    <?php else: ?>
+    <?php endif; ?>
 
 
 

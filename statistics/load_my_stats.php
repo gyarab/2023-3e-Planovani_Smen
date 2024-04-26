@@ -1,5 +1,4 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
@@ -19,18 +18,13 @@ for ($i = 1; $i < 32; $i++) {
     } else {
         $Day = $i;
     }
-    //break;
 
 $Date = $Year. "-".$Month."-".$Day;
-//$sql = " SELECT * FROM attendace WHERE id_shift='$idArr[$x]' AND year_shift=$Year AND month_shift =$Month ";
-//$sql = "SELECT * FROM saved_shift_data WHERE (saved_shift_data.saved_date='$Date' AND saved_shift_data.id_user='$Id' AND saved_shift_data.id IN (SELECT planned_id FROM attendance));";
 $sql = "SELECT * FROM saved_shift_data, attendance WHERE (saved_shift_data.id = attendance.planned_id AND saved_shift_data.saved_date='$Date' AND saved_shift_data.id_user=$Id AND saved_shift_data.id IN (SELECT planned_id FROM attendance));";
 $check_get = mysqli_query($conn, $sql);
 if (mysqli_num_rows($check_get) == 0) {
     $saved_data[$count] = 0;
-    //$saved_data[$count][1] = null;
-    //$saved_data[$count][1] = $i;
-    //$saved_data[$count][2] = 0;
+
     $count++;
 }else{
 $result = $mysqli->query($sql);
@@ -63,12 +57,9 @@ while ($rows = $result->fetch_assoc()) {
         $time = $time;
     }
 }
-    //$time = $time +strtotime($log_to) - strtotime($log_from); 
     
     $saved_data[$count] = $time;
-    //$saved_data[$count][1] = $log_to;
-    //$saved_data[$count][1] = $i;
-    //$saved_data[$count][2] = $delay_arr;
+
     $count++;
 }
 }

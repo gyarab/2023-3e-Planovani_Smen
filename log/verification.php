@@ -1,9 +1,8 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+    $is_invalid = false;
     if (isset($_POST["verification_code"])) {
         $verification_code = $_POST["verification_code"];
 
@@ -38,13 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql2 = "DELETE FROM verification";
                 $mysqli->query($sql2);
 
-                header("Location: signup-success.html");
+                header("Location: ../index.php");
                 exit;
             } else {
-                die("Failed to insert data into user2: " . $mysqli->error);
             }
         } else {
-            die("Verification code not found or expired.");
+            $is_invalid = true;
         }
     }
 }
@@ -67,6 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="verification_code" placeholder="Enter verification code" required>
             <br>
             <input type="submit" value="Verify">
+            <?php if ($is_invalid): ?>
+                    <em style="color:red">Invalid code</em>
+                <?php endif; ?>
         </form>
     </div>
     </div>

@@ -1,52 +1,37 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
-$mysqli = require("../database.php");
+$mysqli = require ("../database.php");
 
-
-
-//$mysqli = require __DIR__ . "/database.php";
-//include("database.php");
 $conn = new mysqli($host, $username, $password, $dbname);
-//$input = array();
 $input = $_POST['input'];
 
-//$query = "SELECT * FROM user2 WHERE firstname LIKE '{$input}%' OR middlename LIKE '{$input}%' OR lastname LIKE '{$input}%' OR position LIKE '{$input}%'";
 $arr = array();
 $arr = explode(" ", $input);
 $query = "SELECT * FROM user2 WHERE firstname LIKE '$arr[0]%' AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
 if (count($arr) != 0) {
-  
+
   for ($i = 0; $i < count($arr); $i++) {
-    if($arr[$i] == " "){
+    if ($arr[$i] == " ") {
       array_splice($arr, $i);
     }
   }
   for ($i = 0; $i < count($arr); $i++) {
-    //echo"<p>".$i."-".$arr[$i]."-</p>";
   }
 }
 
-if (count($arr) > 2 && ($arr[count($arr)- 1] !="" || $arr[count($arr)- 1] !=" ")) {
-  
-  for ($i = 2; $i < count($arr)-1; $i++) {
-    /*if($arr[$i] == " "){
-      array_splice($arr, $i);
-    }**/
-    $arr[1] = $arr[1]." ".$arr[$i];
+if (count($arr) > 2 && ($arr[count($arr) - 1] != "" || $arr[count($arr) - 1] != " ")) {
+
+  for ($i = 2; $i < count($arr) - 1; $i++) {
+
+    $arr[1] = $arr[1] . " " . $arr[$i];
 
   }
-  $arr[3] =  $arr[count($arr)- 1];
+  $arr[3] = $arr[count($arr) - 1];
 
   for ($i = 0; $i < count($arr); $i++) {
-    echo"<p>".$i."-".$arr[$i]."-</p>";
+    echo "<p>" . $i . "-" . $arr[$i] . "-</p>";
   }
 }
-//echo"<p>".$input."</p>";
 
-
-//}else{
-//$query = "SELECT * FROM user2 WHERE (firstname LIKE '$arr[0]%' OR firstname LIKE '$arr[1]%') AND middlename LIKE '$arr[1]%' AND lastname LIKE '$arr[2]%' ";
-//}
 $quer = array();
 $quer2 = array();
 $quer3 = array();
@@ -56,7 +41,7 @@ $c = 0;
 if ($arr[0] == null) {
   $quer[$c] = "SELECT * FROM user2";
   $c++;
-} else if ($arr[0] != " "&& $arr[1] == null) {
+} else if ($arr[0] != " " && $arr[1] == null) {
   for ($i = 0; $i < 1; $i++) {
     for ($x = 0; $x < 1; $x++) {
       for ($z = 0; $z < 1; $z++) {
@@ -81,7 +66,6 @@ if ($arr[0] == null) {
         $quer[$c] = "SELECT * FROM user2 WHERE middlename LIKE '$arr[$i]%' AND lastname LIKE '$arr[$x]%' ";
         $c++;
       }
-      //}
     }
   }
 } else {
@@ -109,7 +93,6 @@ $phone_arr = array();
 $pos = $_POST['position'];
 $obj = $_POST['object'];
 $shi = $_POST['shift'];
-//echo "<p>sad".$shi[0]."</p>";
 if (count($pos) != 0) {
   for ($d = 0; $d < $c; $d++) {
     for ($e = 0; $e < count($pos); $e++) {
@@ -135,8 +118,7 @@ if (count($pos) != 0) {
     }
   }
 }
-//$ps_arr = array();
-//echo "<h6>".$quer[0]."</h6>";
+
 for ($d = 0; $d < $c; $d++) {
   $result = mysqli_query($conn, $quer[$d]);
   if (mysqli_num_rows($result) > 0) { ?>
@@ -151,7 +133,6 @@ for ($d = 0; $d < $c; $d++) {
           $quer2[0] = "SELECT * FROM manager_rights WHERE id_user='$id' ";
 
           for ($p = 0; $p < count($obj); $p++) {
-            //$quer2[0] = "SELECT * FROM manager_rights WHERE id_user='$id' ";
             if ($p == 0) {
               $quer2[0] = $quer2[0] . "AND (object_id='" . $obj[$p] . "' ";
             } else {
@@ -189,12 +170,10 @@ for ($d = 0; $d < $c; $d++) {
         if (count($shi) != 0 && count($obj) != 0) {
 
 
-          //$quer4 = "SELECT * FROM shift_assignment WHERE user_id='$id' ";
           for ($n = 0; $n < count($shi); $n++) {
             $quer4 = "SELECT * FROM shift_assignment WHERE user_id='$id' ";
             $pos_boo = false;
             $obj_boo = false;
-            //$quer2[0] = "SELECT * FROM manager_rights WHERE id_user='$id' ";
 
             $quer4 = $quer4 . "AND shift_name='" . $shi[$n] . "' ";
 
@@ -202,41 +181,27 @@ for ($d = 0; $d < $c; $d++) {
             if (mysqli_num_rows($fetch4) > 0) {
               $pos_boo = true;
             }
-            //echo "<p>asdadsljk</p>";
             if ($pos_boo == true) {
-              
+
               $quer5 = "SELECT * FROM create_shift WHERE shift_name='$shi[$n]' ";
               $fetch5 = mysqli_query($conn, $quer5);
               $id_sh_ob = array();
               if (mysqli_num_rows($fetch5) > 0) {
-                
+
                 $result_id = mysqli_query($conn, $quer5);
                 while ($row_id = mysqli_fetch_assoc($result_id)) {
                   array_push($id_sh_ob, $row_id['object_id']);
                 }
                 for ($j = 0; $j < count($obj); $j++) {
-                  //echo "<p>asdadsljk</p>";
 
                   if (in_array($obj[$j], $id_sh_ob)) {
                     $obj_boo = true;
-                    //break;
                   }
                 }
               } else {
                 $obj_boo = false;
               }
-              /*for ($a = 0; $a < count($shi); $a++) {
-                echo "<p>".$shi[$a]."</p>";
-              }*/
-              //echo "<p>".$shi[$n]."</p>";
-              /*if($pos_boo == true){
-              echo "<p>Pos</p>";
-              }
-              echo "<p>".$obj[0]."</p>";*/
-              /*if($obj_boo == true){
-                echo "<p>Obj</p>";
-                }*/
-              /*echo "<p>".$id_sh_ob[0]."</p>";*/
+
               if ($pos_boo == true && $obj_boo == true) {
                 $firstname = $row['firstname'];
                 $middlename = $row['middlename'];
@@ -260,9 +225,7 @@ for ($d = 0; $d < $c; $d++) {
                 }
               }
             }
-            /*for ($f = 0; $f < count($obj); $f++) {
 
-            }*/
 
           }
 
@@ -270,7 +233,6 @@ for ($d = 0; $d < $c; $d++) {
 
           $quer3[0] = "SELECT * FROM shift_assignment WHERE user_id='$id' ";
           for ($r = 0; $r < count($shi); $r++) {
-            //$quer2[0] = "SELECT * FROM manager_rights WHERE id_user='$id' ";
             if ($r == 0) {
               $quer3[0] = $quer3[0] . "AND (shift_name='" . $shi[$r] . "' ";
             } else {
@@ -337,11 +299,9 @@ for ($d = 0; $d < $c; $d++) {
 
 
   } else {
-    //echo "<h6>No data found<h6>";
   }
 
 }
-//echo "<h6>k".count($pos)."</h6>";
 if (0 == count($id_arr)) {
   echo "<h6>No data found<h6>";
 } else {
@@ -480,7 +440,6 @@ if (0 == count($id_arr)) {
 
     $sql2 = "SELECT * FROM shift_assignment WHERE user_id='$input' ";
     $result_get2 = $mysqli->query($sql2);
-    //echo "<p>Hi</p>";
     $fetch2 = mysqli_query($conn, "SELECT * FROM list_of_objects ");
     $data2 = array();
     $data3 = array();
@@ -493,7 +452,6 @@ if (0 == count($id_arr)) {
     $get_id2 = array();
     $get_name2 = array();
     $sm2 = array();
-    //$get_id = array();
     $get_object2 = array();
     $numberval2 = array();
     $arr3[][] = array();
@@ -539,7 +497,6 @@ if (0 == count($id_arr)) {
     for ($x = 0; $x < count($data2); $x++) {
       if ($data3[$x] == null) {
         static $dd2 = 1;
-        //$b = false;
         $help2 = 0;
         $search2 = $data1[$x] . "";
         $numberval2[$count2] = $data1[$x] . "";
@@ -700,14 +657,11 @@ function sub_object2($searching, $dat1, $dat2, $dat3, $dat4, $id, $co, $object, 
       } else {
 
       }
-      /*if (in_array($dat1[$i], $id)) {
-          array_push($arr, $dat2[$i]);
-      }*/
+
       if (in_array($dat1[$i], $s)) {
         $arr3[$rows2][0] = $dat2[$i];
         for ($u = 0; $u < count($object); $u++) {
           if ($object[$u] == $dat1[$i]) {
-            //array_push($arr, $name[$u]);
             $arr3[$rows2][$push2] = $name[$u];
             $push2++;
           }
@@ -715,10 +669,8 @@ function sub_object2($searching, $dat1, $dat2, $dat3, $dat4, $id, $co, $object, 
         }
         $rows2++;
 
-        //$key2 = array_search($dat1[$i], $object); 
-        //array_push($arr, $name[$key2]);
+
       }
-      //echo "<p>dassasd</p>";
 
 
       $dd2++;
@@ -736,5 +688,4 @@ function sub_object2($searching, $dat1, $dat2, $dat3, $dat4, $id, $co, $object, 
   }
 
 }
-//}
 ?>

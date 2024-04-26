@@ -1,114 +1,26 @@
 <?php
 
-/**Main sign up page */
+$cons = "";
+session_start();
 
-/**Vars that check if everything matche */
-$firstnameis_invalid = true;
-$lastnameis_invalid = true;
-$emailis_invalid = false;
-$passwordlenghtis_invalid = false;
-$passwordnumberis_invalid = false;
-$passwordcharis_invalid = false;
-$passwordmatchis_invalid = false;
-$allis_invalid = true;
+if (isset($_SESSION["user2_id"])) {
 
-if (!empty ($_POST["firstname"])) {
-    $firstnameis_invalid = false;
-}
+    $mysqli = require ("../database.php");
 
-if (!empty ($_POST["lastname"])) {
-    $lastnameis_invalid = false;
-}
+    $sql = "SELECT * FROM user2
+            WHERE id = {$_SESSION["user2_id"]}";
 
-if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-    $emailis_invalid = true;
-}
+    $result = $mysqli->query($sql);
 
+    $user = $result->fetch_assoc();
+    $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+    $resultp = $mysqli->query($sqlp);
+    while ($rrr = $resultp->fetch_assoc()) {
+        $userp = $rrr['position'];
+        $userid = $rrr['id'];
 
-if (strlen($_POST["password"]) < 8) {
-    $passwordlenghtis_invalid = true;
-}
-
-
-if (!preg_match("/[a-z]/i", $_POST["password"])) {
-    $passwordcharis_invalid = true;
-}
-
-
-if (!preg_match("/[0-9]/", $_POST["password"])) {
-    $passwordnumberis_invalid = true;
-}
-
-if ($_POST["password"] !== $_POST["password_confirmation"]) {
-    $passwordmatchis_invalid = true;
-}
-
-
-if (
-    ($passwordmatchis_invalid == false) &&
-    ($passwordnumberis_invalid == false) &&
-    ($passwordlenghtis_invalid == false) &&
-    ($passwordcharis_invalid == false) &&
-    ($emailis_invalid == false) &&
-    ($lastnameis_invalid == false) &&
-    ($firstnameis_invalid == false)
-) {
-
-    $allis_invalid = false;
-}
-
-/**Test print of vars */
-/**print "pasma $passwordmatchis_invalid,";
-print "pas nu $passwordnumberis_invalid,";
-print "pasl $passwordlenghtis_invalid,";
-print "pasch $passwordcharis_invalid,";
-print "em $emailis_invalid,";
-print "la $lastnameis_invalid,";
-print "fi $firstnameis_invalid,";
-print "as $allis_invalid,";*/
-
-/**Creation of new user account to database */
-/*--if ($allis_invalid == false) {
-
-    /**Hashing password */
-    /*---$password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $mysqli = require __DIR__ . "/database.php";
-    /**Inserting data */
-   /*-- $sql = "INSERT INTO user2 (firstname, middlename, lastname, email, password_hash, countryCode, phone, position)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $mysqli->stmt_init();
-
-    if (!$stmt->prepare($sql)) {
-        die ("SQL error: " . $mysqli->error);
     }
-
-    $stmt->bind_param(
-        "sssssiis",
-        $_POST["firstname"],
-        $_POST["middlename"],
-        $_POST["lastname"],
-        $_POST["email"],
-        $password_hash,
-        $_POST["countryCode"],
-        $_POST["phone"],
-        $_POST["position"]
-    );
-
-    if ($stmt->execute()) {
-
-        header("Location: signup-success.html");
-        exit;
-    } else {
-        /** Code that checks if is email unique*/
-        /**Needs to be reconstruct  */
-        /*--if ($mysqli->errno === 1062) {
-            //die("email already taken");
-        } else {
-            //die($mysqli->error . " " . $mysqli->errno);
-        }
-    }
-}*/
+}
 
 ?>
 <!DOCTYPE html>
@@ -118,10 +30,8 @@ print "as $allis_invalid,";*/
 <html>
 
 <head>
-    <title>Signup</title>
+    <title>Add to the system</title>
     <meta charset="UTF-8">
-    <!--<link rel="stylesheet" href="css/style.css">-->
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">-->
     <script src="/js/validation.js" defer></script>
     <link rel="stylesheet" href="../css/main_page.css">
     <!-- Boxicons CDN Link -->
@@ -138,16 +48,21 @@ print "as $allis_invalid,";*/
 </head>
 
 <body>
-
+<?php if (isset($user) && $userp == "admin"): ?>
 
     <nav>
+
         <div class="navbar container">
+
             <i class='bx bx-menu'></i>
-            <div class="logo"><a href="../main/admin_main_page.php">Home :
+            <div class="logo"><a
+                    style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                    href="../main/admin_main_page.php">Home :
                     <?= $cons ?>
                     <?= htmlspecialchars($user["firstname"]) ?>
                     <?= htmlspecialchars($user["middlename"]) ?>
                     <?= htmlspecialchars($user["lastname"]) ?>
+
                 </a></div>
             <div class="nav-links">
                 <div class="sidebar-logo">
@@ -158,51 +73,67 @@ print "as $allis_invalid,";*/
                     <li>
                         <a href="#">EMPLOYEES</a>
                         <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-                        <ul class="em-sub-menu sub-menu">
-                            <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                            <li><a href="../search/list_of_employees.php">LIST</a></li>
-                            <li><a href="#">CHANGE DATA</a></li>
+                        <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                            <div>
+                                <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                                <li><a href="../search/list_of_employees.php">LIST</a></li>
+                                <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                                <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                            </div>
                         </ul>
+
                     </li>
                     <li>
                         <a href="#">DATABASE</a>
                         <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-                        <ul class="htmlCss-sub-menu sub-menu">
+                        <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
                             <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
                             <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                            <li><a href="#">CURRENT SCHEDULE</a></li>
+                            <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
                             <li class="more">
                                 <span><a href="#">More</a>
                                     <i class='bx bxs-chevron-right arrow more-arrow'></i>
                                 </span>
-                                <ul class="more-sub-menu sub-menu">
-                                    <li><a href="#"></a>Algorithm</li>
-                                    <li><a href="#">Pre-loader</a></li>
-                                    <li><a href="#">Glassmorphism</a></li>
+                                <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                                    <li><a href="#"></a></li>
+                                    <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                    <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#">HISTORY</a>
+                        <a href="#">OTHERS</a>
                         <i class='bx bxs-chevron-down js-arrow arrow '></i>
-                        <ul class="js-sub-menu sub-menu">
-                            <li><a href="#">Dynamic Clock</a></li>
-                            <li><a href="#">Form Validation</a></li>
-                            <li><a href="#">Card Slider</a></li>
-                            <li><a href="#">Complete Website</a></li>
+                        <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                            <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                            <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                            <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">STATISTICS</a></li>
-                    <li><a href="../log/logout.php">LOG OUT</a></li>
+                    <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+                    <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
                 </ul>
             </div>
+
             <div class="search-box">
                 <i class='bx bx-search'></i>
                 <div class="input-box">
                     <input type="text" placeholder="Search...">
+                    <br>
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>123456789</p>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
     </nav>
     <script src="js/main_page.js"></script>
@@ -221,16 +152,15 @@ print "as $allis_invalid,";*/
             <h1>Sign up</h1>
             <br>
 
-            <!--<form method="post" id="signup" class="login-form" novalidate>-->
             <div class="row">
                 <div class='col-12 col-md-6'>
                     <div class="form-group">
                         <h6 for="firstname">First name</h6>
 
                         <input type="text" id="firstname" name="firstname" class="form-control"
-                            placeholder="Enter your fisrt name"
-                            value="<?php //htmlspecialchars($_POST["firstname"] ?? "")    ?>">
-                        <small id="firstnameh" class="form-text" style="color: red;visibility:hidden" >*First name is required</small>
+                            placeholder="Enter your fisrt name" value="">
+                        <small id="firstnameh" class="form-text" style="color: red;visibility:hidden">*First name is
+                            required</small>
 
                     </div>
                 </div>
@@ -240,9 +170,9 @@ print "as $allis_invalid,";*/
                         <h6 for="lastname">Last name</h6>
 
                         <input type="text" id="lastname" name="lastname" class="form-control"
-                            placeholder="Enter your last name"
-                            value="<?php //htmlspecialchars($_POST["lastname"] ?? "")    ?>">
-                        <small id="lastnameh" class="form-text" style="color: red;visibility:hidden">*Last name is required</small>
+                            placeholder="Enter your last name" value="">
+                        <small id="lastnameh" class="form-text" style="color: red;visibility:hidden">*Last name is
+                            required</small>
 
                     </div>
                 </div>
@@ -255,8 +185,7 @@ print "as $allis_invalid,";*/
                         <h6 for="middlename">Middle name</h6>
 
                         <input type="text" id="middlename" name="middlename" class="form-control"
-                            placeholder="Enter your middle name"
-                            value="<?php //htmlspecialchars($_POST["middlename"] ?? "")    ?>">
+                            placeholder="Enter your middle name" value="">
                     </div>
                 </div>
             </div>
@@ -267,16 +196,15 @@ print "as $allis_invalid,";*/
                     <div class="form-group">
                         <h6 for="email">Email</h6>
                         <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email"
-                            value="<?php //htmlspecialchars($_POST["email"] ?? "")    ?>">
+                            value="">
                         <small id="emailh" class="form-text" style="color: red;visibility:hidden">*</small>
 
                     </div>
-                  
+
                     <h6 for="countryCode">Phone</h6>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <select name="countryCode" id="countryCode" class="form-select"
-                                value="<?php //htmlspecialchars($_POST["countryCode"] ?? "")    ?>">
+                            <select name="countryCode" id="countryCode" class="form-select" value="">
                                 <option data-countryCode="CZ" value="420">Czech Republic (+420)</option>
                                 <option data-countryCode="SK" value="421">Slovakia (+421)</option>
                                 <optgroup label="Other countries">
@@ -512,23 +440,21 @@ print "as $allis_invalid,";*/
                                 </script>
                             </select>
 
-                            
+
                             <input id="phone" type="text" name="phone" class="form-control"
                                 placeholder="Enter your phone number">
-      
-                            </div>
-                            <div class="form-group">
-                                <small id="phoneh" class="form-text" style="color: red;visibility:hidden">*</small>
-                                </div>
-                        </div>
 
-                    
+                        </div>
+                        <div class="form-group">
+                            <small id="phoneh" class="form-text" style="color: red;visibility:hidden">*</small>
+                        </div>
+                    </div>
+
+
                 </div>
                 <div class='col-12 col-md-6'>
                     <div class="form-group">
                         <h6 for="password">Password</h6>
-                        <!--<input type="password" id="password" name="password" class="form-control"
-                                value="<?php //htmlspecialchars($_POST["password"] ?? "")    ?>">-->
                         <input type="password" id="password" name="password" class="form-control"
                             placeholder="Enter your password">
                         <small id="passwordh" class="form-text" style="color: red;visibility:hidden">*</small>
@@ -537,9 +463,9 @@ print "as $allis_invalid,";*/
                     <div class="form-group">
                         <h6 for="password_confirmation">Repeat password</h6>
                         <input type="password" id="password_confirmation" name="password_confirmation"
-                            placeholder="Enter your password again" class="form-control"
-                            value="<?php //htmlspecialchars($_POST["password_confirmation"] ?? "")    ?>">
-                            <small id="password_confirmationh" class="form-text" style="color: red;visibility:hidden">*</small>
+                            placeholder="Enter your password again" class="form-control" value="">
+                        <small id="password_confirmationh" class="form-text"
+                            style="color: red;visibility:hidden">*</small>
                     </div>
                 </div>
             </div>
@@ -572,26 +498,15 @@ print "as $allis_invalid,";*/
                 </label>
             </div>
 
-
-            <!--<select name="position" id="position">
-                    <option data-positionCode="FE" value="fulltime_employee" Selected>HPP - Employee</option>
-                    <option data-positionCode="PE" value="parttime_employee">DPP - Employee</option>
-                    <option data-positionCode="MA" value="manager">Manager</option>
-                    <option data-positionCode="AM" value="admin">Admin</option>
-                </select>-->
             <div>
                 <br>
                 <br>
                 <button class="btn btn-primary" name="btnSubmit" style="float:right" onclick="ADD_user()">Sign
                     up</button>
-                <!--<?php if ($allis_invalid): ?>
-                        <em style="color:red">Every requirement needs to be filled</em>
-                    <?php endif; ?>-->
+
 
 
             </div>
-            <!--</div>-->
-            <!--</form>-->
 
 
 
@@ -616,9 +531,8 @@ print "as $allis_invalid,";*/
                 }
             }
 
-            //alert(password);
+
             var status;
-            //alert(password);
             $.ajax({
                 url: "../log/add_user.php",
                 method: "POST",
@@ -635,7 +549,6 @@ print "as $allis_invalid,";*/
                     status = status.split(",");
                     alert(data);
                 }
-                //alert(status);
 
 
             });
@@ -643,14 +556,12 @@ print "as $allis_invalid,";*/
             for (var i = 0; i < status.length; i++) {
                 stringArray.push(status[i]);
                 if (i != status.length - 1) {
-                    //stringArray.push(" ");
                 }
             }
-           
-            //alert(stringArray[0]);
-            if(stringArray.length == 0){
+
+            if (stringArray.length == 0) {
                 window.location.href = "../log/signup-success.html";
-            }else{
+            } else {
 
                 document.getElementById("firstnameh").style.visibility = "hidden";
                 document.getElementById("lastnameh").style.visibility = "hiiden";
@@ -658,90 +569,61 @@ print "as $allis_invalid,";*/
                 document.getElementById("passwordh").style.visibility = "hidden";
                 document.getElementById("password_confirmationh").style.visibility = "hidden";
                 document.getElementById("phoneh").style.visibility = "hidden";
-            for(var i = 0; i < stringArray.length; i++){
-                if(stringArray[i] == 1){
-                    document.getElementById("firstnameh").style.visibility = "visible";
-                    //alert("hjasdhjkdashjk");
-                }else if(stringArray[i] == 2){
-                    document.getElementById("lastnameh").style.visibility = "visible";
-                }else if(stringArray[i] == 3){
-                    document.getElementById("emailh").style.visibility = "visible";
-                    document.getElementById("emailh").innerText = "*Invalid email format";
-                }else if(stringArray[i] == 10){
-                    document.getElementById("emailh").style.visibility = "visible";
-                    document.getElementById("emailh").innerText = "*Email already registered";
-                }else if(stringArray[i] == 4) {
-                    document.getElementById("passwordh").style.visibility = "visible";
-                    document.getElementById("passwordh").innerText = "*Password needs to be at least 8 charaters long";
-                }else if(stringArray[i] == 5 || stringArray[i] == 6 || stringArray[i] == 7) {
-                    document.getElementById("passwordh").style.visibility = "visible";
-                    document.getElementById("passwordh").innerText = "*Password needs to contain one uppercase and lowercase letter and one number ";
-                }else if(stringArray[i] == 8){
-                    document.getElementById("password_confirmationh").style.visibility = "visible";
-                    document.getElementById("password_confirmationh").innerText = "*Passwords do not match";                   
-                }else if(stringArray[i] == 9){
-                    document.getElementById("phoneh").style.visibility = "visible";
-                    document.getElementById("phoneh").innerText = "*Phone number cannot contain letters";                   
+                for (var i = 0; i < stringArray.length; i++) {
+                    if (stringArray[i] == 1) {
+                        document.getElementById("firstnameh").style.visibility = "visible";
+                    } else if (stringArray[i] == 2) {
+                        document.getElementById("lastnameh").style.visibility = "visible";
+                    } else if (stringArray[i] == 3) {
+                        document.getElementById("emailh").style.visibility = "visible";
+                        document.getElementById("emailh").innerText = "*Invalid email format";
+                    } else if (stringArray[i] == 10) {
+                        document.getElementById("emailh").style.visibility = "visible";
+                        document.getElementById("emailh").innerText = "*Email already registered";
+                    } else if (stringArray[i] == 4) {
+                        document.getElementById("passwordh").style.visibility = "visible";
+                        document.getElementById("passwordh").innerText = "*Password needs to be at least 8 charaters long";
+                    } else if (stringArray[i] == 5 || stringArray[i] == 6 || stringArray[i] == 7) {
+                        document.getElementById("passwordh").style.visibility = "visible";
+                        document.getElementById("passwordh").innerText = "*Password needs to contain one uppercase and lowercase letter and one number ";
+                    } else if (stringArray[i] == 8) {
+                        document.getElementById("password_confirmationh").style.visibility = "visible";
+                        document.getElementById("password_confirmationh").innerText = "*Passwords do not match";
+                    } else if (stringArray[i] == 9) {
+                        document.getElementById("phoneh").style.visibility = "visible";
+                        document.getElementById("phoneh").innerText = "*Phone number cannot contain letters";
+                    }
+
+
                 }
-                
-                /*if(){
-
-                }*/
-
             }
-        }
-            /*$.ajax({
-                alert(stringArray);
-                        url: "add_user.php",
-                        method: "POST",
-                        dataType: "json",
-                        cache: false,
-                        async: false,
-                        data: { /*firstname: firstname, lastname: lastname, middlename: middlename, email: emai,
-                        password: password, password_confirmation: password_confirmation, countryCode: countryCode, position: position*/ /*},
-/*success: function (data) {
-    alert("dadsds");
-}
- 
-});**/
+
         }
     </script>
 
+<?php else: ?>
+        <script>
+            document.getElementById("body").style.backgroundColor = " rgba(118,184,82,1)";
+        </script>
+        <div class="login-page">
+            <div class="form">
+                <h2>
+                    You are current log out
+                </h2>
+                <br>
+                <br>
+                <p style="float:left">Log-in <a href="../log/login.php">here:</a></p>
+                <br>
+                <br>
+                <p style="float:left">Go to home page <a href="../index.php">here:</a></p>
+                <br>
+                <br>
+                <br>
 
+            </div>
+        </div>
 
-
-
-
-    <!--<label for="position">Position</label>
-    <select name="position" id="position">
-        <option data-positionCode="FE" value="fulltime_employee" Selected>HPP - Employee</option>
-        <option data-positionCode="PE" value="parttime_employee">DPP - Employee</option>
-        <option data-positionCode="MA" value="manager">Manager</option>
-        <option data-positionCode="AM" value="admin">Admin</option>
-    </select>
-    <div>
-        <br>
-        <br>
-        <button name="btnSubmit">Sign up</button>
-        <?php if ($allis_invalid): ?>
-            <em style="color:red">Every requirement needs to be filled</em>
-        <?php endif; ?>
-
-
-    </div>-->
-    <!--</div>
-    </form>
-    </div>
-    </div>-->
-    <?php
-    /**Code for input box after refreh */
-    /**The code not works  */
-    if (isset ($_POST[''])) {
-        if (isset ($_POST['countryCode'])) {
-            $value = $_POST['countryCode'];
-        }
-    }
-    ?>
+    <?php endif; ?>
 </body>
 
 </html>

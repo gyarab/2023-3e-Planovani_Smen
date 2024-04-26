@@ -1,27 +1,16 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
-$mysqli = require("../database.php");
+/**tento soubor nacita ulozena data z databaze a vklada je do kalendare */
+$mysqli = require ("../database.php");
 
 $conn = new mysqli($host, $username, $password, $dbname);
-$saved_data[0] = "das";
-$saved_data[1] = "sad";
-$shi_arr = $_POST['shift_arr'];
-$obj_arr = $_POST['object_arr'];
-$user = $_POST['user'];
-$shall = $_POST['shall'];
-$sql[] = array();
-$final[][] = array();
-$pas[][] = array();
-$pas[0][0] = "dasdsas";
-$pas[1][0] = "dasdas";
-$pas[2][0] = "dasdss";
-$pas[0][1] = "dasasds";
-$pas[1][1] = "dasfdbds";
-$pas[2][1] = "dasdsczx";
-$pas[0][2] = "dasdnbns";
-$pas[1][2] = "dasmmmmds";
-$pas[2][2] = "dasdjkls";
 
+$shi_arr = $_POST['shift_arr']; /**id smen na nacteni */
+$obj_arr = $_POST['object_arr'];/**id objektu na nacteni */
+$user = $_POST['user']; /**id uzivatele */
+$sql[] = array(); /**arr na sql prikazy */
+$final[][] = array();/**return arr */
+
+/**arraye pro nacteni objektu */
 $data2[] = array();
 $data3[] = array();
 $data1[] = array();
@@ -223,7 +212,6 @@ for ($i = 0; $i < count($sort_arr); $i++) {
         }
     }
 }
-//}
 
 
 
@@ -275,5 +263,4 @@ function sub_object($searching, $dat1, $dat2, $dat3, $dat4, $find2, $look, $inpu
 
 
 echo json_encode($final);
-//echo json_encode($final);
 ?>

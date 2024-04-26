@@ -5,7 +5,6 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-  //$mysqli = require __DIR__ . "/database.php";
   $mysqli = require("../database.php");
 
 
@@ -17,10 +16,6 @@ if (isset($_SESSION["user2_id"])) {
   $user = $result->fetch_assoc();
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
 
 
 ?>
@@ -220,15 +215,8 @@ $mysqli1->close();*/
             <script>
               var obj_search = new Array();
               var shi_search = new Array();
-              /*const curr_date = new Date();
-              let day =curr_date.getDate();
-              let month = curr_date.getMonth()+1;
-              let year = curr_date.getFullYear();
-
-              let sr = `${day}-${month}-${year}`;*/
 
               let currentDate = new Date().toJSON().slice(0, 10);
-              //alert(currentDate);
             </script>
 
             <br>
@@ -242,8 +230,6 @@ $mysqli1->close();*/
               <Select id="select_em" style="display: inline">
                 <option id="opt_man-0" value="0">Pick a employee</option>
                 <?php
-                /** nacteni vsech uzivatelu do select boxu */
-                //$mysqli = require __DIR__ . "/database.php";
                 $mysqli = require("../database.php");
 
 
@@ -308,8 +294,6 @@ $mysqli1->close();*/
                   document.getElementById('search_bar_em').readOnly = true;
                   document.getElementById('select_em').disabled = true;
                   document.getElementById("unselect").style.display = "";
-                  /*document.getElementById("chart").style.display = "";
-                  document.getElementById("table_stat").style.display = "";*/
                   document.getElementById("div_in").style.display = "";
                   usid = srch;
                   loader();
@@ -327,8 +311,6 @@ $mysqli1->close();*/
                 document.getElementById('search_bar_em').readOnly = true;
                 document.getElementById('select_em').disabled = true;
                 document.getElementById("unselect").style.display = "";
-                /*document.getElementById("chart").style.display = "";
-                document.getElementById("table_stat").style.display = "";*/
                 document.getElementById("div_in").style.display = "";
                 usid = vvv;
                 loader();
@@ -341,8 +323,6 @@ $mysqli1->close();*/
                 document.getElementById('select_em').value = 0;
                 document.getElementById('search_bar_em').value = "";
                 document.getElementById("unselect").style.display = "none";
-                /*document.getElementById("chart").style.display = "none";
-                document.getElementById("table_stat").style.display = "none";*/
                 document.getElementById("div_in").style.display = "none";
                  document.getElementById('frommonday').value ="";
              document.getElementById('tomonday').value ="";
@@ -506,8 +486,7 @@ $mysqli1->close();*/
 
         </div>
       </div>
-      <!--<label>In which object the shift should be:</label>
-          <br>-->
+ 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -533,14 +512,6 @@ $mysqli1->close();*/
 
 
 
-
-
-
-        <!--<div class="tree">
-            <div id="res"></div>
-          </div>
-          <br id="hbr3" style="display:none">
-          <label id="label3" style="visibility:hidden;color:red">Object needs to be selected*</label>-->
 
 
 
@@ -603,7 +574,6 @@ $mysqli1->close();*/
               var sut = document.getElementById('stosunday').value;
 
               var name = document.getElementById('sfield').value;
-              //var start = document.getElementById('sr').value;
               var start = currentDate;
 
               var mo_d = document.getElementById("smonday");
@@ -623,7 +593,6 @@ $mysqli1->close();*/
                 var jj = transfer[23]
               }
               var update = 1;
-              //alert(previous3);
               if (mo_d.checked == true) {
                 mon_day = 1;
               } else {
@@ -685,7 +654,6 @@ $mysqli1->close();*/
               var frid = JSON.parse(fri_day);
               var satd = JSON.parse(sat_day);
               var sund = JSON.parse(sun_day);
-              //alert(jj);
               $.ajax({
 
 
@@ -706,7 +674,6 @@ $mysqli1->close();*/
                 success: function (data) {
                   modal.style.display = "none";
                   alert("Shift was successfully edited");
-                  //alert("Schift saved succesfully");
                 }
               });
               $.ajax({
@@ -767,7 +734,6 @@ $mysqli1->close();*/
               },
               success: function (data) {
                 return_data = JSON.stringify(data);
-                //alert(data);
               }
 
             });
@@ -779,7 +745,6 @@ $mysqli1->close();*/
            return_data_arr =  return_data.split(",");
            for(var e = 0; e < return_data_arr.length; e++){
             return_data_arr[e] = return_data_arr[e].substring(1,return_data_arr[e].length-1);
-            //alert(return_data_arr[e]);
            }
            if(return_data_arr[0] == 1 ){
             document.getElementById("monday").checked = true;
@@ -847,7 +812,6 @@ $mysqli1->close();*/
             var suf = document.getElementById('fromsunday').value;
             var sut = document.getElementById('tosunday').value;
 
-            //var start = document.getElementById('sr').value;
             var start = currentDate;
 
             var mo_d = document.getElementById("monday");
@@ -939,17 +903,6 @@ $mysqli1->close();*/
 
             });
 
-            /*$.ajax({
-
-
-              url: "load_existing_shift.php",
-              method: "POST",
-              data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search },
-              success: function (data) {
-                $("#shift_ex_load").html(data);
-              }
-            });*/
-
           }
         </script>
 
@@ -957,75 +910,7 @@ $mysqli1->close();*/
 
 
         <br>
-        <!--<label for="colorpicker">Color Picker:</label>
-          <br>
-          <br>
-
-          <input id="color-1" type="button" class="in" onclick="Color(this.id)" style="background-color: #124072;"
-            value="">
-          <input id="color-2" type="button" class="in" onclick="Color(this.id)" style="background-color: #067088;"
-            value="">
-          <input id="color-3" type="button" class="in" onclick="Color(this.id)" style="background-color: #056362;"
-            value="">
-          <input id="color-4" type="button" class="in" onclick="Color(this.id)" style="background-color: #055d2b;"
-            value="">
-          <input id="color-5" type="button" class="in" onclick="Color(this.id)" style="background-color: #4b8723;"
-            value="">
-          <input id="color-6" type="button" class="in" onclick="Color(this.id)" style="background-color: #889d1e;"
-            value="">
-          <br>
-          <input id="color-7" type="button" class="in" onclick="Color(this.id)" style="background-color: #c3b204;"
-            value="">
-          <input id="color-8" type="button" class="in" onclick="Color(this.id)" style="background-color: #ce8425;"
-            value="">
-          <input id="color-9" type="button" class="in" onclick="Color(this.id)" style="background-color:  #a53d1a;"
-            value="">
-          <input id="color-10" type="button" class="in" onclick="Color(this.id)" style="background-color:  #880002;"
-            value="">
-          <input id="color-11" type="button" class="in" onclick="Color(this.id)" style="background-color:  #6a1161;"
-            value="">
-          <input id="color-12" type="button" class="in" onclick="Color(this.id)" style="background-color:  #4c1862 ;"
-            value="">
-          <br>
-          <input id="color-13" type="button" class="in" onclick="Color(this.id)" style="background-color: #1965b9;"
-            value="">
-          <input id="color-14" type="button" class="in" onclick="Color(this.id)" style="background-color:  #039ce0;"
-            value="">
-          <input id="color-15" type="button" class="in" onclick="Color(this.id)" style="background-color: #01969c;"
-            value="">
-          <input id="color-16" type="button" class="in" onclick="Color(this.id)" style="background-color: #009242;"
-            value="">
-          <input id="color-17" type="button" class="in" onclick="Color(this.id)" style="background-color:  #67ad31 ;"
-            value="">
-          <input id="color-18" type="button" class="in" onclick="Color(this.id)" style="background-color: #bcd637;"
-            value="">
-          <br>
-          <input id="color-19" type="button" class="in" onclick="Color(this.id)" style="background-color: #fff002;"
-            value="">
-          <input id="color-20" type="button" class="in" onclick="Color(this.id)" style="background-color: #fdaf43;"
-            value="">
-          <input id="color-21" type="button" class="in" onclick="Color(this.id)" style="background-color: #e87034;"
-            value="">
-          <input id="color-22" type="button" class="in" onclick="Color(this.id)" style="background-color: #eb1c26;"
-            value="">
-          <input id="color-23" type="button" class="in" onclick="Color(this.id)" style="background-color: #a2288d;"
-            value="">
-          <input id="color-24" type="button" class="in" onclick="Color(this.id)" style="background-color: #652d90;"
-            value="">
-          <br>
-          <input id="color-25" type="button" class="in" onclick="Color(this.id)" style="background-color: #81c1e7;"
-            value="">
-          <input id="color-26" type="button" class="in" onclick="Color(this.id)" style="background-color: #50ddd5;"
-            value="">
-          <input id="color-27" type="button" class="in" onclick="Color(this.id)" style="background-color: #addc81;"
-            value="">
-          <input id="color-28" type="button" class="in" onclick="Color(this.id)" style="background-color: #ffffba;"
-            value="">
-          <input id="color-29" type="button" class="in" onclick="Color(this.id)" style="background-color: #fea698;"
-            value="">
-          <input id="color-30" type="button" class="in" onclick="Color(this.id)" style="background-color: #b697dd;"
-            value="">
-          <br>-->
+        <
 
         <script>
           var input_obj =
@@ -1044,13 +929,11 @@ $mysqli1->close();*/
             method: "POST",
             data: { input: input_obj },
             success: function (data) {
-              //$("#searchresult").css("display", "inline");
               $("#shi_load").html(data);
             }
           });
 
           $('#option').change(function () {
-            //bj_search = [];
             obj_search = [];
             shi_search = [];
             var inp = $(this).val();
@@ -1068,21 +951,8 @@ $mysqli1->close();*/
 
           });
 
-          /*function pos_click(clicked_val) {
 
-              if (pos_search.includes(clicked_val) == true) {
-                  for (let i = 0; i < pos_search.length; i++) {
-                      if (pos_search[i] === clicked_val) {
-                          pos_search.splice(i, 1);
-                      }
-                  }
-              } else {
-                  pos_search.push(clicked_val);
-              }
-
-          }*/
           function obj_click(clicked_val) {
-            //alert(obj_search);
 
             if (obj_search.includes(clicked_val) == true) {
               for (let i = 0; i < obj_search.length; i++) {
@@ -1107,7 +977,6 @@ $mysqli1->close();*/
             });
           }
           function shift_search(clicked_val) {
-            //alert(shift_search);
             if (shi_search.includes(clicked_val) == true) {
               for (let i = 0; i < shi_search.length; i++) {
                 if (shi_search[i] === clicked_val) {
@@ -1139,7 +1008,6 @@ $mysqli1->close();*/
           var typ_btn = 1;
           var inp0 =
             <?php echo json_encode($first); ?>;
-          //var Arrs =new Array();
           $.ajax({
 
 
@@ -1453,7 +1321,7 @@ $mysqli1->close();*/
       su.checked = true;
     }
   }
-  function myFunction() {//w ww  . jav a 2 s  .  c  o m
+  function myFunction() {// source :www.java2s.com
     if (document.getElementById("monday").checked) {
       document.getElementById("frommonday").value = document.getElementById("from").value;
       document.getElementById("tomonday").value = document.getElementById("to").value;
@@ -1496,7 +1364,6 @@ $mysqli1->close();*/
 
   form.addEventListener('submit', function (event) {
 
-    // Ignore the #toggle-something button
     if (event.submitter.matches('#paste')) {
       event.preventDefault();
     }

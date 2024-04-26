@@ -4,7 +4,6 @@ session_start();
 
 if (isset($_SESSION["user2_id"])) {
 
-  //$mysqli = require __DIR__ . "/database.php";
   $mysqli = require("../database.php");
 
 
@@ -30,11 +29,7 @@ if (isset($_SESSION["user2_id"])) {
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!--<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">-->
-  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>-->
+
   <link rel="stylesheet" href="../css/main_page.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -46,33 +41,6 @@ if (isset($_SESSION["user2_id"])) {
     td {
       border: 1px solid black;
     }
-
-    /* td:nth-child(even) {
-  background-color: #D6EEEE;
-}*/
-    /*
-    .hoverTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .hoverTable td {
-      padding: 7px;
-      border: #4e95f4 1px solid;
-    }>
-
-    /* Define the default color for all the table rows */
-    /*.hoverTable tr {
-      background: #b8d1f3;
-    }*/
-
-    /* Define the hover highlight color for the table row */
-    /* tr:hover {
-      background-color: #e8e8e8;
-    }*/
-    /*.container {
-      position: relative;
-    }*/
 
     .topright {
       position: absolute;
@@ -155,30 +123,11 @@ if (isset($_SESSION["user2_id"])) {
       font-size: 30px;
     }
 
-    /* Scrollbar styles */
-    /*::-webkit-scrollbar {
-width: 12px;
-height: 12px;
-}
-
-::-webkit-scrollbar-track {
-border: 1px solid yellowgreen;
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-background: yellowgreen;  
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: #88ba1c;  
-}*/
   </style>
 </head>
 
 <body>
-  <?php if (isset($user) /*&& $userp == "admin"*/): ?>
+  <?php if (isset($user) && ($userp == "admin" || $userp == "manager")): ?>
     <?php
     $today = date("Y-m-d");
 
@@ -186,82 +135,171 @@ background: #88ba1c;
     <script>
       var usid = <?php echo json_encode($userid); ?>;
     </script>
-    <!--<div class="container">-->
+<?php if ($userp == "admin"){ ?>
+<nav>
 
-      <nav>
+<div class="navbar container">
 
-        <div class="navbar container">
+    <i class='bx bx-menu'></i>
+    <div class="logo"><a
+            style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+            href="../main/admin_main_page.php">Home :
+            <?= $cons ?>
+            <?= htmlspecialchars($user["firstname"]) ?>
+            <?= htmlspecialchars($user["middlename"]) ?>
+            <?= htmlspecialchars($user["lastname"]) ?>
 
-          <i class='bx bx-menu'></i>
-          <div class="logo"><a href="../main/admin_main_page.php" style="padding-left: 0px;">Home :
+        </a></div>
+    <div class="nav-links">
+        <div class="sidebar-logo">
+            <span class="logo-name">Home page</span>
+            <i class='bx bx-x'></i>
+        </div>
+        <ul class="links">
+            <li>
+                <a href="#">EMPLOYEES</a>
+                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                    <div>
+                        <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                        <li><a href="../search/list_of_employees.php">LIST</a></li>
+                        <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                        <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                    </div>
+                </ul>
+
+            </li>
+            <li>
+                <a href="#">DATABASE</a>
+                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                    <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
+                    <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
+                    <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                    <li class="more">
+                        <span><a href="#">More</a>
+                            <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                        </span>
+                        <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                            <li><a href="#"></a></li>
+                            <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                            <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">OTHERS</a>
+                <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                    <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                    <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                    <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+                </ul>
+            </li>
+            <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+            <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+        </ul>
+    </div>
+
+    <div class="search-box">
+        <i class='bx bx-search'></i>
+        <div class="input-box">
+            <input type="text" placeholder="Search...">
+            <br>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>123456789</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</nav>
+<?php }else{ ?>
+  <nav>
+
+  <div class="navbar container">
+
+      <i class='bx bx-menu'></i>
+      <div class="logo"><a
+              style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+              href="../main/manager_main_page.php">Home :
               <?= $cons ?>
               <?= htmlspecialchars($user["firstname"]) ?>
               <?= htmlspecialchars($user["middlename"]) ?>
               <?= htmlspecialchars($user["lastname"]) ?>
-            </a></div>
-          <div class="nav-links">
-            <div class="sidebar-logo">
+              
+          </a></div>
+      <div class="nav-links">
+          <div class="sidebar-logo">
               <span class="logo-name">Home page</span>
               <i class='bx bx-x'></i>
-            </div>
-            <ul class="links">
+          </div>
+          <ul class="links">
               <li>
-                <a href="#">EMPLOYEES</a>
-                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-                <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
-                  <div>
-                    <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                    <li><a href="../search/list_of_employees.php">LIST</a></li>
-                    <li><a href="#">CHANGE DATA</a></li>
-                    <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
-                  </div>
-                </ul>
+                  <a href="#">EMPLOYEES</a>
+                  <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                  <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                      <div>
+                          <li><a href="../search/list_of_employees.php">LIST</a></li>
+                          <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                      </div>
+                  </ul>
 
               </li>
               <li>
-                <a href="#">DATABASE</a>
-                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-                <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-                  <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                  <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
-                  <li class="more">
-                    <span><a href="#">More</a>
-                      <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                    </span>
-                    <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
-                      <li><a href="#"></a></li>
-                      <li><a href="#">Pre-loader</a></li>
-                      <li><a href="#">Glassmorphism</a></li>
-                    </ul>
-                  </li>
-                </ul>
+                  <a href="#">CALENDAR</a>
+                  <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                  <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                      <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                      <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+                      
+                      <li class="more">
+                      </li>
+                  </ul>
               </li>
               <li>
-                <a href="#">HISTORY</a>
-                <i class='bx bxs-chevron-down js-arrow arrow '></i>
-                <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                  <li><a href="#">Dynamic Clock</a></li>
-                  <li><a href="#">Form Validation</a></li>
-                  <li><a href="#">Card Slider</a></li>
-                  <li><a href="#">Complete Website</a></li>
-                </ul>
+                  <a href="#">OTHERS</a>
+                  <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                  <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                      <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                      <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                      <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                  </ul>
               </li>
-              <li><a href="#">STATISTICS</a></li>
+              <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
               <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
-            </ul>
-          </div>
+          </ul>
+      </div>
 
-          <div class="search-box">
-            <i class='bx bx-search'></i>
-            <div class="input-box">
+      <div class="search-box">
+          <i class='bx bx-search'></i>
+          <div class="input-box">
               <input type="text" placeholder="Search...">
-            </div>
+              <br>
+              <br>
+              <div class="container">
+                  <div class="row">
+                      <div class="col-12">
+                          <p>123456789</p>
+
+                      </div>
+                  </div>
+              </div>
           </div>
+      </div>
 
 
-        </div>
-      </nav>
+  </div>
+</nav>
+<?php }?>
       <script src="../js/main_page.js"></script>
       <br>
       <br>
@@ -270,7 +308,6 @@ background: #88ba1c;
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    <!--</div>-->
 
 
 
@@ -282,7 +319,6 @@ background: #88ba1c;
 
 
 
-    <!--<div class="container">-->
 
       <input type="hidden" id="kpk" name="kpk" value="2024-01">
       <div>
@@ -310,7 +346,6 @@ background: #88ba1c;
             <select id="select_obj" class="form-select form-select-sm" name="option" id="option"
               style="font-size:15px;display:inline">
               <?php
-              //$mysqli2 = require __DIR__ . "/database.php";
               $mysqli2 = require("../database.php");
 
               $sql2 = " SELECT * FROM list_of_objects ORDER BY object_name ASC";
@@ -383,10 +418,6 @@ background: #88ba1c;
               load_check1 = 0;
             load_check2 = 0;
           load_check3 = 0;
-           /*   objectall = 0;
-              shiftall = 0;
-              object_all();
-              shift_all();*/
 
               inp = $(this).val();
               $.ajax({
@@ -408,34 +439,9 @@ background: #88ba1c;
 
                 }
               });
-              //alert(shi_search);
-              //alert(obj_search);
-              //filter();
+
             });
 
-
-            /*function rum(inp,usid){
-              $.ajax({
-                url: "cal_shi_load.php",
-                method: "POST",
-                data: { input: inp, id: usid },
-                success: function (data) {
-                  //$("#searchresult").css("display", "inline");
-                  $("#shi_load").html(data);
-                  /*let lshi = document.getElementsByName("nshi").length;
-                  let elements = document.getElementsByName("nshi");
-                  if (lshi != 0) {
-                    for (var b = 0; b < lshi; b++) {
-
-                      shiftall_arr.push(elements[b].value);
-                    }
-                  }*/
-            /*shift_all();
-            //shift_all();
-
-          }
-        });
-      }*/
 
             var load_check1 = 0;
             var load_check2 = 0;
@@ -443,8 +449,7 @@ background: #88ba1c;
             var arridc = new Array();
 
            $(document).on("ajaxComplete", function () {
-              //$( ".log" ).text( "Triggered ajaxComplete handler." );
-              //alert("true");
+
               let lshi = document.getElementsByName("nshi").length;
               let elements = document.getElementsByName("nshi");
               if (lshi != 0 && load_check1 == 0) {
@@ -464,13 +469,11 @@ background: #88ba1c;
                 }
               }
               if(load_check1 ==1 && load_check2==1 && load_check3 ==0 ){
-                //alert("went");
+               
                 load_check3 = 1;
                 f_load = 0;
                 filter();
-                
-                /*load_check3 = 1;
-                load_check3 = 1;*/
+
               }
             });
 
@@ -507,8 +510,7 @@ background: #88ba1c;
                 }
 
               }
-              //alert(shi_search);
-              //filter();
+
 
 
             }
@@ -541,9 +543,7 @@ background: #88ba1c;
                   }
                 }
               }
-              //alert(obj_search);
-              //filter();
-
+    
             }
             var shi_search = new Array();
 
@@ -558,8 +558,7 @@ background: #88ba1c;
               } else if(shiftall== 0){
                 shi_search.push(clicked_val);
               }
-              //alert(shi_search);
-              //filter();
+   
             }
               var arrcols = new Array();
               var arrcolor = new Array();
@@ -569,104 +568,6 @@ background: #88ba1c;
               var arrobj = new Array();
               var arrname = new Array();
 
-              /*function filter(){
-              var results = new Array();
-              $.ajax({
-                url: "cal_arr_load.php",
-                method: "POST",
-                dataType: "json",
-                cache: false,
-                async: false,
-                data: { shall: shiftall,oball: objectall, shift_arr: shi_search, object_arr: obj_search, input: inp,user: usid },
-                success: function (data) {
-                  results = JSON.stringify(data);
-                }
-
-              });
-              //alert(results);
-               arridc = [];
-               arrcols = [];
-              arrcolor =[]; //new Array();
-              arrwdw =[]; //new Array(7);
-             arrcolordark =[]; //new Array();
-               arrtish =[]; //new Array();
-               arrobj =[]; //new Array();
-              //if (shiftall == 1) {
-                results = results.substring(1, results.length - 1);
-                if(results.length >7){
-                alert(results);
-                var hhha = new Array();
-                var sks = new Array();
-                var qpw = [];
-                var bnm = lshi;
-                hhha = results.split("]");
-                var bnm = hhha.length;
-                //alert(hhha[i]);
-                //alert(hhha[0]);
-                for (let i = 0; i < bnm; i++) {
-                  var tt = hhha[i].length;
-                  if (i == 0) {
-                    hhha[i] = hhha[i].substring(1, tt);
-
-                  } else {
-                    hhha[i] = hhha[i].substring(2, tt);
-                  }
-                  //alert(hhha[i]);
-                  if (i == 0) {
-                    for (let z = 0; z < 7; z++) {
-                      arrwdw[z] = [];
-                      for (let j = 0; j < hhha.length; j++) {
-                        arrwdw[z][j] = 0;
-                      }
-                    }
-                    for (let z = 0; z < 14; z++) {
-                      arrtish[z] = [];
-                      for (let j = 0; j < hhha.length; j++) {
-                        arrtish[z][j] = 0;
-                      }
-                    }
-                  }
-
-                  sks = hhha[i].split(",");
-                  //alert(hhha[i]);
-                  arridc[i] = sks[0].substring(1, sks[0].length - 1);
-                  arrcols[i] = sks[1].substring(1, sks[1].length - 1);
-                  arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
-                  arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
-                  arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
-                  arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
-                  arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
-                  arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
-                  arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
-                  arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
-                  arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
-                  arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
-                  arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
-                  arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
-                  arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
-                  arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
-                  arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
-                  arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
-                  arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
-                  arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
-                  arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
-                  arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
-                  arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
-                  arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
-                  arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
-                  arrobj[i] = sks[25].substring(1, sks[25].length - 1);
-                  renderCalendar();
-                 //alert( arrobj[i]);
-
-                }
-              }
-                //alert( arrobj[0]);
-
-              //}
-
-
-
-            }*/
 
             var obj_search = new Array();
             function object_search(clicked_val) {
@@ -680,8 +581,7 @@ background: #88ba1c;
               } else if(objectall == 0){
                 obj_search.push(clicked_val);
               }
-              //alert(obj_search);
-              //filter();
+         
             }
 
           </script>
@@ -745,10 +645,8 @@ background: #88ba1c;
                 ,c_id: current_id, c_from: current_from,  c_to: current_to, count_id: counter_al_id, count_number: counter_al_number},
               success: function (data) {
 
-                //alert("success123546");
                 alert(data);
                 al_return= JSON.stringify(data);
-                //$("#employee_table").html(data);
 
               }
             });
@@ -762,7 +660,6 @@ background: #88ba1c;
 
       </div>
 
-    <!--</div>-->
 
 
 
@@ -800,7 +697,6 @@ background: #88ba1c;
         
       
       <form>
-        <!--<input type="text" size="30" onkeyup="showResult(this.value)">-->
         <div id="livesearch"></div>
       </form>
 
@@ -827,12 +723,10 @@ background: #88ba1c;
       function Vacant() {
         var modal = document.getElementById("myModal");
         modal.style.display = "none";
-        //let fkf = "bn"
 
         let chch = document.getElementById(idbtn);
         let mj = idbtn.substring(1, 9);
         let vjvj = document.getElementById("h" + mj);
-        //alert(mj);
         vjvj.value = "";
         chch.value = "--vacant--";
 
@@ -847,16 +741,12 @@ background: #88ba1c;
         var btn = document.getElementById(clicked_id);
         idbtn = clicked_id;
         shfft = document.getElementById("i00-"+clicked_id.substring(5)).value;
-        //alert(shfft);
-        //qkk = "kldsa";
+
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
         modal.style.display = "block";
-        //alert("hjkfashjk");
         var input = document.getElementById("live_search").value;
-        //var qkk = "kldsa";
-        //var btna = "lasds";
-        //alert(input);
+
         if (input != "") {
           $.ajax({
             url: "../search/livesearch.php",
@@ -877,7 +767,6 @@ background: #88ba1c;
             }
           });
         } else {
-          //alert(input);
           $("#searchresult").css("display", "none");
           $("#searchresult_assign").css("display", "none");
         }
@@ -891,9 +780,6 @@ background: #88ba1c;
         $("#live_search").keyup(function () {
 
           var input = $(this).val();
-          //var qkk = "kldsa";
-          //var btna = "lasds";
-          //alert(input);
           if (input != "") {
             $.ajax({
               url: "../search/livesearch.php",
@@ -922,21 +808,16 @@ background: #88ba1c;
 
       function closebtn(clicked_id, vallue) {
         modal.style.display = "none";
-        //alert("hjkasd");
         let vva = clicked_id;
         let rr = vva.substring(1, 9);
         let mj = vva.substring(2, 9);
         var mjk = vva.substring(9);
-        //alert(rr);
         let chch = document.getElementById(rr);
         let vjvj = document.getElementById("h" + mj);
-        //let hhl = document.getElementById("live_search");
-        //hhl.value = "";
+
 
 
         var ttxx = document.getElementById(vva).innerText;
-        //var ssxx = document.getElementById(vva).innerText;
-        //alert(ttxx);
         chch.value = ttxx;
         vjvj.value = mjk;
         document.getElementById("searchresult").innerHTML = "";
@@ -946,47 +827,23 @@ background: #88ba1c;
 
       function Pick_em(cid,cvalue){
         modal.style.display = "none";
-        //alert("hjkasd");
         let vva = cid;
         let rr = vva.substring(1, 9);
         let mj = vva.substring(2, 9);
         var mjk = vva.substring(9);
-        //alert(rr);
         let chch = document.getElementById(rr);
         let vjvj = document.getElementById("h" + mj);
-        //let hhl = document.getElementById("live_search");
-        //hhl.value = "";
 
 
         var ttxx = document.getElementById(vva).innerText;
         var ttxx = cvalue;
-        //var ssxx = document.getElementById(vva).innerText;
-        //alert(ttxx);
         chch.value = ttxx;
         vjvj.value = mjk;
-        /*alert(rr);
-        alert(mj);
-        alert(mjk);*/
         document.getElementById("searchresult").innerHTML = "";
         document.getElementById("searchresult_assign").innerHTML = "";
 
       }
-      /*function showResult(str) {
-        if (str.length==0) {
-          document.getElementById("livesearch").innerHTML="";
-          document.getElementById("livesearch").style.border="0px";
-          return;
-        }
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange=function() {
-          if (this.readyState==4 && this.status==200) {
-            document.getElementById("livesearch").innerHTML=this.responseText;
-            document.getElementById("livesearch").style.border="1px solid #A5ACB2";
-          }
-        }
-        xmlhttp.open("GET","livesearch.php?q="+str,true);
-        xmlhttp.send();
-      }*/
+
     </script>
 
 
@@ -1017,24 +874,14 @@ background: #88ba1c;
           var area = new Array();
           var id_shift = new Array();
           var id_shift_delete = new Array();
-          //var id_shift_delete = new Array();
           for (var x = 1; x <= arridc.length+10; x++) {
             for (var i = 1; i <= 31; i++) {
-              /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
-              //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
 
               if (i < 10) {
                 var q = "0" + i;
               } else {
                 var q = i;
               }
-              /*if (x < 100) {
-                var p = "0" + "0" + x;
-              } else if (x < 10) {
-                var p = "0" + x;
-              }else{
-                var p = x;
-              }*/
               if (x < 10) {
                 var p = "0" + "0" + x;
               } else if (x < 100) {
@@ -1045,7 +892,6 @@ background: #88ba1c;
               var kla = "tf";
               var kla2 = "-";
               let ml = kla + q + kla2 + p;
-              //alert(ml);
               var myElem = document.getElementById(ml);
               if (myElem != null) {
 
@@ -1063,7 +909,6 @@ background: #88ba1c;
                 var ym = $("#current_load_date").val();
                 let h = ym + "-" + q;
                 date.push(h);
-                //alert(ym);
               }
 
             }
@@ -1076,8 +921,6 @@ background: #88ba1c;
           var nameidArr = JSON.stringify(nameid);
           var nameArr = JSON.stringify(name);
           var areaArr = JSON.stringify(area);
-          //alert(fromTime);
-          //alert(toTime);
           var year_month = $("#current_load_date").val();
           $.ajax({
             url: "../calendar/insert-ajax.php",
@@ -1095,45 +938,20 @@ background: #88ba1c;
      var count_table = new Array();
      var time_table = new Array();
 
-     //var today = new Date();
-     //alert(yyy+"-"+mm+"-"+dd);
-     //alert("jkhasd");
-     /*var de=new Date("April 18, 2024 16:00:00");
-alert(de.getTime());*/
-//alert($("#current_date").val());
-
-     //alert(yyyy+"-"+mm+"-"+dd);
-
 
       function load_employee_table(){
-        //var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
           var from = new Array();
           var to = new Array();
-          //var date = new Array();
           var nameid = new Array();
           var name = new Array();
-
-          /*var area = new Array();
-          var id_shift = new Array();
-          var id_shift_delete = new Array();*/
-          //var id_shift_delete = new Array();
           for (var x = 1; x <= arridc.length+10; x++) {
             for (var i = 1; i <= 31; i++) {
-              /*name.push($("#"+i+" .name"+i).html()); /*pushing all the names listed in the table*/
-              //email.push($("#"+i+" .email"+i).html()); /*pushing all the emails listed in the table*/
 
               if (i < 10) {
                 var q = "0" + i;
               } else {
                 var q = i;
               }
-              /*if (x < 100) {
-                var p = "0" + "0" + x;
-              } else if (x < 10) {
-                var p = "0" + x;
-              }else{
-                var p = x;
-              }*/
               if (x < 10) {
                 var p = "0" + "0" + x;
               } else if (x < 100) {
@@ -1144,29 +962,13 @@ alert(de.getTime());*/
               var kla = "tf";
               var kla2 = "-";
               let ml = kla + q + kla2 + p;
-              //alert(ml);
               var myElem = document.getElementById(ml);
               if (myElem != null) {
-                //alert(ml);
-                /*alert($("#tt" + q + "-" + p).val());*/
                 to.push($("#tt" + q + "-" + p).val());
                 from.push($("#tf" + q + "-" + p).val());
-                //id_shift.push($("#i00-" + p).val());
                 nameid.push($("#hn" + q + "-" + p).val());
                 name.push($("#bn" + q + "-" + p).val());
 
-                /*area.push($("#tx" + q + "-" + p).val());
-                var ids = $("#i00-" + p).val();
-                if (id_shift_delete.includes(ids)) {
-                } else {
-                  id_shift_delete.push(ids);
-                }*/
-
-
-                /*var ym = $("#current_load_date").val();
-                let h = ym + "-" + q;
-                date.push(h);*/
-                //alert(ym);
               }
 
             }
@@ -1175,31 +977,15 @@ alert(de.getTime());*/
 
           var fromTime = JSON.stringify(from);
           var toTime = JSON.stringify(to);
-          //var idArr = JSON.stringify(id_shift);
-          //var dateArr = JSON.stringify(date);
-          //var deleteArr = JSON.stringify(id_shift_delete);
           var nameidArr = JSON.stringify(nameid);
           var nameArr = JSON.stringify(name);
-          //var areaArr = JSON.stringify(area);
-          //alert(fromTime);
-          //alert(toTime);
-          /*var year_month = $("#current_load_date").val();
-          $.ajax({
-            url: "insert-ajax.php",
-            type: "post",
-            data: { from: fromTime, to: toTime, dateym: year_month, id_shift: idArr, date: dateArr, id_delete: deleteArr, namesid: nameidArr, name: nameArr, area: areaArr },
-            success: function (data) {
-              alert(data); 
-            }
-          });*/
 
-          //alert(from);
+
           $.ajax({
               url: "../search/load_employee_table2.php",
               method: "POST",
               data: { id: nameid, from: from, to: to, name: name},
               success: function (data) {
-                //alert("success123546");
                 $("#employee_table").html(data);
 
               }
@@ -1217,6 +1003,12 @@ alert(de.getTime());*/
       var current_to = new Array();
       var counter_al_id = new Array();
       var counter_al_number = new Array();
+      var mark_cell = new Array();
+      var mark_cell_nposition = new Array();
+      var mark_cell_xnext = new Array();
+      var posible_combination = new Array();
+      var count_solution_row = 0;
+      var count_solution_column = 0;
       function cell_selector(){
         for (var z = 0; z <= arridc.length; z++) {
               if (z < 10) {
@@ -1236,8 +1028,6 @@ alert(de.getTime());*/
               let counter_el = "tf" + q + "-" + p;
               var conElem = document.getElementById(counter_el);
                   if (conElem != null) {
-                    //var em_sel =  $("#hn" + q + "-" + z).val();
-                    //var id_sel =  $("#i00-" + z).val();
                     if($("#hn" + q + "-" + p).val() != ""){
                       var is_in_arr = 0; 
                       if(counter_al_id.length != 0){
@@ -1258,8 +1048,6 @@ alert(de.getTime());*/
                         counter_al_number.push(1);
 
                       }
-                    ////current_from.push($("#tf" + q + "-" + p).val());
-                    //current_to.push($("#tt" + q + "-" + p).val());
                     }
                   }
 
@@ -1294,8 +1082,6 @@ alert(de.getTime());*/
               let previous_el = "tf" + r + "-" + k;
               var prevElem = document.getElementById(previous_el);
                   if (prevElem != null) {
-                    //var em_sel =  $("#hn" + q + "-" + z).val();
-                    //var id_sel =  $("#i00-" + z).val();
                     if($("#hn" + r + "-" + k).val() != ""){
 
                     yesterday_id.push($("#hn" + r + "-" + k).val());
@@ -1305,9 +1091,6 @@ alert(de.getTime());*/
                   }
 
                 }
-                /*alert(i+ "----" + yesterday_id);
-                alert(yesterday_from);
-                alert(yesterday_to);*/
               }
               
 
@@ -1336,8 +1119,6 @@ alert(de.getTime());*/
               let current_el = "tf" + c + "-" + b;
               var curElem = document.getElementById(current_el);
                   if (curElem != null) {
-                    //var em_sel =  $("#hn" + q + "-" + z).val();
-                    //var id_sel =  $("#i00-" + z).val();
                     if($("#hn" + c + "-" + b).val() != ""){
 
                     current_id.push($("#hn" + c + "-" + b).val());
@@ -1347,7 +1128,6 @@ alert(de.getTime());*/
                   }
 
                 }
-                //alert(current_id);
               if (i < 10) {
                 var q = "0" + i;
               } else {
@@ -1366,13 +1146,21 @@ alert(de.getTime());*/
               var kla2 = "-";
 
               let ml = kla + q + kla2 + p;
-               
+              let marker = q + kla2 + p;
+
               var myElem = document.getElementById(ml);
+        
               if (myElem != null) {
-                
+             
+
                 var em_sel =  $("#hn" + q + "-" + p).val();
                 if(em_sel == ""){
-                  //alert(currYear);
+                  if(!mark_cell.includes(marker)){
+                    mark_cell.push(marker);
+                    mark_cell_nposition.push(0);
+                  }
+                 
+        
 
                   var from_sel = $("#tf" + q + "-" + p).val();
                   var to_sel = $("#tt" + q + "-" + p).val();
@@ -1385,25 +1173,25 @@ alert(de.getTime());*/
                   }
                   var element_end = q + "-" + p;
                  
-                  algorithm(from_sel, to_sel, id_sel, date_sel, element_end );
-                  //alert(date_sel);
-                  /*alert(from_sel);
-                  alert(to_sel);
-                  alert(id_sel);*/
+                  algorithm(from_sel, to_sel, id_sel, date_sel, element_end,0 );
+
            
                 }
               }
 
+
             }
+            alert(posible_combination);
+
           }
           load_employee_table();
+         
 
       }
 
 
-      function algorithm(from, to, id, date, element){
-            //alert("lksadkjl");
-            //alert(yesterday_id.length + " -- "+ yesterday_id[0]);
+      function algorithm(from, to, id, date, element,nposition){
+
             var al_return;
             var create_unmber = "";
             let sub_name;
@@ -1414,28 +1202,24 @@ alert(de.getTime());*/
               cache: false,
               async: false,
               data: { id: id, from: from, to: to, date: date, y_id: yesterday_id, y_from: yesterday_from,  y_to: yesterday_to 
-                ,c_id: current_id, c_from: current_from,  c_to: current_to, count_id: counter_al_id, count_number: counter_al_number},
+                ,c_id: current_id, c_from: current_from,  c_to: current_to, count_id: counter_al_id, count_number: counter_al_number,
+              nposition: nposition},
               success: function (data) {
-
-                //alert("success123546");
-                alert(data);
                 al_return= JSON.stringify(data);
-                //$("#employee_table").html(data);
+  
 
               }
             });
             al_return = al_return.substring(1,al_return.length-1);
-            //alert(al_return.substring(0,1));
-            if(al_return.substring(0,1) != 0){
-              //alert("jkjcasd");
-              for(var b = 0; b <al_return.length; b++){
+            mark_cell_xnext.push(al_return.substring(0,1));
+            if(al_return.substring(3,4) != 0){
+          
+              for(var b = 3; b <al_return.length; b++){
                  var number_input = al_return.substring(b,b+1);
-                 //alert(number_input);
-                 //alert(Number.isInteger(parseInt(number_input)));
+
                 if(Number.isInteger(parseInt(number_input)) == true){
                   create_unmber = create_unmber + number_input;
 
-                  //alert("true");
                 }else{
                   sub_name = al_return.substring(b+2);
                   break;
@@ -1443,6 +1227,8 @@ alert(de.getTime());*/
                 
 
               }
+              posible_combination[count_solution_row][count_solution_column] = create_unmber;
+              count_solution_column++; 
               document.getElementById("hn" + element).value = create_unmber;
               document.getElementById("bn" + element).value = sub_name;
               var is_in_arr = 0;
@@ -1464,10 +1250,8 @@ alert(de.getTime());*/
                         counter_al_number.push(1);
 
                       }
-                      /*alert(counter_al_id);
-                      alert(counter_al_number);*/
 
-              //alert(int_name);
+
             }
           
 
@@ -1563,12 +1347,8 @@ alert(de.getTime());*/
 
 
 
-      //const renderCalendar = () => {
        function renderCalendar(){
-        /*for(var sd = 0; sd < arridc.length; sd++){
-          alert(arridc[sd]);
 
-        }*/
 
         let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
           lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
@@ -1604,7 +1384,6 @@ alert(de.getTime());*/
 
             <?php
             $jk = $_POST['current_load_date'];
-            //$mysqli_cal = require __DIR__ . "/database.php";
             $mysqli_cal = require("../database.php");
 
             $sql_cal = " SELECT * FROM create_shift ORDER BY id_shift ASC";
@@ -1677,60 +1456,16 @@ alert(de.getTime());*/
             if ($currentr == 0) {
 
               $ch = "2024-01";
-              //$ch = 
             } else {
               $ch = "2024-02";
             }
             $currentr = 1;
             $y = substr($ch, 0, -3);
             $m = substr($ch, -2);
-            //$mysqli_sav = require __DIR__ . "/database.php";
             $mysqli_sav = require("../database.php");
 
             $conout = 0;
             $con = new mysqli($host, $username, $password, $dbname);
-            /*if ($conout == 0) {
-
-
-
-              for ($x = 0; $x < count($idc); $x++) {
-                $sql_check = " SELECT * FROM shift_check WHERE id_shift='$idc[$x]' AND year_shift='$y' AND month_shift ='$m' ";
-                $check_existance = mysqli_query($con, $sql_check);
-
-                if (mysqli_num_rows($check_existance) == 0) {
-
-                  $saved_data[$x][0] = "0";
-                  $sa[$x] = 0;
-
-                } else {
-
-                  $sa[$x] = "1";
-                  $saved_data[$x][0] = "1";
-                  for ($i = 1; $i < 32; $i++) {
-                    if ($i < 10) {
-                      $dt = "0" . $i;
-                    } else {
-                      $dt = $i;
-                    }
-
-                    $d = $ch . "-" . $dt;
-                    $sql_get = " SELECT * FROM saved_shift_data WHERE id_of_shift='$idc[$x]' AND saved_date='$d' ";
-                    $check_get = mysqli_query($con, $sql_get);
-                    if (mysqli_num_rows($check_get) == 0) {
-                      $saved_data[$x][$i] = "empty";
-                    } else {
-                      $result_get = $mysqli_sav->query($sql_get);
-                      while ($rows_get = $result_get->fetch_assoc()) {
-                        $get_from = $rows_get['saved_from'];
-                        $get_to = $rows_get['saved_to'];
-                      }
-                      $saved_data[$x][$i] = $get_from . "//" . $get_to;
-                    }
-                  }
-                }
-              }
-              $conout = 1;
-            }*/
             global $number;
             $number = count($cols);
             $col_code = "<th id='00-000'>Date</th>";
@@ -1758,8 +1493,7 @@ alert(de.getTime());*/
 
 
             var count_number =  arrcols.length;
-            //alert(count_number+ " Len");
-            var col_code = /*"<th id='00-000'>Date</th>"*/"";
+            var col_code = "";
             for (var ps = 0; ps < count_number; ps++) {
 
               let ff = ps + 1;
@@ -1772,16 +1506,10 @@ alert(de.getTime());*/
 
             }
             let final_col_code = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code + "</tr><table>";
-
-
-
-            //var count_number =  arrcols.length;
-            //alert(count_number+ " Len");
             var col_code_obj = "<th id='00-000' rowspan='2'>Date</th>";
             var sea_obj = 0;
             var cou_obj = 0;
             var prea = "";
-            //var lst = 0;
             for (var ps = 0; ps < count_number; ps++) {
               if(sea_obj == 0){
                 sea_obj = arrobj[ps];
@@ -1790,35 +1518,18 @@ alert(de.getTime());*/
                 col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='"+cou_obj+"' >" + arrname[ps-1] + "</th>";
                 sea_obj = arrobj[ps];
                 cou_obj = 1;
-                //prea
               }else{
                 cou_obj++;
               }
               prea = arrname[ps];
-              /*let ff = ps + 1;
-              if(ff <10){
-                ff = "0" + "0" + ff;
-              }else if(ff < 100){
-                ff = "0" + ff;
-              }*/
-              //col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' >" + arrname[ps] + "</th>";
 
             }
             col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='"+cou_obj+"' >" + prea + "</th>";
              let final_col_code_obj = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code_obj + "</tr><table>";
-            //alert(col_code);
 
 
-          /**moe */
-          /*var passedID =
-              <?php echo json_encode($idc); ?>;*/
-              /*var gig =arridc;*/
-              //var passedID = new Array();
               var passedID =arridc;
-               /*for(var jk = 0; jk < arridc.length; jk++){
-                passedID[jk] = arridc[jk];
 
-               }*/
             var passedY =
               <?php echo json_encode($y); ?>;
             var passedM =
@@ -1826,25 +1537,18 @@ alert(de.getTime());*/
             var passedCh =
               <?php echo json_encode($ass); ?>;
               
-            //var lena = "<?php //echo "$number" ?>";
             var lena = count_number;
             var tsaas = "1";
             var idp = JSON.stringify(passedID);
-            //var idps = JSON.stringify(gig);
-            //alert(idps[0]);
-            //var idp = gig;
             var Yp = JSON.parse(currYear);
             var Mp = JSON.stringify(currMonth);
             var ChA = JSON.stringify(passedCh);
             var passedSavedata1 = Array();
             var tes;
-            //alert(currYear);
             var ssaz = currMonth + 1;
             var MPa = JSON.stringify(ssaz);
-            //alert(ssaz);
             var a1sa = new Array;
             var text_return = new Array;
-           // alert(idp);
             $.ajax({
               type: "POST",
               url: "../calendar/cal_get_comment.php",
@@ -1855,19 +1559,14 @@ alert(de.getTime());*/
                 id: idp, year: Yp, month: MPa, cha: ChA
               },
               success: function (data) {
-                  //alert(JSON.stringify(data));
                   text_return  = JSON.stringify(data);
-                  //alert(JSON.stringify(data));
               }
 
             });
             text_return =text_return.substring(1,text_return.length-1);
-            //alert(text_return);
             var middle_arr = new Array();
             var second_arr = new Array();
-            //let final_arr = Array();
             middle_arr = text_return.split("]");
-            //alert(middle_arr[0]);
             for (let jh = 0; jh < middle_arr.length; jh++) {
               second_arr = [];
               if(jh == 0){
@@ -1876,23 +1575,13 @@ alert(de.getTime());*/
                 middle_arr[jh] = middle_arr[jh].substring(2);
               }
               final_arr[jh] = [];
-              //alert(middle_arr[jh]);
             second_arr = middle_arr[jh].split(",");
               for (let j = 0; j < 31; j++) {
-                //alert(second_arr[j]);
                 var xs = second_arr[j];
-                //xs = xs.substring(1);
-                //let xk = second_arr[j];
-                //let xk = xs.length;
-                /*alert(xs);
-                alert(xk);*/
                 final_arr[jh][j] = xs;
-                //final_arr[jh][j] = final_arr[jh][j].substring(1);
-                //final_arr[jh][j] = 0;
+
               }
             }
-            //alert(middle_arr[0]);
-            //alert(final_arr[4][0]);
             $.ajax({
               type: "POST",
               url: "../calendar/get-ajax.php",
@@ -1903,15 +1592,9 @@ alert(de.getTime());*/
                 id: idp, year: Yp, month: MPa, cha: ChA
               },
               success: function (data321) {
-                //alert(data321);
                 document.getElementById("help2").value = data321;
-                //var tes = JSON.parse(data);
-                //tes =  JSON.stringify(data);
-                //aja(data);
-                //document.getElementById("help").innerHTML = data321;
-                //r//eturn data;
+
                 a1sa = JSON.stringify(data321);
-                //alert(a1sa);
 
               }
 
@@ -1927,72 +1610,32 @@ alert(de.getTime());*/
                 id: idp, year: Yp, month: MPa, cha: ChA
               },
               success: function (data321) {
-                //alert(data321);
-                //document.getElementById("help2").value = data321;
-                //var tes = JSON.parse(data);
-                //tes =  JSON.stringify(data);
-                //aja(data);
-                //document.getElementById("help").innerHTML = data321;
-                //r//eturn data;
                 alert(JSON.stringify(data321));
-                //a1sa = JSON.stringify(data321);
-                //alert(a1sa);
 
               }
 
             });
 
-
-
-            //let rrra = document.getElementById("help2").value;
             var hhha = new Array();
             var sks = new Array();
             var qpw = [];
-            /*moe*/
-            //var bnm = "<?php //echo "$number" ?>";
             var bnm =arridc.length;
             hhha = a1sa.split("]");
             for (let i = 0; i < bnm; i++) {
               hhha[i] = hhha[i].substring(2);
-              //alert(hhha[i]);
               passedSavedata[i] = [];
               sks = hhha[i].split(",");
               for (let j = 0; j < 32; j++) {
                 passedSavedata[i][j] = sks[j].substring(1, sks[j].length - 1);
-                //alert(qpw[j]);
               }
             }
-            //alert("success");
-            /*$.ajax({
-              url: "load_employee_table.php",
-              method: "POST",
-              data: { id: idp, year: Yp, month: MPa, cha: ChA },
-              success: function (data) {
-                alert("success");
-                $("#employee_table").html(data);
 
-              }
-            });*/
-            //alert(qpw);
-            //alert(passedSavedata[0][0]);
-            /*alert(hhha[0]);
-            alert(hhha[1]);
-
-            alert(hhha[2]);
-
-            alert(hhha[3]);
-            alert(hhha[4]);
-            alert(hhha[5]);
-            alert(hhha[6]);
-            alert(hhha[7]);
-            alert(hhha[8]);*/
 
 
 
 
             let tet = "<?php echo "$final_col_code"; ?>"
 
-            //liTag += `${tet}`;
             liTag += `${final_col_code_obj}`;
             liTag += `${final_col_code}`;
             col_code = "<th id='00-000'>Date</th>"+col_code; 
@@ -2022,34 +1665,13 @@ alert(de.getTime());*/
           }
           /** source https://www.geeksforgeeks.org/how-to-pass-a-php-array-to-a-javascript-function/ */
 
-          /**moe */
-          /*var passedArray =
-            <?php //echo json_encode($wdw); ?>;
-          var passedTime =
-            <?php //echo json_encode($tish); ?>;
-          var passedColor =
-            <?php //echo json_encode($color); ?>;
-          var passedColorDark =
-            <?php //echo json_encode($colordark); ?>;*/
-            //alert("jkhasd");
            var passedArray = arrwdw;
           var passedTime = arrtish;
           var passedColor =arrcolor;
           var passedColorDark = arrcolordark;
           
 
-                                   /* var passedSavedata =
-                                      <?php //echo json_encode($saved_data);                ?>;* /
-          var passedID =
-            <?php //echo json_encode($idc); ?>;
-          var tas = 0;
-          //alert(passedSavedata[0][2]);
 
-
-          /** source https://www.geeksforgeeks.org/how-to-pass-variables-and-data-from-php-to-javascript/ */
-          /* moe*/
-         // var sz = "<?php //echo "$number" ?>";
-          //var numas = "<?php //echo "$number" ?>";
           
           if(f_load == 0){
           var sz =arridc.length;
@@ -2058,7 +1680,6 @@ alert(de.getTime());*/
             var sz =arridc.length-1;
           var numas =arridc.length-1;   
           }
-          //alert("jkhasd2");
           let dts = "";
           let cll = "background-color:#303030; color:white;";
           let ppp = '<div><td>';
@@ -2076,7 +1697,6 @@ alert(de.getTime());*/
           let ib = '">';
           let ib1 = '">';
           let xcx = '<button align="right" style="position:absolute;font-size: 10px;pading: 10px" onClick="canceled(this.id)">X</button>';
-          //let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;padding: 10px"" onClick="canceled(this.id)" id="x';
           let b1 = '<button class="btn-close btn-close-white" style="position:relative;border: 1px blackfont-size: 12px;padding-top: 10px;padding-left: 10px" onClick="canceled(this.id)" id="x';
           let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
           let b2 = '"></button><br><input type="button" id="bn';
@@ -2125,7 +1745,6 @@ alert(de.getTime());*/
           let copy_start = '<button type="button" class="btn btn-primary" style="position:relative;border: 1px solid black;font-size:15px;margin-top:2px;width: 25px;height: 25px;padding:0px;float:right" title="Copy" onClick="copy_cell(this.id)" id="co';
           let copy_end = '">C</button></div></div></div></td>';
           
-          //dts = dts.concat(td_start, td_body, td_end, timepicker_first_start, timepicker_first_body, timepicker_first_end, timepicker_second_start, timepicker_second_body, timepicker_second_end, employee_selector_start, employee_selector_end, em_hidden_selector_start, em_hidden_selector_body, em_hidden_selector_end, textarea_start, textarea_end, delete_start, paste_start, paste_end, copy_start, copy_end);
           
           
           if (day == "Monday") {
@@ -2145,7 +1764,6 @@ alert(de.getTime());*/
                     p = "0" + p;
                   }
                   dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, mmm, ii, xxx, p, nnn, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, mmm, ii, xxx, p, nnn, qqq);
 
 
                 } else {
@@ -2184,10 +1802,7 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p,bt2, t3,ii, xxx, p,t4, ii, xxx, p, tv, str1, ib, bbb, t5,ii, xxx, p,t6, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                 }
               } else if (passedArray[0][q] == 1) {
                 let str1 = passedTime[0][q];
@@ -2196,8 +1811,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                 str3 = str3.substring(1, str3.length-1);
-                //str3 = load_comment(i,currMonth, currYear, arridc[q]);
-                //const str4 = new String(load_comment(i,currMonth, currYear, arridc[q]).toString());
 
                 let p = q + 1;
                 if (p < 10) {
@@ -2211,8 +1824,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
               } else {
                 let p = q + 1;
@@ -2282,9 +1893,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = //dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq)
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
                 }
@@ -2295,7 +1903,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2308,8 +1915,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
@@ -2381,9 +1986,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[2][q] == 1) {
@@ -2393,7 +1995,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2406,8 +2007,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
 
@@ -2480,9 +2079,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[3][q] == 1) {
@@ -2492,7 +2088,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2505,8 +2100,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
@@ -2579,9 +2172,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[4][q] == 1) {
@@ -2591,7 +2181,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2604,8 +2193,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
@@ -2678,9 +2265,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
                 }
               } else if (passedArray[5][q] == 1) {
@@ -2690,7 +2274,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2703,8 +2286,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColorDark[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColorDark[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
@@ -2776,9 +2357,6 @@ alert(de.getTime());*/
                   }
                   char = char + 2;
                   let namen = passedSavedata[q][i].substring(char);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2,ii, xxx, p,b3,ii, xxx, p,b4, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
-                  //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, namen, b6, ii, xxx, p, b4, val3, b5, qqq);
                   dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, namen, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, val3, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
                 }
@@ -2789,7 +2367,6 @@ alert(de.getTime());*/
                 str2 = str2.substring(0, str2.length - 3);
                 let str3 = final_arr[q][i-1];
                   str3 = str3.substring(1, str3.length-1);
-                  //str3 = load_comment(i,currMonth, currYear, arridc[q]);
                 let p = q + 1;
                 if (p < 10) {
                   p = "0" + "0" + p;
@@ -2802,8 +2379,6 @@ alert(de.getTime());*/
                 } else {
                   ii = i;
                 }
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b1, ii, xxx, p, b2, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
-                //dts = dts.concat(ddd, ii, xxx, p, ccc, passedColor[q], zzz, bt, ii, xxx, p, bt2, t1, ii, xxx, p, tv, str1, ib, bbb, t2, ii, xxx, p, tv, str2, ib, b7, ii, xxx, p, b3, open, b6, ii, xxx, p, b4, b5, qqq);
                 dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, timepicker_first_start, ii, xxx, p, timepicker_first_body, str1, timepicker_first_end, timepicker_second_start, ii, xxx, p, timepicker_second_body, str2, timepicker_second_end, employee_selector_start, ii, xxx, p, employee_selector_end, open, em_hidden_selector_start, ii, xxx, p, em_hidden_selector_body, em_hidden_selector_end, textarea_start, ii, xxx, p, textarea_body,str3, textarea_end, delete_start, ii, xxx, p, delete_end, paste_start, ii, xxx, p, paste_end, copy_start, ii, xxx, p, copy_end);
 
               } else {
@@ -2835,20 +2410,15 @@ alert(de.getTime());*/
          
 
           }
-          //alert(lastDateofMonth);
 
           if (day == "Sunday" && i != lastDateofMonth) {
-            let tet = "<?php //echo "$final_col_code"; ?>";
-            //liTag += `${tet}`;
-            //let blank = "<th><th>" + `${col_code}`;
+            let tet = "";
             liTag += `${col_code}`;
             daysTag.innerHTML = liTag;
           }
 
         }
         f_load = 1;
-        /*console.log("Hello");
-        console.log(passedArray);*/
         <?php $dsa = ""; ?>
         currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
         daysTag.innerHTML = liTag;
@@ -2858,7 +2428,6 @@ alert(de.getTime());*/
 
 
 
-      //renderCalendar();
 
       <?php $dsa = ""; ?>
       prevNextIcon.forEach(icon => { // getting prev and next icons
@@ -2874,21 +2443,17 @@ alert(de.getTime());*/
           } else {
             date = new Date(); // pass the current date as date value
           }
-          //first = 1;
           renderCalendar(); // calling renderCalendar function
           load_employee_table();
 
-          //add_dat();
 
 
         });
-        //load_employee_table();
       });
     </script>
 
     <script>
       <?php
-      //$mysqli_open = require __DIR__ . "/database.php";
       $mysqli_open = require("../database.php");
 
       $sql_open = " SELECT * FROM create_shift ORDER BY id_shift ASC";
@@ -2916,7 +2481,6 @@ alert(de.getTime());*/
           <?php echo json_encode($P); ?>;
         var passedChCH =
           <?php echo json_encode($rr); ?>;
-        //var lena = "<?php //echo "$number"                ?>";
         var tsaas = "1";
         var idb = JSON.stringify(passedIDB);
         var Ypb = JSON.parse(neww);
@@ -2924,7 +2488,6 @@ alert(de.getTime());*/
         var ChAb = JSON.stringify(passedChCH);
         var Cdsa = JSON.stringify(newww);
         var tess;
-        //alert(newww);
         $.ajax({
           type: "POST",
           url: "../calendar/get-ajax.php",
@@ -2943,7 +2506,6 @@ alert(de.getTime());*/
 
     </script>
     <script>
-                  //renderCalendar();
 
 
 
@@ -2952,11 +2514,7 @@ alert(de.getTime());*/
                     from_paste_arr = [];
                     to_paste_arr = [];
                     exist_arr = [];
-                    /*alert("1");
-                    alert(shi_search);
-                    alert("2");
-                    alert(obj_search);
-                    alert("3");*/
+
                     f_load = 0;
               var results = new Array();
               $.ajax({
@@ -2971,27 +2529,22 @@ alert(de.getTime());*/
                 }
 
               });
-              //alert(results);
                arridc = [];
                arrcols = [];
-              arrcolor =[]; //new Array();
-              arrwdw =[]; //new Array(7);
-             arrcolordark =[]; //new Array();
-               arrtish =[]; //new Array();
-               arrobj =[]; //new Array();
+              arrcolor =[]; 
+              arrwdw =[]; 
+             arrcolordark =[]; 
+               arrtish =[]; 
+               arrobj =[]; 
                arrname =[];
-              //if (shiftall == 1) {
                 results = results.substring(1, results.length - 1);
                 if(results.length >7){
-                //alert(results);
                 var hhha = new Array();
                 var sks = new Array();
                 var qpw = [];
                 var bnm = lshi;
                 hhha = results.split("]");
                 var bnm = hhha.length;
-                //alert(hhha[i]);
-                //alert(hhha[0]);
                 for (let i = 0; i < bnm; i++) {
                   var tt = hhha[i].length;
                   if (i == 0) {
@@ -3000,7 +2553,6 @@ alert(de.getTime());*/
                   } else {
                     hhha[i] = hhha[i].substring(2, tt);
                   }
-                  //alert(hhha[i]);
                   if (i == 0) {
                     for (let z = 0; z < 7; z++) {
                       arrwdw[z] = [];
@@ -3017,7 +2569,6 @@ alert(de.getTime());*/
                   }
 
                   sks = hhha[i].split(",");
-                  //alert(hhha[i]);
                   arridc[i] = sks[0].substring(1, sks[0].length - 1);
                   arrcols[i] = sks[1].substring(1, sks[1].length - 1);
                   arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
@@ -3045,34 +2596,21 @@ alert(de.getTime());*/
                   arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
                   arrobj[i] = sks[25].substring(1, sks[25].length - 1);
                   arrname[i] = sks[26].substring(1, sks[26].length - 1);
-                  //if (i ==bnm-1) {
-                  //renderCalendar();
                   
                   if(i == bnm-2){
                   call_cal();
                   }
-                  //}
-                  //call_cal();
-                 //alert( arrobj[i]);
                 
 
                 }
-                //call_cal();
-                //renderCalendar();
-                //renderCalendar();
                
 
               }else{
                 daysTag.innerHTML = "";
-                /*let Tac = "<table><tr><th>JAJK</th></tr></table>";
-                daysTag.innerHTML = Tac;*/
                 Empty();
               }
               
-              //renderCalendar();
-                //alert( arrobj[0]);
 
-              //}
 
 
 
@@ -3085,16 +2623,11 @@ alert(de.getTime());*/
             }
             function Empty(){
               let head = "<table><tr style='font-size: 15px;pading:10px;border: solid black'><th>"+lastDateofMonth+"</th></tr><table>";
-              //let Tac = "<table><tr><th>JAJK</th></tr></table>";
               let Tac = head;
-              /*for (let i = 1; i <= lastDateofMonth; i++) {
-                Tac = Tac + "<tr><td>" +i +"</td></tr>";
-              }*/
                 daysTag.innerHTML = head;
             }
             function load_comment(day, month, year, id){
               var return_com;
-              ///alert(day + " - " + month + " - " + year + " - " + id);
               if(day < 10){
                 day = "0" + day;
               }
@@ -3103,7 +2636,6 @@ alert(de.getTime());*/
                 month = "0" + month;
               }
               var date_comment = year + "" + month + "" + day ;  
-              //alert(day + " - " + month + " - " + year+ " - " + id);
 
               $.ajax({
 
@@ -3115,13 +2647,11 @@ alert(de.getTime());*/
               async: false,
               data: { id: id, date: date_comment},
               success: function (data) {
-                                //arr = JSON.stringify(data);
                 return_com = data;
               }
               
               });
               return return_com;
-              //alert (return_com);
             }
 
 
@@ -3210,55 +2740,14 @@ alert(de.getTime());*/
                   let btn6 = '"><input type="hidden" id="hn';
 
 
-                  /*let cll = "background-color:#303030; color:white;";
-          let ppp = '<div><td>';
-          let ddd = '<div><td id="';
-          let xxx = "-";
-          let jjj = '">';
-          let ccc = '" style="min-width:170px;border:solid black;padding: 20px;background-color: ';
-          let zzz = ';">';
-          let qqq = "</td></div>";
-          let ttt = "<button>+</button>";
-          let mmm = '<center><button class="btn btn-light" style="border-radius: 20%;" onClick="reply_click(this.id)" id="b';
-          let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
-          let bbb = "<br>";
-          let ia = '<input type="time" value="';
-          let ib = '">';
-          let ib1 = '">';
-          let xcx = '<button align="right" style="position:absolute;font-size: 10px;pading: 10px" onClick="canceled(this.id)">X</button>';
-          //let b1 = '<button align="right" class="btn btn-light" style="position:absolute;top: 3px;right: 3px;font-size: 8px;padding: 10px"" onClick="canceled(this.id)" id="x';
-          let b1 = '<button class="btn-close btn-close-white" style="position:relative;border: 1px blackfont-size: 12px;padding-top: 10px;padding-left: 10px" onClick="canceled(this.id)" id="x';
-          let bt = '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
-          let b2 = '"></button><br><input type="button" id="bn';
-          let b7 = '<br><br><br><input type="button" id="bn';
-          let b3 = '" onClick="Open_name(this.id)" style="margin-top:10px" value="';
-          let b6 = '"><br><input type="hidden" id="hn';
-          let b4 = '" value="';
-          let b5 = '"></center></div>';
-          let t1 = '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right" class="form-control" id="tf';
-          let t3 = '<div class="form-group"><center><label for="tf';
-          let t4 = '" class="text-light" style="display:inline;font-size:17px;float:left;clear: left;">FROM:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
-          let t2 = '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
-          let t5 = '<label for="tt';
-          let t6 = '" class="text-light" style="display:inline;font-size:17px;float:left">TO:</label><input type="time" style="height: 38px;width: 75px;font-size:10px;;display:inline;float:right" class="form-control" id="tt';
-
-          let tv = '" value="';
-          let open = 'vacant';
-          let s = "background-color:#585858;color:white;";
-          let ii = "";
-          let cen = "</center>";
-          let bt2 = '"><i class="bi bi-trash"></i></button>';*/
 
 
-
-
-                  //let b3 = '" onClick="Open_name(this.id)" value="open"><input type="hidden" id="hn';
                   let btn4 = '" value="';
                   let btn5 = '"></center></div>';
                   let val = a1[x][i];
                   let val1 = val.substring(0, 5);
                   let val2 = val.substring(10, 15);
-                  let val3 = "" /*val.substring(20)*/;
+                  let val3 = "";
                   var count = 0;
                   var char = 20;
                   for (; ;) {
@@ -3359,7 +2848,6 @@ alert(de.getTime());*/
 
           final = new_start+timepicker_first_start + result123+timepicker_first_body + val +timepicker_first_end +timepicker_second_start+result123 + timepicker_second_body+ val +timepicker_second_end+employee_selector_start+ result123 +  employee_selector_end + em_hidden_selector_start+ result123+ em_hidden_selector_body+ em_hidden_selector_end + textarea_start + result123 + textarea_body +textarea_end+delete_start+result123+delete_end +paste_start + result123+paste_end +copy_start +result123 +copy_end;
 
-        //final = bt + result123 + bt2 + tm1 + result123 + tmv + val + tmc + brr + tm2 + result123 + tmv + val + tmc2 + btn1 + result123 + btn2 + result123 + btn3 + result123 + btn4;
         cha.innerHTML = final;
         load_employee_table();
       }
@@ -3381,10 +2869,6 @@ alert(de.getTime());*/
       function paste_cell(paste_id) {
         
         paste_id = paste_id.substring(2);
-        //document.getElementById("tf"+paste_id).value;
-        //alert(document.getElementById("tf"+paste_id).value);
-        //from_paste = document.getElementById("tf"+paste_id).value;
-        //to_paste = document.getElementById("tf"+paste_id).value;
 
         if(from_paste != ""){
         document.getElementById("tf"+paste_id).value = from_paste;
@@ -3392,7 +2876,6 @@ alert(de.getTime());*/
       }
       }
       function copy_cell(copy_id) {
-        //alert(copy_id);
         copy_id = copy_id.substring(2);
 
         from_paste = document.getElementById("tf"+copy_id).value;
@@ -3405,23 +2888,19 @@ alert(de.getTime());*/
         to_paste_arr = [];
         exist_arr = [];
       copy_id = copy_id.substring(2);
-      //alert(copy_id);
       if(copy_id < 10){
           copy_id = "0"+copy_id;
         }
       var sz =arridc.length;
       for(var i = 1; i < sz; i++){
-        //var col = i+1; 
         
 
         var col_id = i; 
         if(col_id < 10){
-          //var row_ = i+1; 
           col_id = "0" + "0" +col_id;
         }else if(col_id < 100){
           col_id = "0" +col_id;
         }
-        //alert("tf"+copy_id+"-"+col_id);
         if (document.getElementById('tf' + copy_id+"-"+col_id) != null) {
             exist_arr[i-1] = 1;
             from_paste_arr[i-1] = document.getElementById("tf"+copy_id+"-"+col_id).value;
@@ -3450,7 +2929,6 @@ alert(de.getTime());*/
          
             var col_id = i; 
         if(col_id < 10){
-          //var row_ = i+1; 
           col_id = "0" + "0" +col_id;
         }else if(col_id < 100){
           col_id = "0" +col_id;
@@ -3465,7 +2943,6 @@ alert(de.getTime());*/
         }else{
           if(document.getElementById('tf' + paste_id+"-"+col_id) == null){
             var r_id = "b" + paste_id+"-"+col_id;
-              //canceled(x_id);
               reply_click(r_id);
               document.getElementById("tf"+paste_id+"-"+col_id).value = from_paste_arr[i-1];
               document.getElementById("tt"+paste_id+"-"+col_id).value = to_paste_arr[i-1];

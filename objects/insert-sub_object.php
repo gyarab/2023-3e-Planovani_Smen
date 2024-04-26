@@ -1,5 +1,4 @@
 <?php
-// $mysqli = require __DIR__ . "/database.php";
  $mysqli = require("../database.php");
 
  $conn = new mysqli($host, $username, $password, $dbname);

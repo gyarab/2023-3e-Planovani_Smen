@@ -40,7 +40,7 @@ function isNumeric($str)
 
 if($status == 0){
     
-    $final_ip = $ip1. ".".  $ip2. ".". $ip3. ".". $ip4;
+    $final_ip = (int)$ip1. ".".  (int)$ip2. ".". (int)$ip3. ".". (int)$ip4;
     $sql_check = "SELECT * FROM IPS WHERE ip_address = '$final_ip' ";
     $check = mysqli_query($conn, $sql_check);
     if (mysqli_num_rows($check) == 0) {

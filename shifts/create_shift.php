@@ -1,12 +1,10 @@
 <?php
-/**Currently in development  */
 $cons = "";
 session_start();
 
-if (isset ($_SESSION["user2_id"])) {
+if (isset($_SESSION["user2_id"])) {
 
-  //$mysqli = require __DIR__ . "/database.php";
-  $mysqli = require("../database.php");
+  $mysqli = require ("../database.php");
 
 
   $sql = "SELECT * FROM user2
@@ -15,12 +13,16 @@ if (isset ($_SESSION["user2_id"])) {
   $result = $mysqli->query($sql);
 
   $user = $result->fetch_assoc();
+  $sqlp = "SELECT position, id FROM user2 WHERE id = {$_SESSION["user2_id"]}";
+  $resultp = $mysqli->query($sqlp);
+  while ($rrr = $resultp->fetch_assoc()) {
+    $userp = $rrr['position'];
+    $userid = $rrr['id'];
+
+  }
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
+
 
 
 ?>
@@ -127,89 +129,109 @@ $mysqli1->close();*/
 </head>
 
 <body>
-  <script>
-    var id_shift;
-    var update;
+  <?php if (isset($user) && $userp == "admin"): ?>
+    <script>
+      var id_shift;
+      var update;
 
-  </script>
+    </script>
+    <nav>
 
-  <nav>
+      <div class="navbar container">
 
-    <div class="navbar container">
-      <i class='bx bx-menu'></i>
-      <div class="logo"><a href="../main/admin_main_page.php">Home :
-          <?= $cons ?>
-          <?= htmlspecialchars($user["firstname"]) ?>
-          <?= htmlspecialchars($user["middlename"]) ?>
-          <?= htmlspecialchars($user["lastname"]) ?>
-        </a></div>
-      <div class="nav-links">
-        <div class="sidebar-logo">
-          <span class="logo-name">Home page</span>
-          <i class='bx bx-x'></i>
+        <i class='bx bx-menu'></i>
+        <div class="logo"><a
+            style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+            href="../main/admin_main_page.php">Home :
+            <?= $cons ?>
+            <?= htmlspecialchars($user["firstname"]) ?>
+            <?= htmlspecialchars($user["middlename"]) ?>
+            <?= htmlspecialchars($user["lastname"]) ?>
+
+          </a></div>
+        <div class="nav-links">
+          <div class="sidebar-logo">
+            <span class="logo-name">Home page</span>
+            <i class='bx bx-x'></i>
+          </div>
+          <ul class="links">
+            <li>
+              <a href="#">EMPLOYEES</a>
+              <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+              <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                <div>
+                  <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                  <li><a href="../search/list_of_employees.php">LIST</a></li>
+                  <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                  <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                </div>
+              </ul>
+
+            </li>
+            <li>
+              <a href="#">DATABASE</a>
+              <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+              <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
+                <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
+                <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                <li class="more">
+                  <span><a href="#">More</a>
+                    <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                  </span>
+                  <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                    <li><a href="#"></a></li>
+                    <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                    <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">OTHERS</a>
+              <i class='bx bxs-chevron-down js-arrow arrow '></i>
+              <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+              </ul>
+            </li>
+            <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+            <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+          </ul>
         </div>
-        <ul class="links">
-          <li>
-            <a href="#">EMPLOYEES</a>
-            <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-            <ul class="em-sub-menu sub-menu">
-              <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-              <li><a href="#">LIST</a></li>
-              <li><a href="#">CHANGE DATA</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">DATABASE</a>
-            <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-            <ul class="htmlCss-sub-menu sub-menu">
-              <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-              <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-              <li><a href="#">CURRENT SCHEDULE</a></li>
-              <li class="more">
-                <span><a href="#">More</a>
-                  <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                </span>
-                <ul class="more-sub-menu sub-menu">
-                  <li><a href="#"></a></li>
-                  <li><a href="#">Pre-loader</a></li>
-                  <li><a href="#">Glassmorphism</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#">HISTORY</a>
-            <i class='bx bxs-chevron-down js-arrow arrow '></i>
-            <ul class="js-sub-menu sub-menu">
-              <li><a href="#">Dynamic Clock</a></li>
-              <li><a href="#">Form Validation</a></li>
-              <li><a href="#">Card Slider</a></li>
-              <li><a href="#">Complete Website</a></li>
-            </ul>
-          </li>
-          <li><a href="#">STATISTICS</a></li>
-          <li><a href="../log/logout.php">LOG OUT</a></li>
-        </ul>
-      </div>
-      <div class="search-box">
-        <i class='bx bx-search'></i>
-        <div class="input-box">
-          <input type="text" placeholder="Search...">
+
+        <div class="search-box">
+          <i class='bx bx-search'></i>
+          <div class="input-box">
+            <input type="text" placeholder="Search...">
+            <br>
+            <br>
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <p>123456789</p>
+
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+
       </div>
-    </div>
-  </nav>
-  <script src="../js/main_page.js"></script>
-  <br>
-  <br>
-  <br>
+    </nav>
+    <script src="../js/main_page.js"></script>
+    <br>
+    <br>
+    <br>
 
 
 
 
-  <form id="main_f" method="post" action="../shifts/load_shift.php" novalidate>
+    <form id="main_f" method="post" action="../shifts/load_shift.php" novalidate>
 
-    <?php if (isset ($user)): ?>
+
 
       <div class="container">
 
@@ -223,29 +245,16 @@ $mysqli1->close();*/
               <script>
                 var obj_search = new Array();
                 var shi_search = new Array();
-                /*const curr_date = new Date();
-                let day =curr_date.getDate();
-                let month = curr_date.getMonth()+1;
-                let year = curr_date.getFullYear();
 
-                let sr = `${day}-${month}-${year}`;*/
 
                 let currentDate = new Date().toJSON().slice(0, 10);
-                //alert(currentDate);
               </script>
-              <!--<label for="sr">When the first schift should start:</label>
-          <input type="date" id="sr" name="sr" value="<?php //echo ('Y-m-d');     ?>">-->
+
               <br>
-              <!--<label for="jobname" style="display:inline">Name of the job position:</label>-->
               <input type="text" name="jobname" id="jobname" style="display:inline">
               <br id="hbr" style="display:none">
               <label id="label2" style="visibility:hidden;color:red"></label>
               <br>
-              <!--<label for="repeat">After how many days the shift should repeat:</label>
-          <input type="number" id="repeat" name="repeat" min="0" size="2">
-          <br>
-          <label>In which days the schift should be:</label>
-          <br>-->
               <br>
               <h6>Selected time</h6>
               <br>
@@ -267,151 +276,148 @@ $mysqli1->close();*/
               <hr>
 
 
-              <!--<h3>Specific setting</h3>--->
-            <input class="select" type="checkbox" id="monday" name="monday" style="display:inline">
-            <label for="monday" style="display:inline"> Monday - </label>
-            <label for="frommonday" style="display:inline">From </label>
-            <input id="frommonday" name="frommonday" type="time" style="display:inline" />
-            <label for="tomonday" style="display:inline">To </label>
-            <input type="time" id="tomonday" name="tomonday" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="monday" name="monday" style="display:inline">
+              <label for="monday" style="display:inline"> Monday - </label>
+              <label for="frommonday" style="display:inline">From </label>
+              <input id="frommonday" name="frommonday" type="time" style="display:inline" />
+              <label for="tomonday" style="display:inline">To </label>
+              <input type="time" id="tomonday" name="tomonday" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="tuesday" name="tuesday" style="display:inline">
-            <label for="tuesday" style="display:inline"> Tuesday - </label>
-            <label for="fromtuesday" style="display:inline">From </label>
-            <input type="time" id="fromtuesday" name="fromtuesday" style="display:inline" />
-            <label for="totuesday" style="display:inline">To </label>
-            <input type="time" id="totuesday" name="totuesday" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="tuesday" name="tuesday" style="display:inline">
+              <label for="tuesday" style="display:inline"> Tuesday - </label>
+              <label for="fromtuesday" style="display:inline">From </label>
+              <input type="time" id="fromtuesday" name="fromtuesday" style="display:inline" />
+              <label for="totuesday" style="display:inline">To </label>
+              <input type="time" id="totuesday" name="totuesday" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="wednesday" name="wednesday" style="display:inline">
-            <label for="wednesday" style="display:inline"> Wednesday - </label>
-            <label for="fromwednesday" style="display:inline">From </label>
-            <input type="time" id="fromwednesday" name="fromwednesday" style="display:inline" />
-            <label for="towednesday" style="display:inline">To </label>
-            <input type="time" id="towednesday" name="towednesday" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="wednesday" name="wednesday" style="display:inline">
+              <label for="wednesday" style="display:inline"> Wednesday - </label>
+              <label for="fromwednesday" style="display:inline">From </label>
+              <input type="time" id="fromwednesday" name="fromwednesday" style="display:inline" />
+              <label for="towednesday" style="display:inline">To </label>
+              <input type="time" id="towednesday" name="towednesday" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="thursday" name="thursday" style="display:inline">
-            <label for="thursday" style="display:inline"> Thursday - </label>
-            <label for="fromthursday" style="display:inline">From </label>
-            <input type="time" id="fromthursday" name="fromthursday" min="00:00" max="00:00" style="display:inline" />
-            <label for="tothursday" style="display:inline">To </label>
-            <input type="time" id="tothursday" name="tothursday" min="00:00" max="00:00" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="thursday" name="thursday" style="display:inline">
+              <label for="thursday" style="display:inline"> Thursday - </label>
+              <label for="fromthursday" style="display:inline">From </label>
+              <input type="time" id="fromthursday" name="fromthursday" min="00:00" max="00:00" style="display:inline" />
+              <label for="tothursday" style="display:inline">To </label>
+              <input type="time" id="tothursday" name="tothursday" min="00:00" max="00:00" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="friday" name="friday" style="display:inline">
-            <label for="Friday" style="display:inline"> Friday - </label>
-            <label for="fromfriday" style="display:inline">From </label>
-            <input type="time" id="fromfriday" name="fromfriday" min="00:00" max="00:00" style="display:inline" />
-            <label for="tofriday" style="display:inline">To </label>
-            <input type="time" id="tofriday" name="tofriday" min="00:00" max="00:00" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="friday" name="friday" style="display:inline">
+              <label for="Friday" style="display:inline"> Friday - </label>
+              <label for="fromfriday" style="display:inline">From </label>
+              <input type="time" id="fromfriday" name="fromfriday" min="00:00" max="00:00" style="display:inline" />
+              <label for="tofriday" style="display:inline">To </label>
+              <input type="time" id="tofriday" name="tofriday" min="00:00" max="00:00" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="saturday" name="saturday" style="display:inline">
-            <label for="saturday" style="display:inline"> Saturday - </label>
-            <label for="fromsaturday" style="display:inline">From </label>
-            <input type="time" id="fromsaturday" name="fromsaturday" min="00:00" max="00:00" style="display:inline" />
-            <label for="tosaturday" style="display:inline">To </label>
-            <input type="time" id="tosaturday" name="tosaturday" min="00:00" max="00:00" style="display:inline" />
-            <br>
+              <input class="select" type="checkbox" id="saturday" name="saturday" style="display:inline">
+              <label for="saturday" style="display:inline"> Saturday - </label>
+              <label for="fromsaturday" style="display:inline">From </label>
+              <input type="time" id="fromsaturday" name="fromsaturday" min="00:00" max="00:00" style="display:inline" />
+              <label for="tosaturday" style="display:inline">To </label>
+              <input type="time" id="tosaturday" name="tosaturday" min="00:00" max="00:00" style="display:inline" />
+              <br>
 
 
-            <input class="select" type="checkbox" id="sunday" name="sunday" style="display:inline">
-            <label for="sunday" style="display:inline"> Sunday - </label>
-            <label for="fromsunday" style="display:inline">From </label>
-            <input class="select" type="time" id="fromsunday" name="fromsunday" min="00:00" max="00:00"
-              style="display:inline" />
-            <label style="display:inline">To </label>
-            <input type="time" id="tosunday" name="tosunday" min="00:00" max="00:00" style="display:inline" />
+              <input class="select" type="checkbox" id="sunday" name="sunday" style="display:inline">
+              <label for="sunday" style="display:inline"> Sunday - </label>
+              <label for="fromsunday" style="display:inline">From </label>
+              <input class="select" type="time" id="fromsunday" name="fromsunday" min="00:00" max="00:00"
+                style="display:inline" />
+              <label style="display:inline">To </label>
+              <input type="time" id="tosunday" name="tosunday" min="00:00" max="00:00" style="display:inline" />
 
-            <br>
-            <br>
+              <br>
+              <br>
 
-            <h6>Color Picker:</h6>
-            <br>
+              <h6>Color Picker:</h6>
+              <br>
 
 
-            <input id="color-1" type="button" class="in" onclick="Color(this.id)" style="background-color: #124072;"
-              value="">
-            <input id="color-2" type="button" class="in" onclick="Color(this.id)" style="background-color: #067088;"
-              value="">
-            <input id="color-3" type="button" class="in" onclick="Color(this.id)" style="background-color: #056362;"
-              value="">
-            <input id="color-4" type="button" class="in" onclick="Color(this.id)" style="background-color: #055d2b;"
-              value="">
-            <input id="color-5" type="button" class="in" onclick="Color(this.id)" style="background-color: #4b8723;"
-              value="">
-            <input id="color-6" type="button" class="in" onclick="Color(this.id)" style="background-color: #889d1e;"
-              value="">
-            <br>
-            <input id="color-7" type="button" class="in" onclick="Color(this.id)" style="background-color: #c3b204;"
-              value="">
-            <input id="color-8" type="button" class="in" onclick="Color(this.id)" style="background-color: #ce8425;"
-              value="">
-            <input id="color-9" type="button" class="in" onclick="Color(this.id)" style="background-color:  #a53d1a;"
-              value="">
-            <input id="color-10" type="button" class="in" onclick="Color(this.id)" style="background-color:  #880002;"
-              value="">
-            <input id="color-11" type="button" class="in" onclick="Color(this.id)" style="background-color:  #6a1161;"
-              value="">
-            <input id="color-12" type="button" class="in" onclick="Color(this.id)" style="background-color:  #4c1862 ;"
-              value="">
-            <br>
-            <input id="color-13" type="button" class="in" onclick="Color(this.id)" style="background-color: #1965b9;"
-              value="">
-            <input id="color-14" type="button" class="in" onclick="Color(this.id)" style="background-color:  #039ce0;"
-              value="">
-            <input id="color-15" type="button" class="in" onclick="Color(this.id)" style="background-color: #01969c;"
-              value="">
-            <input id="color-16" type="button" class="in" onclick="Color(this.id)" style="background-color: #009242;"
-              value="">
-            <input id="color-17" type="button" class="in" onclick="Color(this.id)" style="background-color:  #67ad31 ;"
-              value="">
-            <input id="color-18" type="button" class="in" onclick="Color(this.id)" style="background-color: #bcd637;"
-              value="">
-            <br>
-            <input id="color-19" type="button" class="in" onclick="Color(this.id)" style="background-color: #fff002;"
-              value="">
-            <input id="color-20" type="button" class="in" onclick="Color(this.id)" style="background-color: #fdaf43;"
-              value="">
-            <input id="color-21" type="button" class="in" onclick="Color(this.id)" style="background-color: #e87034;"
-              value="">
-            <input id="color-22" type="button" class="in" onclick="Color(this.id)" style="background-color: #eb1c26;"
-              value="">
-            <input id="color-23" type="button" class="in" onclick="Color(this.id)" style="background-color: #a2288d;"
-              value="">
-            <input id="color-24" type="button" class="in" onclick="Color(this.id)" style="background-color: #652d90;"
-              value="">
-            <br>
-            <input id="color-25" type="button" class="in" onclick="Color(this.id)" style="background-color: #81c1e7;"
-              value="">
-            <input id="color-26" type="button" class="in" onclick="Color(this.id)" style="background-color: #50ddd5;"
-              value="">
-            <input id="color-27" type="button" class="in" onclick="Color(this.id)" style="background-color: #addc81;"
-              value="">
-            <input id="color-28" type="button" class="in" onclick="Color(this.id)" style="background-color: #ffffba;"
-              value="">
-            <input id="color-29" type="button" class="in" onclick="Color(this.id)" style="background-color: #fea698;"
-              value="">
-            <input id="color-30" type="button" class="in" onclick="Color(this.id)" style="background-color: #b697dd;"
-              value="">
-            <br>
+              <input id="color-1" type="button" class="in" onclick="Color(this.id)" style="background-color: #124072;"
+                value="">
+              <input id="color-2" type="button" class="in" onclick="Color(this.id)" style="background-color: #067088;"
+                value="">
+              <input id="color-3" type="button" class="in" onclick="Color(this.id)" style="background-color: #056362;"
+                value="">
+              <input id="color-4" type="button" class="in" onclick="Color(this.id)" style="background-color: #055d2b;"
+                value="">
+              <input id="color-5" type="button" class="in" onclick="Color(this.id)" style="background-color: #4b8723;"
+                value="">
+              <input id="color-6" type="button" class="in" onclick="Color(this.id)" style="background-color: #889d1e;"
+                value="">
+              <br>
+              <input id="color-7" type="button" class="in" onclick="Color(this.id)" style="background-color: #c3b204;"
+                value="">
+              <input id="color-8" type="button" class="in" onclick="Color(this.id)" style="background-color: #ce8425;"
+                value="">
+              <input id="color-9" type="button" class="in" onclick="Color(this.id)" style="background-color:  #a53d1a;"
+                value="">
+              <input id="color-10" type="button" class="in" onclick="Color(this.id)" style="background-color:  #880002;"
+                value="">
+              <input id="color-11" type="button" class="in" onclick="Color(this.id)" style="background-color:  #6a1161;"
+                value="">
+              <input id="color-12" type="button" class="in" onclick="Color(this.id)" style="background-color:  #4c1862 ;"
+                value="">
+              <br>
+              <input id="color-13" type="button" class="in" onclick="Color(this.id)" style="background-color: #1965b9;"
+                value="">
+              <input id="color-14" type="button" class="in" onclick="Color(this.id)" style="background-color:  #039ce0;"
+                value="">
+              <input id="color-15" type="button" class="in" onclick="Color(this.id)" style="background-color: #01969c;"
+                value="">
+              <input id="color-16" type="button" class="in" onclick="Color(this.id)" style="background-color: #009242;"
+                value="">
+              <input id="color-17" type="button" class="in" onclick="Color(this.id)" style="background-color:  #67ad31 ;"
+                value="">
+              <input id="color-18" type="button" class="in" onclick="Color(this.id)" style="background-color: #bcd637;"
+                value="">
+              <br>
+              <input id="color-19" type="button" class="in" onclick="Color(this.id)" style="background-color: #fff002;"
+                value="">
+              <input id="color-20" type="button" class="in" onclick="Color(this.id)" style="background-color: #fdaf43;"
+                value="">
+              <input id="color-21" type="button" class="in" onclick="Color(this.id)" style="background-color: #e87034;"
+                value="">
+              <input id="color-22" type="button" class="in" onclick="Color(this.id)" style="background-color: #eb1c26;"
+                value="">
+              <input id="color-23" type="button" class="in" onclick="Color(this.id)" style="background-color: #a2288d;"
+                value="">
+              <input id="color-24" type="button" class="in" onclick="Color(this.id)" style="background-color: #652d90;"
+                value="">
+              <br>
+              <input id="color-25" type="button" class="in" onclick="Color(this.id)" style="background-color: #81c1e7;"
+                value="">
+              <input id="color-26" type="button" class="in" onclick="Color(this.id)" style="background-color: #50ddd5;"
+                value="">
+              <input id="color-27" type="button" class="in" onclick="Color(this.id)" style="background-color: #addc81;"
+                value="">
+              <input id="color-28" type="button" class="in" onclick="Color(this.id)" style="background-color: #ffffba;"
+                value="">
+              <input id="color-29" type="button" class="in" onclick="Color(this.id)" style="background-color: #fea698;"
+                value="">
+              <input id="color-30" type="button" class="in" onclick="Color(this.id)" style="background-color: #b697dd;"
+                value="">
+              <br>
 
-          </div>
-          <div class='col-12 col-md-6'>
-            <h6>Selected object :</h6>
-            <br>
-            <Select id="select_objm" style="display: inline">
-              <!--<option value="0">Pick a object</option>-->
+            </div>
+            <div class='col-12 col-md-6'>
+              <h6>Selected object :</h6>
+              <br>
+              <Select id="select_objm" style="display: inline">
                 <?php
-                //$mysqli = require __DIR__ . "/database.php";
-                $mysqli = require("../database.php");
+                $mysqli = require ("../database.php");
 
 
                 $conn = new mysqli($host, $username, $password, $dbname);
@@ -456,27 +462,11 @@ $mysqli1->close();*/
                       $("#res").html(data);
                     }
                   });
-                  /*$.ajax({
-                    url: "load_object_in_rights.php",
-                    method: "POST",
-                    data: { input: inp },
-                    success: function (data) {
-                      $("#object").html(data);
-                      if (document.getElementsByName("s" + transfer[23]) != null) {
-                        let find = document.getElementsByName("s" + transfer[23]);
-                        find[0].style.backgroundColor = '#056362';
-                        find[0].style.color = '#fff';
-                        find[0].style.border = "solid #056362";
-                      }
-                    }
-                  });
-                  previous3 = 0;*/
+
                 });
               </script>
             </div>
           </div>
-          <!--<label>In which object the shift should be:</label>
-          <br>-->
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
@@ -687,10 +677,8 @@ $mysqli1->close();*/
                     <h6>Selected object :</h6>
                     <br>
                     <Select id="select_obj" style="display: inline">
-                      <!--<option value="0">Pick a object</option>-->
                       <?php
-                      //$mysqli = require __DIR__ . "/database.php";
-                      $mysqli = require("../database.php");
+                      $mysqli = require ("../database.php");
 
 
                       $conn = new mysqli($host, $username, $password, $dbname);
@@ -819,21 +807,6 @@ $mysqli1->close();*/
 
 
 
-
-
-
-
-          <!--<div class="tree">
-            <div id="res"></div>
-          </div>
-          <br id="hbr3" style="display:none">
-          <label id="label3" style="visibility:hidden;color:red">Object needs to be selected*</label>-->
-
-
-
-
-
-
           <script>
 
 
@@ -941,7 +914,6 @@ $mysqli1->close();*/
               var rgb = codecolor.match(/\d+/g);
               hex = '#' + ('0' + parseInt(rgb[0], 10).toString(16)).slice(-2) + ('0' + parseInt(rgb[1], 10).toString(16)).slice(-2) + ('0' + parseInt(rgb[2], 10).toString(16)).slice(-2);
               let clicked_color_prev = document.getElementById(previous2);
-              //clicked_color_prev.style.border = "";
               if (clicked1 != previous2) {
                 clicked_color_prev.style.border = "";
                 previous2 = clicked1;
@@ -998,7 +970,6 @@ $mysqli1->close();*/
                 var sut = document.getElementById('stosunday').value;
 
                 var name = document.getElementById('sfield').value;
-                //var start = document.getElementById('sr').value;
                 var start = currentDate;
 
                 var mo_d = document.getElementById("smonday");
@@ -1018,7 +989,6 @@ $mysqli1->close();*/
                   var jj = transfer[23]
                 }
                 var update = 1;
-                //alert(previous3);
                 if (mo_d.checked == true) {
                   mon_day = 1;
                 } else {
@@ -1080,7 +1050,6 @@ $mysqli1->close();*/
                 var frid = JSON.parse(fri_day);
                 var satd = JSON.parse(sat_day);
                 var sund = JSON.parse(sun_day);
-                //alert(jj);
                 $.ajax({
 
 
@@ -1101,7 +1070,6 @@ $mysqli1->close();*/
                   success: function (data) {
                     modal.style.display = "none";
                     alert("Shift was successfully edited");
-                    //alert("Schift saved succesfully");
                   }
                 });
                 $.ajax({
@@ -1176,7 +1144,6 @@ $mysqli1->close();*/
                 var sut = document.getElementById('tosunday').value;
 
                 var name = document.getElementById('jobname').value;
-                //var start = document.getElementById('sr').value;
                 var start = currentDate;
 
                 var mo_d = document.getElementById("monday");
@@ -1335,75 +1302,6 @@ $mysqli1->close();*/
 
 
           <br>
-          <!--<label for="colorpicker">Color Picker:</label>
-          <br>
-          <br>
-
-          <input id="color-1" type="button" class="in" onclick="Color(this.id)" style="background-color: #124072;"
-            value="">
-          <input id="color-2" type="button" class="in" onclick="Color(this.id)" style="background-color: #067088;"
-            value="">
-          <input id="color-3" type="button" class="in" onclick="Color(this.id)" style="background-color: #056362;"
-            value="">
-          <input id="color-4" type="button" class="in" onclick="Color(this.id)" style="background-color: #055d2b;"
-            value="">
-          <input id="color-5" type="button" class="in" onclick="Color(this.id)" style="background-color: #4b8723;"
-            value="">
-          <input id="color-6" type="button" class="in" onclick="Color(this.id)" style="background-color: #889d1e;"
-            value="">
-          <br>
-          <input id="color-7" type="button" class="in" onclick="Color(this.id)" style="background-color: #c3b204;"
-            value="">
-          <input id="color-8" type="button" class="in" onclick="Color(this.id)" style="background-color: #ce8425;"
-            value="">
-          <input id="color-9" type="button" class="in" onclick="Color(this.id)" style="background-color:  #a53d1a;"
-            value="">
-          <input id="color-10" type="button" class="in" onclick="Color(this.id)" style="background-color:  #880002;"
-            value="">
-          <input id="color-11" type="button" class="in" onclick="Color(this.id)" style="background-color:  #6a1161;"
-            value="">
-          <input id="color-12" type="button" class="in" onclick="Color(this.id)" style="background-color:  #4c1862 ;"
-            value="">
-          <br>
-          <input id="color-13" type="button" class="in" onclick="Color(this.id)" style="background-color: #1965b9;"
-            value="">
-          <input id="color-14" type="button" class="in" onclick="Color(this.id)" style="background-color:  #039ce0;"
-            value="">
-          <input id="color-15" type="button" class="in" onclick="Color(this.id)" style="background-color: #01969c;"
-            value="">
-          <input id="color-16" type="button" class="in" onclick="Color(this.id)" style="background-color: #009242;"
-            value="">
-          <input id="color-17" type="button" class="in" onclick="Color(this.id)" style="background-color:  #67ad31 ;"
-            value="">
-          <input id="color-18" type="button" class="in" onclick="Color(this.id)" style="background-color: #bcd637;"
-            value="">
-          <br>
-          <input id="color-19" type="button" class="in" onclick="Color(this.id)" style="background-color: #fff002;"
-            value="">
-          <input id="color-20" type="button" class="in" onclick="Color(this.id)" style="background-color: #fdaf43;"
-            value="">
-          <input id="color-21" type="button" class="in" onclick="Color(this.id)" style="background-color: #e87034;"
-            value="">
-          <input id="color-22" type="button" class="in" onclick="Color(this.id)" style="background-color: #eb1c26;"
-            value="">
-          <input id="color-23" type="button" class="in" onclick="Color(this.id)" style="background-color: #a2288d;"
-            value="">
-          <input id="color-24" type="button" class="in" onclick="Color(this.id)" style="background-color: #652d90;"
-            value="">
-          <br>
-          <input id="color-25" type="button" class="in" onclick="Color(this.id)" style="background-color: #81c1e7;"
-            value="">
-          <input id="color-26" type="button" class="in" onclick="Color(this.id)" style="background-color: #50ddd5;"
-            value="">
-          <input id="color-27" type="button" class="in" onclick="Color(this.id)" style="background-color: #addc81;"
-            value="">
-          <input id="color-28" type="button" class="in" onclick="Color(this.id)" style="background-color: #ffffba;"
-            value="">
-          <input id="color-29" type="button" class="in" onclick="Color(this.id)" style="background-color: #fea698;"
-            value="">
-          <input id="color-30" type="button" class="in" onclick="Color(this.id)" style="background-color: #b697dd;"
-            value="">
-          <br>-->
           <br>
           <input type="button" id="savebtn" style="font-size: 20px;float:right" class="btn btn-primary"
             onclick="Save_shift()" value="Save the shift">
@@ -1420,8 +1318,7 @@ $mysqli1->close();*/
           <br>
           <select name="option" id="option" class="dropdown-toggle" style="margin: auto;float:left">
             <?php
-            //$mysqli2 = require __DIR__ . "/database.php";
-            $mysqli2 = require("../database.php");
+            $mysqli2 = require ("../database.php");
 
             $sql2 = " SELECT * FROM list_of_objects ORDER BY id_object ASC";
             $result3 = $mysqli2->query($sql2);
@@ -1469,13 +1366,11 @@ $mysqli1->close();*/
               method: "POST",
               data: { input: input_obj },
               success: function (data) {
-                //$("#searchresult").css("display", "inline");
                 $("#shi_load").html(data);
               }
             });
 
             $('#option').change(function () {
-              //bj_search = [];
               obj_search = [];
               shi_search = [];
               var inp = $(this).val();
@@ -1493,21 +1388,7 @@ $mysqli1->close();*/
 
             });
 
-            /*function pos_click(clicked_val) {
-
-                if (pos_search.includes(clicked_val) == true) {
-                    for (let i = 0; i < pos_search.length; i++) {
-                        if (pos_search[i] === clicked_val) {
-                            pos_search.splice(i, 1);
-                        }
-                    }
-                } else {
-                    pos_search.push(clicked_val);
-                }
-
-            }*/
             function obj_click(clicked_val) {
-              //alert(obj_search);
 
               if (obj_search.includes(clicked_val) == true) {
                 for (let i = 0; i < obj_search.length; i++) {
@@ -1532,7 +1413,6 @@ $mysqli1->close();*/
               });
             }
             function shift_search(clicked_val) {
-              //alert(shift_search);
               if (shi_search.includes(clicked_val) == true) {
                 for (let i = 0; i < shi_search.length; i++) {
                   if (shi_search[i] === clicked_val) {
@@ -1564,7 +1444,6 @@ $mysqli1->close();*/
             var typ_btn = 1;
             var inp0 =
               <?php echo json_encode($first); ?>;
-            //var Arrs =new Array();
             $.ajax({
 
 
@@ -1773,19 +1652,8 @@ $mysqli1->close();*/
 
 </script>
 <script>
-  function cr() {
-    var s = document.getElementById('sr').value;
-    <?php
-    faasr();
-    ?>
 
-  }
-  <?php
-  function faasr()
-  {
 
-  }
-  ?>
 
 </script>
 <script>
@@ -1889,7 +1757,7 @@ $mysqli1->close();*/
       su.checked = true;
     }
   }
-  function myFunction() {//w ww  . jav a 2 s  .  c  o m
+  function myFunction() {// source: www.java2s.com
     if (document.getElementById("monday").checked) {
       document.getElementById("frommonday").value = document.getElementById("from").value;
       document.getElementById("tomonday").value = document.getElementById("to").value;
@@ -1932,7 +1800,6 @@ $mysqli1->close();*/
 
   form.addEventListener('submit', function (event) {
 
-    // Ignore the #toggle-something button
     if (event.submitter.matches('#paste')) {
       event.preventDefault();
     }

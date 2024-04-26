@@ -7,9 +7,9 @@
  */
 $cons = "";
 session_start();
-//echo "123";
+
 if (isset($_SESSION["user2_id"])) {
-    //$mysqli = require __DIR__ . "/database.php";
+
     $mysqli = require ("../database.php");
 
     $sql = "SELECT * FROM user2
@@ -27,11 +27,6 @@ if (isset($_SESSION["user2_id"])) {
     }
 }
 
-/*$mysqli1 = require __DIR__ . "/database.php";
-$sql1 = " SELECT * FROM user2 ORDER BY id DESC ";
-$result1 = $mysqli1->query($sql1);
-$mysqli1->close();*/
-//echo "123";
 ?>
 
 
@@ -70,12 +65,11 @@ $mysqli1->close();*/
                     <div class="logo"><a
                             style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
                             href="../main/admin_main_page.php">Home :
-                            <!--<div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px">-->
                             <?= $cons ?>
                             <?= htmlspecialchars($user["firstname"]) ?>
                             <?= htmlspecialchars($user["middlename"]) ?>
                             <?= htmlspecialchars($user["lastname"]) ?>
-                            <!--</div>-->
+
                         </a></div>
                     <div class="nav-links">
                         <div class="sidebar-logo">
@@ -90,7 +84,7 @@ $mysqli1->close();*/
                                     <div>
                                         <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
                                         <li><a href="../search/list_of_employees.php">LIST</a></li>
-                                        <li><a href="#">CHANGE DATA</a></li>
+                                        <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
                                         <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
                                     </div>
                                 </ul>
@@ -116,13 +110,12 @@ $mysqli1->close();*/
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">HISTORY</a>
+                                <a href="#">OTHERS</a>
                                 <i class='bx bxs-chevron-down js-arrow arrow '></i>
                                 <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
-                                    <li><a href="#">Dynamic Clock</a></li>
-                                    <li><a href="#">Form Validation</a></li>
-                                    <li><a href="#">Card Slider</a></li>
-                                    <li><a href="#">Complete Website</a></li>
+                                    <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                    <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                    <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
                                 </ul>
                             </li>
                             <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
@@ -366,6 +359,7 @@ $mysqli1->close();*/
                         function Comfirm() {
                             var fetch_id = <?php echo json_encode($userid); ?>;/**promena s id uzivatele */
                             var field = document.getElementById("txtfield").value;/**promena co ziskava text z textarea na komentare */
+                            var ip_address = document.getElementById("hip").value;
                             var status;/**promena pro zpetna data */
                             var status1;/**promena pro potvrzeni, ze data se ulozily do databaze uspesne */
                             var status2;/**promena pro potvrzeni, ze komentar se do databaze ulozil upesne */
@@ -377,7 +371,7 @@ $mysqli1->close();*/
                                 dataType: "json",
                                 cache: false,
                                 async: false,
-                                data: { id: fetch_id, text: field },
+                                data: { id: fetch_id, text: field, ip_address: ip_address },
                                 success: function (data) {
                                     status = JSON.stringify(data);
                                     status1 = status.substring(1, 2);
@@ -401,10 +395,22 @@ $mysqli1->close();*/
                                 var message = "Please enter comment why are you late";
                                 arrival_error(message);
 
-                            } else {
+                            } else if (status1 == 2) {
                                 //alert("Please enter comment why are you early");
                                 var message = "Please enter comment why are you early";
                                 arrival_error(message);
+                            } else if (status1 == 4) {
+                                var message = "Your current device is not register in the system";
+                                arrival_error(message);
+
+                            } else if (status1 == 5) {
+                                var message = "Connection error";
+                                arrival_error(message);
+
+                            } else {
+                                var message = "";
+                                arrival_error(message);
+
                             }
 
                         }
@@ -413,6 +419,7 @@ $mysqli1->close();*/
 
                             var fetch_id = <?php echo json_encode($userid); ?>;/**promena s id uzivatele */
                             var field = document.getElementById("txtfield").value;/**promena co ziskava text z textarea na komentare */
+                            var ip_address = document.getElementById("hip").value;
                             var left;/**promena pro zpetna data */
                             var left1;/**promena pro potvrzeni, ze data se ulozily do databaze uspesne */
                             var left2;/**promena pro potvrzeni, ze komentar se do databaze ulozil upesne */
@@ -422,7 +429,7 @@ $mysqli1->close();*/
                                 dataType: "json",
                                 cache: false,
                                 async: false,
-                                data: { id: fetch_id, text: field },
+                                data: { id: fetch_id, text: field, ip_address: ip_address },
                                 success: function (data) {
                                     left = JSON.stringify(data);
                                     left1 = left.substring(1, 2);
@@ -431,6 +438,7 @@ $mysqli1->close();*/
 
                                 }
                             });
+
                             if (left1 == 0) {
                                 //alert("Your departure is confirm");
                                 document.getElementById("pause").style.display = "none";
@@ -438,20 +446,25 @@ $mysqli1->close();*/
                                 document.getElementById("departure").style.display = "none";
                                 departure_alert();
                             } else if (left1 == 1) {
-                                //alert("Please enter comment why are leaving late");
                                 var message = "Please enter comment why are leaving late";
                                 departure_error(message);
-                            } else {
-                                //alert("Please enter comment why are you leaving early");
-                                //alert("Please enter comment why are you leaving early");
+                            } else if (left1 == 2) {
                                 var message = "Please enter comment why are you leaving early";
+                                departure_error(message);
+                            } else if (left1 == 4) {
+                                var message = "Your current device is not register in the system";
+                                departure_error(message);
+                            } else if (left1 == 5) {
+                                var message = "Connection error";
+                                departure_error(message);
+                            } else {
+                                var message = "";
                                 departure_error(message);
                             }
                         }
                         function start_break() {
 
                             var fetch_id = <?php echo json_encode($userid); ?>;
-                            //var message = "Your break has begun";
                             $.ajax({
                                 url: "../attendance/insert_pause_from.php",
                                 method: "POST",
@@ -471,7 +484,6 @@ $mysqli1->close();*/
                         function end_break() {
 
                             var fetch_id = <?php echo json_encode($userid); ?>;
-                            //var message = "Your break has begun";
                             $.ajax({
                                 url: "../attendance/insert_pause_to.php",
                                 method: "POST",
@@ -780,12 +792,21 @@ $mysqli1->close();*/
                     });
 
                 }
+                var ip_return;
+                $(document).ready(() => {
+                    $.getJSON("https://api.ipify.org?format=json",
+                        function (data) {
+                            document.getElementById("hip").value = data.ip;
+                        })
+                });
+
+
             </script>
             <br>
             <br>
             <br>
             <br>
-
+            <input type="hidden" id="hip">
         </div>
     <?php else: ?>
         <script>

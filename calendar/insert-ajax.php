@@ -10,7 +10,6 @@ $nameArr = json_decode($_POST["name"]);
 $areaArr = json_decode($_POST["area"]);
 $YM = $_POST['dateym'];
 $time = time();
-//$mysqli_sav = require __DIR__ . "/database.php";
 $mysqli_sav = require("../database.php");
 
 $con = new mysqli($host, $username, $password, $dbname);
@@ -29,18 +28,12 @@ for ($x = 0; $x < count($fromArr); $x++) {
             $sql = "INSERT INTO saved_shift_data (saved_date, id_of_shift, saved_from, saved_to, up_timestamp, id_user, user_name, comments)
 VALUES
 ('$dateArr[$x]','$idArr[$x]','$fromArr[$x]','$toArr[$x]','$time','$namesidArr[$x]','$nameArr[$x]', '$areaArr[$x]')";
-            /*$sql2 = "INSERT INTO attendance (planned_from, planned_to, date, user_id, user_name)
-            VALUES
-            ('$fromArr[$x]','$toArr[$x]','$dateArr[$x]','$namesidArr[$x]','$nameArr[$x]')";*/
+
             if (!mysqli_query($con, $sql)) {
                 die('Error: ' . mysqli_error($con));
             }
-            /*if (!mysqli_query($con, $sql2)) {
-                die('Error: ' . mysqli_error($con));
-            }*/
         } else {
             $sqlsav = "UPDATE saved_shift_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , up_timestamp='$time', id_user='$namesidArr[$x]', user_name='$nameArr[$x]', comments='$areaArr[$x]' WHERE saved_date='$dateArr[$x]' AND id_of_shift='$idArr[$x]'";
-            //$sqlsav = "UPDATE saved_shift_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , up_timestamp='$time', id_user='$namesidArr[$x]', user_name='$nameArr[$x]' WHERE saved_date='$dateArr[$x]' AND id_of_shift='$idArr[$x]'";
             $con->query($sqlsav);
         }
     }

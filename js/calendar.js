@@ -28,15 +28,11 @@ const renderCalendar = () => {
         lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
         lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
     let liTag = "";
-    //const f = new Date(currYear, currMonth, 1);
-    /*for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-        liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-    }*/
+
 
     const fr = new Date(currYear, currMonth, 0);
     const f = new Date(currYear, currMonth, 0);
     const d = new Date();
-    //let day = weekday[f.getDay()];
     for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
         // adding active class to li if the current day, month, and year matched
         let find = 0;
@@ -48,8 +44,7 @@ const renderCalendar = () => {
         f.setDate(f.getDate() + 1)
         let day = weekday[fr.getDay()];
         const m = fr.getMonth();
-        //const d = fr.getDay();
-        //alert(i);
+
         for (let e = 0; e < items.length; e++) {
 
             if (m == items[e][0] && i == items[e][1]) {
@@ -66,9 +61,7 @@ const renderCalendar = () => {
             liTag += `<tr><td class="${isToday}">${i} ${day}</td><tr>`;
         }
     }
-    /*for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
-    }*/
+
     currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
     daysTag.innerHTML = liTag;
 }

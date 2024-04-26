@@ -10,7 +10,7 @@ session_start();
 if (isset($_SESSION["user2_id"])) {
 
     //$mysqli = require __DIR__ . "/database.php";
-    $mysqli = require("../database.php");
+    $mysqli = require ("../database.php");
 
 
     $sql = "SELECT * FROM user2
@@ -167,79 +167,260 @@ $mysqli1->close();*/
 
 <body onload="startTime()">
 
-    <?php if (isset($user) && $userp == "admin"): ?>
+    <?php if (isset($user) && $userp == "admin" || $userp == "manager" || $userp == "parttime_employee" || $userp == "fulltime_employee"): ?>
 
 
         <div class="container">
-            <nav>
-                <div class="navbar container">
+            <?php if ($userp == "admin") { ?>
+                <nav>
 
-                    <i class='bx bx-menu'></i>
-                    <div class="logo"><a href="../main/admin_main_page.php">Home :
-                            <?= $cons ?>
-                            <?= htmlspecialchars($user["firstname"]) ?>
-                            <?= htmlspecialchars($user["middlename"]) ?>
-                            <?= htmlspecialchars($user["lastname"]) ?>
-                        </a></div>
-                    <div class="nav-links">
-                        <div class="sidebar-logo">
-                            <span class="logo-name">Home page</span>
-                            <i class='bx bx-x'></i>
+                    <div class="navbar container">
+
+                        <i class='bx bx-menu'></i>
+                        <div class="logo"><a
+                                style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                href="../main/admin_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
+
+                            </a></div>
+                        <div class="nav-links">
+                            <div class="sidebar-logo">
+                                <span class="logo-name">Home page</span>
+                                <i class='bx bx-x'></i>
+                            </div>
+                            <ul class="links">
+                                <li>
+                                    <a href="#">EMPLOYEES</a>
+                                    <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                    <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                        <div>
+                                            <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
+                                            <li><a href="../search/list_of_employees.php">LIST</a></li>
+                                            <li><a href="../log/change_user_data.php">CHANGE DATA</a></li>
+                                            <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                                        </div>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">DATABASE</a>
+                                    <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                    <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                        <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
+                                        <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
+                                        <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                                        <li class="more">
+                                            <span><a href="#">More</a>
+                                                <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                                            </span>
+                                            <ul class="more-sub-menu sub-menu" style="padding-left: 0px;">
+                                                <li><a href="#"></a></li>
+                                                <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                                <li><a href="../ip/adding_device.php">ADD DEVICE</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">OTHERS</a>
+                                    <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                    <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                        <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                        <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+                                <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+                            </ul>
                         </div>
-                        <ul class="links">
-                            <li>
-                                <a href="#">EMPLOYEES</a>
-                                <i class='bx bxs-chevron-down js-emarrow arrow '></i>
-                                <ul class="em-sub-menu sub-menu">
-                                    <li><a href="../log/signup.php">ADD TO SYSTEM</a></li>
-                                    <li><a href="../search/list_of_employees.php">LIST</a></li>
-                                    <li><a href="#">CHANGE DATA</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">DATABASE</a>
-                                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
-                                <ul class="htmlCss-sub-menu sub-menu">
-                                    <li><a href="../objects/create_object.php">CREATE OBJECT</a></li>
-                                    <li><a href="../shifts/create_shift.php">CREATE SHIFT</a></li>
-                                    <li><a href="#">CURRENT SCHEDULE</a></li>
-                                    <li class="more">
-                                        <span><a href="#">More</a>
-                                            <i class='bx bxs-chevron-right arrow more-arrow'></i>
-                                        </span>
-                                        <ul class="more-sub-menu sub-menu">
-                                            <li><a href="#"></a></li>
-                                            <li><a href="#">Pre-loader</a></li>
-                                            <li><a href="#">Glassmorphism</a></li>
+
+                        <div class="search-box">
+                            <i class='bx bx-search'></i>
+                            <div class="input-box">
+                                <input type="text" placeholder="Search...">
+                                <br>
+                                <br>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p>123456789</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </nav>
+            <?php } else if ($userp == "manager") { ?>
+                    <nav>
+
+                        <div class="navbar container">
+
+                            <i class='bx bx-menu'></i>
+                            <div class="logo"><a
+                                    style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                    href="../main/manager_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
+
+                                </a></div>
+                            <div class="nav-links">
+                                <div class="sidebar-logo">
+                                    <span class="logo-name">Home page</span>
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <ul class="links">
+                                    <li>
+                                        <a href="#">EMPLOYEES</a>
+                                        <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                        <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                            <div>
+                                                <li><a href="../search/list_of_employees.php">LIST</a></li>
+                                                <li><a href="../rights_assignments/rights.php">RIGTHS & ASSIGNMENT</a></li>
+                                            </div>
+                                        </ul>
+
+                                    </li>
+                                    <li>
+                                        <a href="#">CALENDAR</a>
+                                        <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                        <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../calendar/calendar.php">CURRENT SCHEDULE</a></li>
+                                            <li><a href="../options/permanent_time_options.php">TIME OPTIONS</a></li>
+
+                                            <li class="more">
+                                            </li>
                                         </ul>
                                     </li>
+                                    <li>
+                                        <a href="#">OTHERS</a>
+                                        <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                        <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../board/information_board.php">INFO BOARD</a></li>
+                                            <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                            <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="../statistics/all_stats.php">STATISTICS</a></li>
+                                    <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
                                 </ul>
-                            </li>
-                            <li>
-                                <a href="#">HISTORY</a>
-                                <i class='bx bxs-chevron-down js-arrow arrow '></i>
-                                <ul class="js-sub-menu sub-menu">
-                                    <li><a href="#">Dynamic Clock</a></li>
-                                    <li><a href="#">Form Validation</a></li>
-                                    <li><a href="#">Card Slider</a></li>
-                                    <li><a href="#">Complete Website</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">STATISTICS</a></li>
-                            <li><a href="../log/logout.php">LOG OUT</a></li>
-                        </ul>
-                    </div>
+                            </div>
 
-                    <div class="search-box">
-                        <i class='bx bx-search'></i>
-                        <div class="input-box">
-                            <input type="text" placeholder="Search...">
+                            <div class="search-box">
+                                <i class='bx bx-search'></i>
+                                <div class="input-box">
+                                    <input type="text" placeholder="Search...">
+                                    <br>
+                                    <br>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>123456789</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
-                    </div>
+                    </nav>
+            <?php } else { ?>
+                    <nav>
 
-                </div>
-            </nav>
+                        <div class="navbar container">
 
+                            <i class='bx bx-menu'></i>
+                            <div class="logo"><a
+                                    style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display:inline; width: 100px"
+                                    href="../main/employee_main_page.php">Home :
+                                <?= $cons ?>
+                                <?= htmlspecialchars($user["firstname"]) ?>
+                                <?= htmlspecialchars($user["middlename"]) ?>
+                                <?= htmlspecialchars($user["lastname"]) ?>
+
+                                </a></div>
+                            <div class="nav-links">
+                                <div class="sidebar-logo">
+                                    <span class="logo-name">Home page</span>
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <ul class="links">
+                                    <li>
+                                        <a href="#">EMPLOYEES</a>
+                                        <i class='bx bxs-chevron-down js-emarrow arrow '></i>
+                                        <ul class="em-sub-menu sub-menu " style="padding-left: 0px;">
+                                            <div>
+
+                                                <li><a
+                                                        href="../search/list_of_employees.php">LIST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                                </li>
+
+
+                                            </div>
+                                        </ul>
+
+                                    </li>
+                                    <li>
+                                        <a href="#">CALENDAR</a>
+                                        <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                                        <ul class="htmlCss-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../calendar/calendar_view.php">CURRENT SCHEDULE</a></li>
+                                        <?php if ($userp == "parttime_employee") { ?>
+                                                <li><a href="../options/time_options.php">TIME OPTIONS</a></li>
+                                        <?php } else if ($userp == "fulltime_employee") { ?>
+                                                    <li><a href="../options/permanent_time_options_view.php">TIME OPTIONS</a></li>
+                                        <?php } ?>
+                                            <li class="more">
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">OTHERS</a>
+                                        <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                                        <ul class="js-sub-menu sub-menu" style="padding-left: 0px;">
+                                            <li><a href="../shifts/my_shifts.php">MY SHIFTS</a></li>
+                                            <li><a href="../log/change_my_password.php">CHANGE PASSWORD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="../statistics/my_stats.php">STATISTICS</a></li>
+                                    <li><a href="../log/logout.php" style="color :#b2d2f2;">LOG OUT</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="search-box">
+                                <i class='bx bx-search'></i>
+                                <div class="input-box">
+                                    <input type="text" placeholder="Search...">
+                                    <br>
+                                    <br>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>123456789</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </nav>
+                <?php
+                }
+                ?>
             <br><br>
 
             <div id="txt"></div>
@@ -254,7 +435,7 @@ $mysqli1->close();*/
 
             <?php
             //$mysqli2 = require __DIR__ . "/database.php";
-            $mysqli2 = require("../database.php");
+            $mysqli2 = require ("../database.php");
 
             $conn = new mysqli($host, $username, $password, $dbname);
             $sql2 = " SELECT * FROM user2 ORDER BY id ASC ";
@@ -340,7 +521,7 @@ $mysqli1->close();*/
                     <br>
                     <br>
                     <h5 style="display:inline;"> &nbsp;&nbsp;Objects : &nbsp;&nbsp;</h5>
-                    
+
                     <Select id="select_obj" style="display: inline">
                         <!--<option value="0">Pick a object</option>-->
                         <?php
@@ -363,7 +544,7 @@ $mysqli1->close();*/
                         }
                         ?>
                     </Select>
-                
+
                     <script>
                         var obj_search = new Array();
                         function obj_click(clicked_val) {

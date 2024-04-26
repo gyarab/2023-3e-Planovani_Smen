@@ -1,5 +1,4 @@
 <?php
-//$mysqli = require __DIR__ . "/database.php";
 $mysqli = require("../database.php");
 
 $input = $_POST['input'];
@@ -17,19 +16,13 @@ $numberval = array();
 $arr = array();
 
 $result_get = $mysqli->query($sql);
-//echo "<p style='display: inline'>";
 while ($rows_get = $result_get->fetch_assoc()) {
     $get = $rows_get['shift_name'];
     $ge = $rows_get['object_id'];
     array_push($get_id,$ge);
     array_push($get_name,$get);
-    //$get_id = $rows_get['object_id'];
-    /*$get_id = $rows_get['id_user'];
-    $get_name = $rows_get['user_name'];*/
 
-    //echo $get. ", " ;
 }
-//echo "</p>";
 
 if (mysqli_num_rows($fetch) > 0) {
   /**Sorting data alphabetically */
@@ -42,7 +35,6 @@ if (mysqli_num_rows($fetch) > 0) {
   array_multisort($data2, $data1, $data3, $data4);
 }
 
-//echo "<br>";
 $count = 0;
 $dd = 1;
     for ($x = 0; $x < count($data2); $x++) {
@@ -59,7 +51,6 @@ $dd = 1;
           echo "<p>Rights for : <b>".$data2[$x]."</b></p>";
           
           $arr = []; 
-          //echo "<br>";
 
            
           $row = 0;
@@ -100,7 +91,6 @@ $dd = 1;
         for ($i = 0; $i < count($dat2); $i++) {
             if ($searching == $dat4[$i]) {
             if (in_array($dat1[$i], $id)){
-                //echo $dat2[$i]. ", " ;
                 return true;
             }
             
@@ -130,13 +120,11 @@ $dd = 1;
             if ($searching == $dat4[$i]) {
             if ($find == 0){
                 $find = 1;
-                //echo "<ul>";
-                //echo "<hr>";
+
             }else{
                 
             }
             if (in_array($dat1[$i], $id)){
-                //echo $dat2[$i]. ", " ;
                 array_push($arr,$dat2[$i]);
             }
             
@@ -153,11 +141,9 @@ $dd = 1;
             }
         }
             
-            //echo "</li>";          
           
         }
         }
-        //echo "</ul>";  
 
       }
 
